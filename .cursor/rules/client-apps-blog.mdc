@@ -1,0 +1,301 @@
+---
+description: Blog 博客前端应用代码规范（Next.js 16 App Router）
+globs: client/apps/blog/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Blog 应用代码规范
+
+## 应用信息
+
+- **框架**: Next.js 16
+- **路由系统**: App Router
+- **样式**: Tailwind CSS 4
+- **路径别名**: `@/*` 指向 `./*`（根目录）
+
+## 路径别名规则
+
+- **使用 `@/` 引用应用内模块**，指向根目录（`apps/blog/`）
+- **禁止使用相对路径跨级引用**（如 `../../`），应使用路径别名
+- **示例**：
+  ```typescript
+  // ✅ 正确
+  import { Card } from '@/app/components/article';
+  import { getArticles } from '@/app/lib/api';
+  import type { Article } from '@/app/types/article';
+  
+  // ❌ 错误
+  import { Card } from '../../components/article';
+  import { getArticles } from '../../../lib/api';
+  ```
+
+## 目录结构
+
+```
+app/
+├── (routes)/       # 路由页面（Next.js App Router）
+│   ├── page.tsx           # 首页
+│   ├── articles/          # 文章相关页面
+│   │   └── [id]/          # 动态路由
+│   ├── changeLog/         # 更新日志
+│   ├── messageBoard/      # 留言板
+│   ├── aboutBlog/         # 关于博客
+│   └── aboutMe/           # 关于我
+├── components/    # 公共组件
+│   ├── article/   # 文章相关组件
+│   ├── navBar/    # 导航栏
+│   └── ...
+├── lib/           # 工具库
+│   ├── api.ts     # API 调用
+│   └── request.ts # 请求封装
+├── types/         # TypeScript 类型定义
+├── globals.css    # 全局样式
+└── layout.tsx     # 根布局
+```
+
+## Next.js App Router 规范
+
+### 页面组件
+
+- **服务端组件（默认）**: 不需要 `'use client'` 指令
+- **客户端组件**: 需要添加 `'use client'` 指令
+- **异步组件**: 服务端组件可以是 `async` 函数
+- **示例**:
+  ```typescript
+  // 服务端组件（默认）
+  export default async function ArticlePage({ params }: Props) {
+    const article = await getArticle(params.id);
+    return <ArticleContent article={article} />;
+  }
+  
+  // 客户端组件
+  'use client';
+  
+  export default function InteractiveComponent() {
+    const [state, setState] = useState();
+    // ...
+  }
+  ```
+
+### 路由约定
+
+- **文件路由**: 使用文件夹结构定义路由
+- **动态路由**: 使用 `[id]` 或 `[...slug]` 命名文件夹
+- **布局**: 使用 `layout.tsx` 定义布局
+- **加载状态**: 使用 `loading.tsx` 定义加载 UI
+- **错误处理**: 使用 `error.tsx` 定义错误 UI
+
+### 数据获取
+
+- **服务端数据获取**: 在服务端组件中使用 `fetch` 或 API 调用
+- **重新验证**: 使用 `next: { revalidate }` 配置缓存
+- **示例**:
+  ```typescript
+  const data = await get<Article>(`/posts/${id}`, {
+    next: { revalidate: 60 }, // 缓存 60 秒
+  });
+  ```
+
+## 样式规范
+
+- **Tailwind CSS**: 优先使用 Tailwind 工具类
+- **CSS 变量**: 使用 CSS 变量定义主题颜色（在 `globals.css` 中）
+- **响应式设计**: 使用 Tailwind 响应式前缀（`sm:`, `md:`, `lg:` 等）
+- **暗色模式**: 支持暗色/亮色主题切换
+
+## 类型定义
+
+- **类型文件**: 放在 `app/types/` 目录下
+- **类型导入**: 使用 `type` 关键字导入类型
+- **示例**:
+  ```typescript
+  import type { Article } from '@/app/types/article';
+  import type { Category } from '@/app/types/category';
+  ```
+
+## API 调用
+
+- **API 文件**: 放在 `app/lib/api.ts` 中
+- **请求封装**: 使用 `app/lib/request.ts` 中的请求方法
+- **服务端调用**: 在服务端组件中直接调用 API
+- **客户端调用**: 在客户端组件中使用 `useEffect` 或数据获取库
+- **示例**:
+  ```typescript
+  // app/lib/api.ts
+  import { get, post } from './request';
+  
+  export async function getArticles(params: PaginationParams) {
+    return get<PaginationResponse<Article>>('/posts/page', { params });
+  }
+  
+  // 在服务端组件中使用
+  const data = await getArticles({ current: 1, pageSize: 10 });
+  ```
+
+## 组件规范
+
+### 服务端组件
+
+- **默认导出**: 使用默认导出
+- **Props 类型**: 定义明确的 Props 类型
+- **异步支持**: 可以是 `async` 函数
+- **示例**:
+  ```typescript
+  interface ArticleDetailProps {
+    params: Promise<{ id: string }>;
+  }
+  
+  export default async function ArticleDetail({ params }: ArticleDetailProps) {
+    const { id } = await params;
+    const article = await getArticle(id);
+    return <ArticleContent article={article} />;
+  }
+  ```
+
+### 客户端组件
+
+- **指令**: 必须在文件顶部添加 `'use client'`
+- **Hooks**: 可以使用所有 React Hooks
+- **交互**: 处理用户交互和状态管理
+- **示例**:
+  ```typescript
+  'use client';
+  
+  import { useState, useEffect } from 'react';
+  
+  export default function SearchBar() {
+    const [query, setQuery] = useState('');
+    // ...
+  }
+  ```
+
+## SEO 优化
+
+- **Metadata**: 在 `layout.tsx` 或页面中导出 `metadata` 对象
+- **动态 Metadata**: 使用 `generateMetadata` 函数
+- **示例**:
+  ```typescript
+  import type { Metadata } from 'next';
+  
+  export const metadata: Metadata = {
+    title: '文章标题',
+    description: '文章描述',
+  };
+  
+  // 或动态生成
+  export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const article = await getArticle(params.id);
+    return {
+      title: article.title,
+      description: article.summary,
+    };
+  }
+  ```
+
+## 代码示例
+
+### 服务端页面组件
+
+```typescript
+import { get } from '@/app/lib/request';
+import { getArticleComments } from '@/app/lib/api';
+import ArticleContentCard from '@/app/components/article/ArticleContentCard';
+import ArticleSidebar from '@/app/components/article/ArticleSidebar';
+
+import type { Article } from '@/app/types/article';
+
+interface ArticleDetailProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function ArticleDetail({ params }: ArticleDetailProps) {
+  const { id } = await params;
+  
+  const [articleRes, comments] = await Promise.all([
+    get<Article>(`/posts/${id}`, {
+      next: { revalidate: 60 },
+    }),
+    getArticleComments(id),
+  ]);
+  
+  const article = articleRes.data;
+  
+  return (
+    <div>
+      <ArticleContentCard article={article} />
+      <ArticleSidebar markdown={article.content} />
+    </div>
+  );
+}
+```
+
+### 客户端页面组件
+
+```typescript
+'use client';
+
+import { useState, useEffect } from 'react';
+
+import { Pagination, Input } from 'antd';
+
+import { Card } from '@/app/components/article';
+import { getArticles } from '@/app/lib/api';
+import type { Article } from '@/app/types/article';
+
+export default function Home() {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+  
+  const fetchArticles = async () => {
+    setLoading(true);
+    const data = await getArticles({ current: 1, pageSize: 10 });
+    setArticles(data.items);
+    setLoading(false);
+  };
+  
+  return (
+    <div>
+      {articles.map(article => (
+        <Card key={article.id} data={article} />
+      ))}
+    </div>
+  );
+}
+```
+
+### API 调用示例
+
+```typescript
+// app/lib/api.ts
+import { get, post } from './request';
+
+import type { Article, PaginationParams, PaginationResponse } from '@/app/types';
+
+export async function getArticles(params: PaginationParams) {
+  return get<PaginationResponse<Article>>('/posts/page', { params });
+}
+
+export async function getArticle(id: string) {
+  return get<Article>(`/posts/${id}`, {
+    next: { revalidate: 60 },
+  });
+}
+
+export async function createComment(data: CreateCommentDto) {
+  return post('/comments', data);
+}
+```
+
+## 注意事项
+
+- Blog 应用是用户端博客，主要用于内容展示
+- 优先使用服务端组件，减少客户端 JavaScript 体积
+- 只在需要交互时才使用客户端组件（添加 `'use client'`）
+- 使用 Next.js 的缓存和重新验证机制优化性能
+- 注意 SEO 优化，正确设置 metadata
+- 使用 Tailwind CSS 进行样式设计，保持响应式
+- 路由使用 Next.js App Router 的文件系统路由约定

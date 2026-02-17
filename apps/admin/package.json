@@ -1,0 +1,35 @@
+{
+  "name": "admin",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@ant-design/plots": "^2.6.8",
+    "@bytemd/plugin-gfm": "^1.21.0",
+    "@bytemd/plugin-highlight": "^1.21.0",
+    "@bytemd/plugin-math": "^1.21.0",
+    "@bytemd/plugin-medium-zoom": "^1.21.0",
+    "@bytemd/react": "^1.21.0",
+    "@react-router/node": "7.10.1",
+    "@react-router/serve": "7.10.1",
+    "bytemd": "^1.21.0",
+    "highlight.js": "^11.10.0",
+    "isbot": "^5.1.31",
+    "katex": "^0.16.11",
+    "react-router": "7.10.1"
+  },
+  "devDependencies": {
+    "@react-router/dev": "7.10.1",
+    "@tailwindcss/vite": "^4.1.13",
+    "@types/node": "^22",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2",
+    "vite": "^6.0.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  }
+}

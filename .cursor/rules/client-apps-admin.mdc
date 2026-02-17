@@ -1,0 +1,196 @@
+---
+description: Admin 管理后台应用代码规范（React Router 7 + Ant Design）
+globs: client/apps/admin/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Admin 应用代码规范
+
+## 应用信息
+
+- **框架**: React Router 7
+- **UI 库**: Ant Design 6
+- **样式**: Tailwind CSS 4
+- **构建工具**: Vite
+- **路径别名**: `@/*` 和 `~/` 都指向 `./app/*`
+
+## 路径别名规则
+
+- **使用 `@/` 或 `~/` 引用应用内模块**，两者都指向 `app/` 目录
+- **禁止使用相对路径跨级引用**（如 `../../`），应使用路径别名
+- **示例**：
+  ```typescript
+  // ✅ 正确
+  import { useQuery } from '@/hooks';
+  import { articleService } from '@/services/article';
+  import type { Article } from '~/types/article';
+  
+  // ❌ 错误
+  import { useQuery } from '../../hooks';
+  import { articleService } from '../../../services/article';
+  ```
+
+## 目录结构
+
+```
+app/
+├── routes/          # 路由页面
+│   ├── article/    # 文章管理
+│   ├── user/       # 用户管理
+│   ├── comment/    # 评论管理
+│   ├── category/   # 分类管理
+│   ├── tag/        # 标签管理
+│   ├── setting/    # 设置页面
+│   └── data/       # 数据统计
+├── components/     # 公共组件
+├── services/       # API 服务
+├── hooks/          # 自定义 Hooks
+├── types/          # TypeScript 类型定义
+├── utils/          # 工具函数
+├── lib/            # 库文件（如 request）
+└── root.tsx        # 根组件
+```
+
+## 路由规范
+
+- **路由定义**: 在 `app/routes.ts` 中使用 `route()` 和 `layout()` 定义路由
+- **路由文件**: 路由组件文件放在 `app/routes/` 目录下
+- **命名规范**: 路由文件使用 `index.tsx` 作为默认导出
+- **示例**:
+  ```typescript
+  // app/routes.ts
+  route('article', './routes/article/index.tsx')
+  
+  // app/routes/article/index.tsx
+  export default function ArticlePage() {
+    // ...
+  }
+  ```
+
+## React Router 特定规范
+
+- **使用 React Router Hooks**: `useNavigate`, `useLocation`, `useParams` 等
+- **数据加载**: 使用 React Router 的 loader 和 action（如需要）
+- **SSR 配置**: 当前 SSR 设置为 `false`（`react-router.config.ts`）
+
+## Ant Design 使用规范
+
+- **组件导入**: 从 `antd` 导入所需组件
+- **图标导入**: 从 `@ant-design/icons` 导入图标
+- **表单处理**: 使用 Ant Design 的 `Form` 组件和 `Form.Item`
+- **消息提示**: 使用 `message` 组件进行提示
+- **表格**: 使用 `Table` 组件，配置 `pagination`、`columns` 等
+
+## 样式规范
+
+- **Tailwind CSS**: 优先使用 Tailwind 工具类
+- **Ant Design 主题**: 使用 Ant Design 的 `theme` 配置（如需要）
+- **暗色模式**: 支持暗色/亮色主题切换
+
+## 类型定义
+
+- **类型文件**: 放在 `app/types/` 目录下
+- **类型导入**: 使用 `type` 关键字导入类型
+- **示例**:
+  ```typescript
+  import type { Article } from '~/types/article';
+  import type { Pagination } from '@/types/index';
+  ```
+
+## API 服务
+
+- **服务文件**: 放在 `app/services/` 目录下
+- **命名规范**: 使用 `xxxService` 命名（如 `articleService`）
+- **请求封装**: 使用 `app/lib/request.ts` 中的请求方法
+- **示例**:
+  ```typescript
+  // app/services/article.ts
+  import { get, post, put, del } from '@/lib/request';
+  
+  export const articleService = {
+    getArticleList: (params) => get('/posts/page', { params }),
+    // ...
+  };
+  ```
+
+## Hooks 规范
+
+- **自定义 Hooks**: 放在 `app/hooks/` 目录下
+- **命名规范**: 使用 `use` 前缀（如 `useQuery`）
+- **数据获取**: 可以使用自定义的 `useQuery` Hook
+
+## 组件规范
+
+- **组件文件**: 放在 `app/components/` 目录下
+- **导出方式**: 使用默认导出或命名导出
+- **Props 类型**: 定义明确的 Props 类型
+- **示例**:
+  ```typescript
+  import type { FC } from 'react';
+  
+  interface LayoutProps {
+    children: React.ReactNode;
+  }
+  
+  const Layout: FC<LayoutProps> = ({ children }) => {
+    // ...
+  };
+  
+  export default Layout;
+  ```
+
+## 代码示例
+
+### 路由页面示例
+
+```typescript
+import { useState } from 'react';
+
+import { Button, Table, message } from 'antd';
+import { useNavigate } from 'react-router';
+
+import { useQuery } from '@/hooks';
+import { articleService } from '@/services/article';
+import type { Article } from '~/types/article';
+
+export default function ArticlePage() {
+  const navigate = useNavigate();
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+  
+  const { data, refetch } = useQuery(() => 
+    articleService.getArticleList(pagination)
+  );
+  
+  return (
+    <Table
+      dataSource={data?.items}
+      columns={columns}
+      pagination={pagination}
+    />
+  );
+}
+```
+
+### 服务文件示例
+
+```typescript
+import { get, post, put, del } from '@/lib/request';
+
+import type { Article, CreateArticleDto } from '~/types/article';
+
+export const articleService = {
+  getArticleList: (params: any) => get('/posts/page', { params }),
+  getArticle: (id: number) => get(`/posts/${id}`),
+  createArticle: (data: CreateArticleDto) => post('/posts', data),
+  updateArticle: (id: number, data: CreateArticleDto) => put(`/posts/${id}`, data),
+  deleteArticle: (id: number) => del(`/posts/${id}`),
+};
+```
+
+## 注意事项
+
+- Admin 应用是管理后台，主要用于数据管理和配置
+- 所有管理操作需要认证（JWT Token）
+- 使用 Ant Design 的组件库，保持 UI 风格一致
+- 路由配置在 `app/routes.ts` 中统一管理
+- 使用 React Router 的路由特性，如需要可以使用 loader 和 action

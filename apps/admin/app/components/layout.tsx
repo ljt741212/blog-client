@@ -11,14 +11,13 @@ import {
   LogoutOutlined,
   LockOutlined,
 } from '@ant-design/icons';
-import { Menu, Dropdown, Switch as AntSwitch, Form, Modal, Input , message } from 'antd';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Menu, Dropdown, Switch as AntSwitch, Form, Modal, Input, message } from 'antd';
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 
 import { userService } from '@/services/user';
-import { removeCookie } from '@/utils';
+import { getCookie, removeCookie } from '@/utils';
 
 import Logo from './Logo';
-
 
 import type { MenuProps } from 'antd';
 
@@ -26,7 +25,7 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
   {
-    key: 'data',
+    key: '',
     label: '仪表盘',
     icon: <HomeOutlined />,
   },
@@ -67,9 +66,8 @@ const items: MenuItem[] = [
       { key: 'updateLog', label: '更新日志' },
       { key: 'tools', label: '工具' },
     ],
-  },  
+  },
 ];
-
 
 const Layout: React.FC = () => {
   const pathname = useLocation().pathname;
@@ -87,10 +85,9 @@ const Layout: React.FC = () => {
     message.success('密码修改成功');
     removeCookie('token');
     navigate('/login');
-
   };
 
-  const settingItems: MenuItem[] = [  
+  const settingItems: MenuItem[] = [
     {
       key: 'logout',
       label: '退出登录',
@@ -104,7 +101,7 @@ const Layout: React.FC = () => {
       key: 'changePassword',
       label: '修改密码',
       icon: <LockOutlined />,
-      onClick: () =>  setOpen(true),
+      onClick: () => setOpen(true),
     },
   ];
 
@@ -120,47 +117,68 @@ const Layout: React.FC = () => {
     menuRef.current = items;
   }, []);
 
+  const isLogin = getCookie('token');
+  if (!isLogin) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <>
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#020617] text-gray-100">
-      <div className="h-12 w-full border-b border-[#9ca3af] flex items-center justify-between pr-8 pl-6 bg-[#111827]">
-        <div className="flex items-center gap-3 text-lg font-bold">
-          <Logo /> Admin
+      <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#020617] text-gray-100">
+        <div className="h-12 w-full border-b border-[#9ca3af] flex items-center justify-between pr-8 pl-6 bg-[#111827]">
+          <div className="flex items-center gap-3 text-lg font-bold">
+            <Logo /> Admin
+          </div>
+          <div className="flex items-center gap-3">
+            <AntSwitch checkedChildren="暗系" unCheckedChildren="亮系" />
+            <Dropdown menu={{ items: settingItems }}>
+              <SettingOutlined className="text-2xl cursor-pointer" />
+            </Dropdown>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
-          <AntSwitch checkedChildren="暗系" unCheckedChildren="亮系" />
-          <Dropdown menu={{ items: settingItems }}>
-            <SettingOutlined className="text-2xl cursor-pointer" />
-          </Dropdown>
-        </div>
-      </div>
-      <div className="flex flex-1 min-h-0">
-        <Menu
-          onClick={onClick}
-          style={{ width: 256 }}
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          mode="inline"
-          theme="dark"
-          items={items}
-        />
-        <div className="flex-1 flex flex-col min-h-0">
-          <div className="flex-1 m-8 p-8 rounded-2xl overflow-auto shadow-[0_18px_40px_rgba(15,23,42,0.65)] bg-gradient-to-br from-[#1f2937] via-[#1e293b] to-[#020617]">
-            <Outlet />
+        <div className="flex flex-1 min-h-0">
+          <Menu
+            onClick={onClick}
+            style={{ width: 256 }}
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            mode="inline"
+            theme="dark"
+            items={items}
+          />
+          <div className="flex-1 flex flex-col min-h-0">
+            <div className="flex-1 m-8 p-8 rounded-2xl overflow-auto shadow-[0_18px_40px_rgba(15,23,42,0.65)] bg-gradient-to-br from-[#1f2937] via-[#1e293b] to-[#020617]">
+              <Outlet />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <Modal open={open} onCancel={() => setOpen(false)} onOk={changePassword} confirmLoading={loading} title="修改密码" okText="确定" cancelText="取消">
-      <Form form={form} layout="horizontal" labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
-        <Form.Item name="oldPassword" label="旧密码" rules={[{ required: true, message: '请输入旧密码' }]}>
-          <Input.Password />
-        </Form.Item>
-        <Form.Item name="newPassword" label="新密码" rules={[{ required: true, message: '请输入新密码' }]}>
-          <Input.Password />
-        </Form.Item>
-      </Form>
-    </Modal>
+      <Modal
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={changePassword}
+        confirmLoading={loading}
+        title="修改密码"
+        okText="确定"
+        cancelText="取消"
+      >
+        <Form form={form} layout="horizontal" labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
+          <Form.Item
+            name="oldPassword"
+            label="旧密码"
+            rules={[{ required: true, message: '请输入旧密码' }]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            name="newPassword"
+            label="新密码"
+            rules={[{ required: true, message: '请输入新密码' }]}
+          >
+            <Input.Password />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 };

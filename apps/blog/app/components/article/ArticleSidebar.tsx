@@ -12,7 +12,6 @@ import {
   type TocTreeNode,
 } from './toc';
 
-
 export type ArticleSidebarProps = {
   markdown: string;
   scrollRootId: string;

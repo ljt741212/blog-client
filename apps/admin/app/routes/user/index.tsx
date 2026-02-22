@@ -6,7 +6,7 @@ import { Input, Table, Switch, message, Button } from 'antd';
 import { useQuery } from '@/hooks';
 import { userService } from '@/services/user';
 import { UserStatusEnum } from '~/types/user';
-import type { User , UserPageQueryDto } from '~/types/user';
+import type { User, UserPageQueryDto } from '~/types/user';
 
 import SaveUserModal from './components/saveUserModal';
 
@@ -71,33 +71,33 @@ export default function UserPage() {
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'Id',
+      key: 'Id',
     },
     {
       title: '用户名',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'Name',
+      key: 'Name',
     },
     {
       title: '权限',
-      dataIndex: 'role',
-      key: 'role',
+      dataIndex: 'Role',
+      key: 'Role',
     },
     {
       title: 'gitHub账号',
-      dataIndex: 'github',
-      key: 'github',
+      dataIndex: 'GitHub',
+      key: 'GitHub',
     },
     {
       title: '创建时间',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
+      dataIndex: 'CreatedAt',
+      key: 'CreatedAt',
     },
     {
       title: '用户状态',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'Status',
+      key: 'Status',
       render: (status: number) => <Switch checked={status === UserStatusEnum.ENABLED} />,
     },
     {
@@ -108,7 +108,7 @@ export default function UserPage() {
           <div className="flex items-center gap-2">
             <DeleteOutlined
               className="text-red-500 hover:text-red-600 cursor-pointer text-lg"
-              onClick={() => deleteUser(record.id as unknown as string)}
+              onClick={() => deleteUser(record.Id)}
             />
           </div>
         );
@@ -138,7 +138,7 @@ export default function UserPage() {
         columns={columns}
         loading={isLoading}
         pagination={paginationConfig}
-        rowKey="id"
+        rowKey="Id"
         scroll={{ y: 55 * 7, x: 'max-content' }}
       />
       <SaveUserModal

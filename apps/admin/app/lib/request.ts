@@ -50,7 +50,7 @@ const createRequest = (baseURL: string) => {
       if (response.status === 401) {
         // token 过期或未授权，清除 token 并跳转到登录页
         removeCookie('token');
-             message.error('未授权，请重新登录');
+        message.error('未授权，请重新登录');
         window.location.href = '/login';
         throw new RequestError(401, '未授权，请重新登录');
       }

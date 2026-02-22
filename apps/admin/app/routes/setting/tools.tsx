@@ -12,7 +12,6 @@ import { uploadService } from '@/services/upload';
 
 import type { UploadFile, UploadChangeParam } from 'antd/es/upload/interface';
 
-
 export default function Tools() {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const handleUpload = (info: UploadChangeParam<UploadFile>) => {

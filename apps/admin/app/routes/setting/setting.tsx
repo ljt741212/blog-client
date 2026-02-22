@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from 'react';
 
-import { GlobalOutlined, LinkOutlined, SettingOutlined , PlusOutlined} from '@ant-design/icons';
-import { Form, Input, Button, Space, Switch, Card, Row, Col, Typography, message, Upload } from 'antd';
+import { GlobalOutlined, LinkOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  Form,
+  Input,
+  Button,
+  Space,
+  Switch,
+  Card,
+  Row,
+  Col,
+  Typography,
+  message,
+  Upload,
+} from 'antd';
 
 import { settingService } from '@/services/setting';
 import { uploadService } from '@/services/upload';
@@ -33,7 +45,7 @@ export default function Setting() {
     await settingService.saveSetting(payload).finally(() => {
       setLoading(false);
     });
-      message.success('保存成功');
+    message.success('保存成功');
   };
 
   const handleUploadImages = async (
@@ -124,29 +136,31 @@ export default function Setting() {
                     </Col>
                     <Col span={12}>
                       <Form.Item label="Open Graph 图片" name={['seo', 'ogImage']}>
-                      <Form.Item noStyle shouldUpdate>
-                  {({ getFieldValue, setFieldValue }) => {
-                    const url = getFieldValue(['seo', 'ogImage']);
-                    return (
-                      <Upload
-                        maxCount={1}
-                        listType="picture-card"
-                        fileList={url ? [{ uid: '-1', name: 'ogImage', status: 'done', url }] : []}
-                        customRequest={async ({ file, onSuccess }) => {
-                          const newUrl = await handleUploadImages([file as File]);
-                          if (newUrl?.length) {
-                            setFieldValue(['seo', 'ogImage'], newUrl[0].url);
-                            onSuccess?.(newUrl);
-                          }
-                        }}
-                        onRemove={() => setFieldValue(['seo', 'ogImage'], undefined)}
-                      >
-                        <PlusOutlined />
-                        <div className="ant-upload-text">Upload</div>
-                      </Upload>
-                    );
-                  }}
-                </Form.Item>
+                        <Form.Item noStyle shouldUpdate>
+                          {({ getFieldValue, setFieldValue }) => {
+                            const url = getFieldValue(['seo', 'ogImage']);
+                            return (
+                              <Upload
+                                maxCount={1}
+                                listType="picture-card"
+                                fileList={
+                                  url ? [{ uid: '-1', name: 'ogImage', status: 'done', url }] : []
+                                }
+                                customRequest={async ({ file, onSuccess }) => {
+                                  const newUrl = await handleUploadImages([file as File]);
+                                  if (newUrl?.length) {
+                                    setFieldValue(['seo', 'ogImage'], newUrl[0].url);
+                                    onSuccess?.(newUrl);
+                                  }
+                                }}
+                                onRemove={() => setFieldValue(['seo', 'ogImage'], undefined)}
+                              >
+                                <PlusOutlined />
+                                <div className="ant-upload-text">Upload</div>
+                              </Upload>
+                            );
+                          }}
+                        </Form.Item>
                       </Form.Item>
                     </Col>
                   </Row>

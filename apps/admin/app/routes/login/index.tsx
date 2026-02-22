@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router';
 import { userService } from '@/services';
 import { setCookie } from '@/utils';
 
-
 interface LoginForm {
   username: string;
   password: string;

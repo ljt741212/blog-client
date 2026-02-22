@@ -21,14 +21,30 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (userInfo) {
-      form.setFieldsValue(userInfo);
+      form.setFieldsValue({
+        Name: userInfo.Name,
+        Email: userInfo.Email,
+        Phone: userInfo.Phone,
+        GitHub: userInfo.GitHub,
+      });
     }
   }, [userInfo, form]);
 
   const saveUser = async () => {
     setLoading(true);
     const values = await form.validateFields();
-    await onSave(values as User).finally(() => {
+    const payload: User = userInfo
+      ? { ...userInfo, ...values }
+      : {
+          Id: '',
+          Name: values.Name,
+          Email: values.Email,
+          Phone: values.Phone,
+          GitHub: values.GitHub,
+          Role: 0,
+          Status: 1,
+        };
+    await onSave(payload).finally(() => {
       setLoading(false);
     });
     form.resetFields();
@@ -58,7 +74,7 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
-              name="username"
+              name="Name"
               label="用户名"
               rules={[{ required: true, message: '请输入用户名' }]}
             >
@@ -67,7 +83,7 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
           </Col>
           <Col span={12}>
             <Form.Item
-              name="email"
+              name="Email"
               label="邮箱"
               rules={[{ required: true, message: '请输入邮箱' }]}
             >
@@ -76,7 +92,7 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
           </Col>
           <Col span={12}>
             <Form.Item
-              name="phone"
+              name="Phone"
               label="手机号"
               rules={[{ required: true, message: '请输入手机号' }]}
             >
@@ -85,7 +101,7 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
           </Col>
           <Col span={12}>
             <Form.Item
-              name="githubAccount"
+              name="GitHub"
               label="GitHub账号"
               rules={[{ required: true, message: '请输入GitHub账号' }]}
             >

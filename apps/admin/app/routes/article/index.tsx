@@ -13,10 +13,9 @@ import { useNavigate } from 'react-router';
 
 import { useQuery } from '@/hooks';
 import { articleService } from '@/services/article';
-import type { SaveArticleDto , ArticlePageQueryDto } from '~/types/article';
+import type { SaveArticleDto, ArticlePageQueryDto } from '~/types/article';
 import { ArticleStatusEnum } from '~/types/article';
 import type { Pagination } from '@/types/index';
-
 
 const ArticleStatusMap = {
   [ArticleStatusEnum.DRAFT]: '草稿',

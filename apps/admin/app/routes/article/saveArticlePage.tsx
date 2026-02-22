@@ -23,7 +23,6 @@ import { ArticleStatusEnum } from '~/types/article';
 import type { Category } from '~/types/category';
 import type { Tag } from '~/types/tag';
 
-
 const { TextArea } = Input;
 
 export default function SaveArticlePage() {

@@ -7,7 +7,6 @@ import dayjs from 'dayjs';
 import { dashboardService } from '@/services/dashboard';
 import type { DashboardStats } from '~/types/dashboard';
 
-
 export default function Data() {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
 

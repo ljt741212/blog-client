@@ -11,12 +11,15 @@ import type { User } from '~/types/user';
 import type { FormInstance } from 'antd';
 
 interface UserProfileFormValues {
-  username: string;
-  email: string;
-  password?: string;
-  avatar?: string;
-  bio?: string;
-  githubAccount?: string;
+  Name: string;
+  Email: string;
+  Password?: string;
+  Avatar?: string;
+  Description?: string;
+  GitHub?: string;
+  NikName?: string;
+  WeChat?: string;
+  Phone?: string;
 }
 
 export default function UserInfo() {
@@ -34,20 +37,8 @@ export default function UserInfo() {
   }, [form]);
 
   const handleSubmit = async (values: UserProfileFormValues) => {
-    const payload: User = {
-      id: currentUser.current?.id as string,
-      username: values.username,
-      email: values.email,
-      avatar: values.avatar,
-      bio: values.bio,
-      githubAccount: values.githubAccount,
-    };
-    // 密码留空则不修改
-    if (values.password) {
-      payload.password = values.password;
-    }
     setLoading(true);
-    await userService.updateUser(currentUser.current?.id as string, payload).finally(() => {
+    await userService.updateUser(currentUser.current?.Id as string, values as Partial<User>).finally(() => {
       setLoading(false);
     });
     message.success('信息修改成功');
@@ -66,7 +57,7 @@ export default function UserInfo() {
               <Col span={12}>
                 <Form.Item
                   label="用户名"
-                  name="name"
+                  name="Name"
                   rules={[{ required: true, message: '请输入用户名' }]}
                 >
                   <Input placeholder="请输入用户名" />
@@ -75,7 +66,7 @@ export default function UserInfo() {
               <Col span={12}>
                 <Form.Item
                   label="邮箱"
-                  name="email"
+                  name="Email"
                   rules={[
                     { required: true, message: '请输入邮箱' },
                     { type: 'email', message: '请输入正确的邮箱格式' },
@@ -88,25 +79,46 @@ export default function UserInfo() {
 
             <Row gutter={16}>
               <Col span={12}>
-                <Form.Item label="个人简介" name="description">
-                  <Input.TextArea rows={3} placeholder="简单介绍一下自己" />
+                <Form.Item label="昵称" name="NikName">
+                  <Input placeholder="请输入昵称" />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="GitHub 账号" name="gitHub">
+                <Form.Item label="微信" name="WeChat">
+                  <Input placeholder="请输入微信号" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item label="手机号" name="Phone">
+                  <Input placeholder="请输入手机号" inputMode="numeric" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="GitHub 账号" name="GitHub">
                   <Input placeholder="例如：your-github-username" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col span={24}>
+                <Form.Item label="个人简介" name="Description">
+                  <Input.TextArea rows={3} placeholder="简单介绍一下自己" />
                 </Form.Item>
               </Col>
             </Row>
 
             <Form.Item
               label="头像"
-              name="avatar"
+              name="Avatar"
               rules={[{ required: true, message: '请上传头像' }]}
             >
               <Form.Item noStyle shouldUpdate>
                 {({ getFieldValue, setFieldValue }) => {
-                  const url = getFieldValue('avatar');
+                  const url = getFieldValue('Avatar');
                   return (
                     <Upload
                       maxCount={1}
@@ -115,11 +127,11 @@ export default function UserInfo() {
                       customRequest={async ({ file, onSuccess }) => {
                         const newUrl = await handleUploadCoverImage(file as File);
                         if (newUrl) {
-                          setFieldValue('avatar', newUrl);
+                          setFieldValue('Avatar', newUrl);
                           onSuccess?.(newUrl);
                         }
                       }}
-                      onRemove={() => setFieldValue('avatar', undefined)}
+                      onRemove={() => setFieldValue('Avatar', undefined)}
                     >
                       <PlusOutlined />
                       <div className="ant-upload-text">Upload</div>

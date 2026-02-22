@@ -1,6 +1,12 @@
 import { get, post, put } from '@/lib/request';
 import type { PaginationResponse } from '@/types';
-import type { LoginForm, LoginResponse, User, UserPageQueryDto, ChangePasswordForm } from '~/types/user';
+import type {
+  LoginForm,
+  LoginResponse,
+  User,
+  UserPageQueryDto,
+  ChangePasswordForm,
+} from '~/types/user';
 
 export const userService = {
   login: (data: LoginForm) => {
@@ -18,7 +24,7 @@ export const userService = {
   // getUserDetail: (id: string) => {
   //   return get<User>(`/users/${id}`);
   // },
-  updateUser: (id: string, payload: User) => {
+  updateUser: (id: string, payload: Partial<User>) => {
     return put<User>(`/users/${id}`, payload);
   },
   getCurrentUser: () => {

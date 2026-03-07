@@ -112,7 +112,7 @@ export async function getGuestMessageList(): Promise<ApiResponse<GuestMessage[]>
  * 获取博主信息
  * @returns 作者信息
  */
-export async function getAuthor(): Promise<Author | null> {
+export async function getAuthor(): Promise<ApiResponse<Author | null>> {
   const result = await get<Author>('/users/super-admin');
   return result.data ?? null;
 }
@@ -134,5 +134,14 @@ export async function incrementViews(id: number): Promise<boolean> {
  */
 export async function incrementLikes(id: number): Promise<boolean> {
   const result = await put<boolean>(`/posts/${id}/likes`);
+  return result.data ?? false;
+}
+
+/**
+ * 在线
+ * @returns 是否成功
+ */
+export async function heartbeat(): Promise<boolean> {
+  const result = await post<boolean>('/visitor/heartbeat');
   return result.data ?? false;
 }

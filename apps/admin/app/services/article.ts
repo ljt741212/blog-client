@@ -1,11 +1,12 @@
 import { get, post, put, del } from '@/lib/request';
+import type { PaginationResponse } from '@/types/index';
+
 import type {
   ArticlePageQueryDto,
   SaveArticleDto,
   ArticleStatusEnum,
   ArticleDetail,
 } from '~/types/article';
-import type { PaginationResponse } from '@/types/index';
 
 export const articleService = {
   saveArticle: (article: SaveArticleDto) => post<SaveArticleDto>('/posts', article),

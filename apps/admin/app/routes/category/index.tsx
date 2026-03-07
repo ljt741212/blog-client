@@ -5,9 +5,10 @@ import { Button, Input, Table, Switch, Modal, message, Form } from 'antd';
 
 import { useQuery } from '@/hooks';
 import { categoryService } from '@/services/category';
+import type { Pagination } from '@/types/index';
+
 import type { Category, CategoryPageQueryDto } from '~/types/category';
 import { CategoryStatusEnum } from '~/types/category';
-import type { Pagination } from '@/types/index';
 
 export default function CategoryPage() {
   const [searchValue, setSearchValue] = useState('');

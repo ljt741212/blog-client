@@ -1,6 +1,7 @@
 import { get, post, del, put } from '@/lib/request';
-import type { Category, CategoryPageQueryDto } from '~/types/category';
 import type { PaginationResponse } from '@/types/index';
+
+import type { Category, CategoryPageQueryDto } from '~/types/category';
 
 export const categoryService = {
   getCategoryList: (params: CategoryPageQueryDto) =>

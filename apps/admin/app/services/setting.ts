@@ -1,4 +1,5 @@
 import { get, put } from '@/lib/request';
+
 import type { Setting } from '~/types/setting';
 
 export const settingService = {

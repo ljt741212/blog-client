@@ -1,5 +1,6 @@
 import { get, post, del } from '@/lib/request';
 import type { PaginationResponse } from '@/types/index';
+
 import type { Tag, TagPageQueryDto } from '~/types/tag';
 
 export const tagService = {

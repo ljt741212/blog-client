@@ -5,9 +5,10 @@ import { Input, Table, message, Switch } from 'antd';
 
 import { useQuery } from '@/hooks';
 import { commentService } from '@/services/comment';
+import type { Pagination } from '@/types/index';
+
 import type { Comment, CommentAdminPageQueryDto } from '~/types/comment';
 import { CommentStatusEnum } from '~/types/comment';
-import type { Pagination } from '@/types/index';
 
 export default function CommentPage() {
   const [searchValue, setSearchValue] = useState('');

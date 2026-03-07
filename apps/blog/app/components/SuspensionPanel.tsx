@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from 'react';
 
 interface SuspensionPanelProps {
-  threshold?: number; // 滚动多少像素后显示
-  qqNumber?: string; // QQ 号码（用于一键联系）
+  threshold?: number;
+  qqNumber?: string;
 }
 
 const SuspensionPanel: React.FC<SuspensionPanelProps> = ({ threshold = 400, qqNumber }) => {
@@ -45,7 +45,6 @@ const SuspensionPanel: React.FC<SuspensionPanelProps> = ({ threshold = 400, qqNu
       }`}
     >
       <div className="flex flex-col gap-2">
-        {/* QQ 联系按钮 */}
         <button
           type="button"
           onClick={handleContactQQ}
@@ -57,11 +56,9 @@ const SuspensionPanel: React.FC<SuspensionPanelProps> = ({ threshold = 400, qqNu
               : 'cursor-not-allowed opacity-60 hover:translate-y-0 hover:shadow-md'
           }`}
         >
-          {/* 简单 QQ 图标（对话气泡形状） */}
           <span className="text-lg leading-none">Q</span>
         </button>
 
-        {/* 回到顶部按钮 */}
         <button
           type="button"
           onClick={handleBackToTop}

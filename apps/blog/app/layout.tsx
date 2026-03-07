@@ -19,7 +19,6 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-// 默认SEO设置（当后端获取失败时使用）
 const defaultMetadata: Metadata = {
   title: {
     default: '我的博客',
@@ -33,7 +32,6 @@ const defaultMetadata: Metadata = {
   },
 };
 
-// 从后端获取SEO设置并生成metadata
 export async function generateMetadata(): Promise<Metadata> {
   const seoSettings = await getSeoSettings();
 
@@ -41,13 +39,10 @@ export async function generateMetadata(): Promise<Metadata> {
     return defaultMetadata;
   }
 
-  // 解析keywords字符串为数组
   const keywords = seoSettings.keywords ? seoSettings.keywords.split(',').map(k => k.trim()) : [];
 
-  // 解析robots字符串
   const robotsConfig = parseRobots(seoSettings.robots);
 
-  // 构建metadata对象
   const metadata: Metadata = {
     title: {
       default: seoSettings.title,
@@ -107,7 +102,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return metadata;
 }
 
-// 解析robots字符串为Next.js的robots配置
 function parseRobots(robots: string | null): Metadata['robots'] {
   if (!robots) {
     return {

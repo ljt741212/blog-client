@@ -6,7 +6,6 @@ export default async function AboutMe() {
   return (
     <div className="pt-20 pb-16 px-4 md:px-8 lg:px-0 max-h-screen">
       <div className="mx-auto w-full max-w-5xl">
-        {/* 标题区域 */}
         <header className="mb-10 border-b border-gray-200 pb-6 dark:border-gray-800">
           <p className="text-sm uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400 mb-2">
             About Me
@@ -20,9 +19,7 @@ export default async function AboutMe() {
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(260px,1fr)] items-start">
-          {/* 左侧：简介 & 经历 */}
           <section className="space-y-8">
-            {/* 个人简介 */}
             <div className="rounded-2xl border border-gray-200 bg-white/60 p-6 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-zinc-900/60">
               <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-50">
                 你好，我是
@@ -39,13 +36,10 @@ export default async function AboutMe() {
             </div>
           </section>
 
-          {/* 右侧：头像 & 联系方式 */}
           <aside className="space-y-6">
-            {/* 头像卡片 */}
             <div className="flex flex-col items-center rounded-2xl border border-gray-200 bg-white/70 p-6 text-center shadow-sm backdrop-blur dark:border-gray-800 dark:bg-zinc-900/70">
               <div className="mb-4 h-24 w-24 overflow-hidden rounded-full border border-gray-200 bg-gradient-to-tr from-blue-500/70 via-emerald-400/70 to-cyan-500/70 dark:border-gray-700" />
               <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
-                {/* 这里可以改成你的名字 / 昵称 */}
                 某某某
               </h2>
               <p className="mt-1 text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400">
@@ -56,7 +50,6 @@ export default async function AboutMe() {
               </p>
             </div>
 
-            {/* 联系方式 */}
             <div className="rounded-2xl border border-gray-200 bg-white/70 p-6 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-zinc-900/70">
               <h2 className="mb-4 text-base font-semibold text-gray-900 dark:text-gray-50">
                 联系方式

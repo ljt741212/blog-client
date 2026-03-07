@@ -1,14 +1,17 @@
 import { useState, useEffect, useMemo } from 'react';
 
 import { Line, Column, Pie } from '@ant-design/plots';
-import { Card, Statistic, Table, Tag } from 'antd';
+import { Card, Statistic, Table, Tag, message } from 'antd';
 import dayjs from 'dayjs';
 
 import { dashboardService } from '@/services/dashboard';
+import { visitorService } from '@/services/visitor';
+
 import type { DashboardStats } from '~/types/dashboard';
 
 export default function Data() {
   const [dashboardStats, setDashboardStats] = useState<DashboardStats | null>(null);
+  const [onlineVisitors, setOnlineVisitors] = useState<number>(0);
 
   const initDashboardStats = async () => {
     const res = await dashboardService.getDashboardStats();
@@ -17,6 +20,23 @@ export default function Data() {
 
   useEffect(() => {
     initDashboardStats();
+    const controller = new AbortController();
+    visitorService.getOnlineVisitors({
+      signal: controller.signal,
+      onmessage: (event) => {
+        if(event.data!==''){
+          const data = JSON.parse(event.data);
+          setOnlineVisitors(data.data.count);
+        }
+      },
+      onerror: (err) => {
+        message.error('获取在线访客失败:' + err.message);
+        return 5000;
+      }
+    });
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   const trendLineData = useMemo(() => {
@@ -68,7 +88,7 @@ export default function Data() {
     <div className="h-full flex flex-col gap-4">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
         <Card>
-          <Statistic title="当前在线人数" value={dashboardStats?.today?.pv} suffix="人" />
+          <Statistic title="当前在线人数" value={onlineVisitors} suffix="人" />
         </Card>
         <Card>
           <Statistic title="今日访问量 (PV)" value={dashboardStats?.today?.pv} suffix="次" />
@@ -89,22 +109,21 @@ export default function Data() {
           <Line data={trendLineData} xField="date" yField="value" seriesField="type" smooth />
         </Card>
         <Card title="访问来源占比" bodyStyle={{ height: 320 }}>
-          <Pie
-            height={260}
-            radius={0.8}
-            data={dashboardStats?.sourceRatio || []}
-            angleField="value"
-            colorField="source"
-            legend={{
-              position: 'right',
-            }}
-            label={{
-              type: 'inner',
-              offset: '-30%',
-              content: ({ percent }: { percent: number }) => `${(percent * 100).toFixed(0)}%`,
-              style: { fontSize: 12, textAlign: 'center' },
-            }}
-          />
+        <Pie
+  height={260}
+  radius={0.8}
+  data={dashboardStats?.sourceRatio || []}
+  angleField="value"
+  colorField="source"
+  legend={{
+    position: 'right',
+  }}
+  label={{
+    text: (d: object) => `${(d.percent * 100).toFixed(0)}%`,
+    position: 'inside',
+    style: { fontSize: 12, textAlign: 'center' },
+  }}
+/>
         </Card>
       </div>
 

@@ -1,9 +1,9 @@
 import { Col, Row } from 'antd';
 
-import { ArticleCommentsCard, ArticleContentCard, ArticleSidebar } from '@/app/components/article';
-import { incrementViews, getArticleComments } from '@/app/lib/api';
-import { get } from '@/app/lib/request';
-import type { Article } from '@/app/types/article';
+import { ArticleCommentsCard, ArticleContentCard, ArticleSidebar } from '@/components/article';
+import { incrementViews, getArticleComments } from '@/lib/api';
+import { get } from '@/lib/request';
+import type { Article } from '@/types/article';
 
 type ArticleDetailProps = {
   params: { id: string };

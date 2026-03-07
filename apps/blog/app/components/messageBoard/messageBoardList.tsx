@@ -1,7 +1,7 @@
 import { Card, Empty } from 'antd';
 import dayjs from 'dayjs';
 
-import { GuestMessage } from '@/app/types/guestMessage';
+import { GuestMessage } from '@/types/guestMessage';
 
 export type MessageBoardListProps = {
   messages: GuestMessage[];

@@ -1,5 +1,5 @@
-import { getChangelogs } from '@/app/lib/api';
-import type { Changelog, ChangelogType } from '@/app/types';
+import { getChangelogs } from '@/lib/api';
+import type { Changelog, ChangelogType } from '@/types';
 
 export const metadata = {
   title: '更新日志',

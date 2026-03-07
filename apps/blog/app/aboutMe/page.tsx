@@ -1,7 +1,8 @@
-// import { getAuthor } from '../lib/api';
+import { getAuthor } from '@/lib/api';
 
 export default async function AboutMe() {
-  // const user = await getAuthor();
+  const user = await getAuthor();
+  console.log(user);
   return (
     <div className="pt-20 pb-16 px-4 md:px-8 lg:px-0 max-h-screen">
       <div className="mx-auto w-full max-w-5xl">

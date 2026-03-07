@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Divider, Input, Space, message } from 'antd';
 
-import { commentArticle, getArticleComments } from '@/app/lib/api';
-import type { SaveCommentDto } from '@/app/types';
+import { commentArticle, getArticleComments } from '@/lib/api';
+import type { SaveCommentDto } from '@/types';
 
 function getCommentDisplay(item: SaveCommentDto) {
   return {

@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 
 import { Pagination, Input } from 'antd';
 
-import { Card } from '@/app/components/article';
-import { getArticles, getArticleCategories } from '@/app/lib/api';
-import type { Article } from '@/app/types/article';
+import { Card } from '@/components/article';
+import { getArticles, getArticleCategories } from '@/lib/api';
+import type { Article } from '@/types/article';
 
 import Footer from './components/footer';
 

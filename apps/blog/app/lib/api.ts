@@ -11,7 +11,7 @@ import {
   CreateGuestMessageDto,
   GuestMessage,
   Author,
-} from '@/app/types';
+} from '@/types';
 
 import { get, post, ApiResponse, put } from './request';
 
@@ -113,8 +113,8 @@ export async function getGuestMessageList(): Promise<ApiResponse<GuestMessage[]>
  * @returns 作者信息
  */
 export async function getAuthor(): Promise<Author | null> {
-  const result = await get<Author>('/users/author');
-  return result.data ?? { code: 0, data: null, message: '' };
+  const result = await get<Author>('/users/super-admin');
+  return result.data ?? null;
 }
 
 /**

@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 
 import { Form, message } from 'antd';
 
-import { MessageBoardList, MessageBoardForm } from '@/app/components/messageBoard';
-import { createGuestMessage, getGuestMessageList } from '@/app/lib/api';
-import { GuestMessage } from '@/app/types/guestMessage';
+import { MessageBoardList, MessageBoardForm } from '@/components/messageBoard';
+import { createGuestMessage, getGuestMessageList } from '@/lib/api';
+import { GuestMessage } from '@/types/guestMessage';
 
 export default function MessageBoard() {
   const [form] = Form.useForm();

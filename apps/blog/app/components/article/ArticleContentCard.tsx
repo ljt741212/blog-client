@@ -6,7 +6,7 @@ import { LikeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { Badge, Card, Divider, Space, Tag, Typography, message } from 'antd';
 import { Viewer } from 'markdownEditor';
 
-import { incrementLikes } from '@/app/lib/api';
+import { incrementLikes } from '@/lib/api';
 
 export type ArticleContentCardProps = {
   articleId: string;

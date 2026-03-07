@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { UserOutlined, ClockCircleOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 
-import type { Article } from '@/app/types/article';
+import type { Article } from '@/types/article';
 
 const MetaIcon = ({ children }: { children: ReactNode }) => (
   <span className="inline-flex items-center justify-center w-3.5 h-3.5 text-[var(--text-muted)]">

@@ -11,8 +11,8 @@ interface RequestConfig extends RequestInit {
 export interface ApiResponse<T = object> {
   code: number;
   data: T;
-  // message: string;
-  msg?: string; // 兼容不同的响应格式
+  message: string;
+  msg?: string;
 }
 
 // 定义请求错误类

@@ -6,6 +6,7 @@ import { Form, Input, Button, Space, message, Row, Col, Upload } from 'antd';
 import FullScreenLoading from '@/components/loading';
 import { uploadService } from '@/services/upload';
 import { userService } from '@/services/user';
+
 import type { User } from '~/types/user';
 
 import type { FormInstance } from 'antd';

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { Modal, Form, Input, Select, Row, Col } from 'antd';
 
+import { UserRoleEnum, UserStatusEnum } from '~/types/user';
 import type { User } from '~/types/user';
 
 import type { ModalProps } from 'antd';
@@ -22,10 +23,10 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
   useEffect(() => {
     if (userInfo) {
       form.setFieldsValue({
-        Name: userInfo.Name,
-        Email: userInfo.Email,
-        Phone: userInfo.Phone,
-        GitHub: userInfo.GitHub,
+        username: userInfo.username,
+        email: userInfo.email,
+        phone: userInfo.phone,
+        github: userInfo.github,
       });
     }
   }, [userInfo, form]);
@@ -36,13 +37,13 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
     const payload: User = userInfo
       ? { ...userInfo, ...values }
       : {
-          Id: '',
-          Name: values.Name,
-          Email: values.Email,
-          Phone: values.Phone,
-          GitHub: values.GitHub,
-          Role: 0,
-          Status: 1,
+          id: '',
+          username: values.username,
+          email: values.email,
+          phone: values.phone,
+          github: values.github,
+          role: UserRoleEnum.ADMIN,
+          status: UserStatusEnum.ENABLED,
         };
     await onSave(payload).finally(() => {
       setLoading(false);
@@ -74,7 +75,7 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
-              name="Name"
+              name="username"
               label="用户名"
               rules={[{ required: true, message: '请输入用户名' }]}
             >
@@ -83,7 +84,7 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
           </Col>
           <Col span={12}>
             <Form.Item
-              name="Email"
+              name="email"
               label="邮箱"
               rules={[{ required: true, message: '请输入邮箱' }]}
             >
@@ -92,7 +93,7 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
           </Col>
           <Col span={12}>
             <Form.Item
-              name="Phone"
+              name="phone"
               label="手机号"
               rules={[{ required: true, message: '请输入手机号' }]}
             >
@@ -101,7 +102,7 @@ export default function SaveUserModal({ userInfo, onSave, ...props }: SaveUserMo
           </Col>
           <Col span={12}>
             <Form.Item
-              name="GitHub"
+              name="github"
               label="GitHub账号"
               rules={[{ required: true, message: '请输入GitHub账号' }]}
             >

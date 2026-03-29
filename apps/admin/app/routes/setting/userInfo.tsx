@@ -12,15 +12,15 @@ import type { User } from '~/types/user';
 import type { FormInstance } from 'antd';
 
 interface UserProfileFormValues {
-  Name: string;
-  Email: string;
-  Password?: string;
-  Avatar?: string;
-  Description?: string;
-  GitHub?: string;
-  NikName?: string;
-  WeChat?: string;
-  Phone?: string;
+  username: string;
+  email: string;
+  password?: string;
+  avatar?: string;
+  bio?: string;
+  github?: string;
+  nickname?: string;
+  wechat?: string;
+  phone?: string;
 }
 
 export default function UserInfo() {
@@ -39,7 +39,7 @@ export default function UserInfo() {
 
   const handleSubmit = async (values: UserProfileFormValues) => {
     setLoading(true);
-    await userService.updateUser(currentUser.current?.Id as string, values as Partial<User>).finally(() => {
+    await userService.updateUser(currentUser.current?.id as string, values as Partial<User>).finally(() => {
       setLoading(false);
     });
     message.success('信息修改成功');
@@ -58,7 +58,7 @@ export default function UserInfo() {
               <Col span={12}>
                 <Form.Item
                   label="用户名"
-                  name="Name"
+                  name="username"
                   rules={[{ required: true, message: '请输入用户名' }]}
                 >
                   <Input placeholder="请输入用户名" />
@@ -67,7 +67,7 @@ export default function UserInfo() {
               <Col span={12}>
                 <Form.Item
                   label="邮箱"
-                  name="Email"
+                  name="email"
                   rules={[
                     { required: true, message: '请输入邮箱' },
                     { type: 'email', message: '请输入正确的邮箱格式' },
@@ -80,12 +80,12 @@ export default function UserInfo() {
 
             <Row gutter={16}>
               <Col span={12}>
-                <Form.Item label="昵称" name="NikName">
+                <Form.Item label="昵称" name="nickname">
                   <Input placeholder="请输入昵称" />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="微信" name="WeChat">
+                <Form.Item label="微信" name="wechat">
                   <Input placeholder="请输入微信号" />
                 </Form.Item>
               </Col>
@@ -93,12 +93,12 @@ export default function UserInfo() {
 
             <Row gutter={16}>
               <Col span={12}>
-                <Form.Item label="手机号" name="Phone">
+                <Form.Item label="手机号" name="phone">
                   <Input placeholder="请输入手机号" inputMode="numeric" />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="GitHub 账号" name="GitHub">
+                <Form.Item label="GitHub 账号" name="github">
                   <Input placeholder="例如：your-github-username" />
                 </Form.Item>
               </Col>
@@ -106,7 +106,7 @@ export default function UserInfo() {
 
             <Row gutter={16}>
               <Col span={24}>
-                <Form.Item label="个人简介" name="Description">
+                <Form.Item label="个人简介" name="bio">
                   <Input.TextArea rows={3} placeholder="简单介绍一下自己" />
                 </Form.Item>
               </Col>
@@ -114,12 +114,12 @@ export default function UserInfo() {
 
             <Form.Item
               label="头像"
-              name="Avatar"
+              name="avatar"
               rules={[{ required: true, message: '请上传头像' }]}
             >
               <Form.Item noStyle shouldUpdate>
                 {({ getFieldValue, setFieldValue }) => {
-                  const url = getFieldValue('Avatar');
+                  const url = getFieldValue('avatar');
                   return (
                     <Upload
                       maxCount={1}
@@ -128,11 +128,11 @@ export default function UserInfo() {
                       customRequest={async ({ file, onSuccess }) => {
                         const newUrl = await handleUploadCoverImage(file as File);
                         if (newUrl) {
-                          setFieldValue('Avatar', newUrl);
+                          setFieldValue('avatar', newUrl);
                           onSuccess?.(newUrl);
                         }
                       }}
-                      onRemove={() => setFieldValue('Avatar', undefined)}
+                      onRemove={() => setFieldValue('avatar', undefined)}
                     >
                       <PlusOutlined />
                       <div className="ant-upload-text">Upload</div>

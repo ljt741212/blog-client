@@ -15,20 +15,20 @@ export interface LoginForm {
   password: string;
 }
 
-/** 与后端约定：用户相关接口入参/出参使用大驼峰 */
+/** 与后端用户接口一致：JSON 小驼峰 */
 export interface User {
-  Id: string;
-  Name: string;
-  Email: string;
-  Avatar?: string;
-  Role: UserRoleEnum;
-  Status: UserStatusEnum;
-  Description?: string;
-  GitHub?: string;
-  NikName?: string;
-  WeChat?: string;
-  Phone?: string;
-  CreatedAt?: string;
+  id: string;
+  username: string;
+  email: string;
+  avatar?: string;
+  role: UserRoleEnum;
+  status: UserStatusEnum;
+  bio?: string;
+  github?: string;
+  nickname?: string;
+  wechat?: string;
+  phone?: string;
+  createdAt?: string;
 }
 
 export interface LoginResponse {

@@ -72,33 +72,33 @@ export default function UserPage() {
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'Id',
-      key: 'Id',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
       title: '用户名',
-      dataIndex: 'Name',
-      key: 'Name',
+      dataIndex: 'username',
+      key: 'username',
     },
     {
       title: '权限',
-      dataIndex: 'Role',
-      key: 'Role',
+      dataIndex: 'role',
+      key: 'role',
     },
     {
       title: 'gitHub账号',
-      dataIndex: 'GitHub',
-      key: 'GitHub',
+      dataIndex: 'github',
+      key: 'github',
     },
     {
       title: '创建时间',
-      dataIndex: 'CreatedAt',
-      key: 'CreatedAt',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
     },
     {
       title: '用户状态',
-      dataIndex: 'Status',
-      key: 'Status',
+      dataIndex: 'status',
+      key: 'status',
       render: (status: number) => <Switch checked={status === UserStatusEnum.ENABLED} />,
     },
     {
@@ -109,7 +109,7 @@ export default function UserPage() {
           <div className="flex items-center gap-2">
             <DeleteOutlined
               className="text-red-500 hover:text-red-600 cursor-pointer text-lg"
-              onClick={() => deleteUser(record.Id)}
+              onClick={() => deleteUser(record.id)}
             />
           </div>
         );
@@ -139,7 +139,7 @@ export default function UserPage() {
         columns={columns}
         loading={isLoading}
         pagination={paginationConfig}
-        rowKey="Id"
+        rowKey="id"
         scroll={{ y: 55 * 7, x: 'max-content' }}
       />
       <SaveUserModal

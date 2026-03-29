@@ -112,7 +112,7 @@ export async function getGuestMessageList(): Promise<ApiResponse<GuestMessage[]>
  * 获取博主信息
  * @returns 作者信息
  */
-export async function getAuthor(): Promise<ApiResponse<Author | null>> {
+export async function getAuthor(): Promise<Author | null> {
   const result = await get<Author>('/users/super-admin');
   return result.data ?? null;
 }

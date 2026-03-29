@@ -6,4 +6,7 @@ export interface Author {
   nickname?: string | null;
   phone?: string | null;
   wechat?: string | null;
+  description?: string | null;
+  github?: string | null;
+  email?: string | null;
 }

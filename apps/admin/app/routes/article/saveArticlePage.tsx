@@ -108,11 +108,16 @@ export default function SaveArticlePage() {
   };
 
   return (
-    <div className="h-screen flex flex-col gap-4 bg-[#0f172a]">
-      <header className="flex justify-between items-center bg-[#111827] border border-[#273549] text-gray-100 p-4 rounded-lg shadow-sm flex-shrink-0">
-        <Button icon={<ArrowLeftOutlined />} onClick={goBack}>
-          返回上一页
-        </Button>
+    <div className="h-screen flex flex-col gap-4 bg-[#f3f4f6]">
+      <header className="flex items-center justify-between rounded-xl border border-[#e5e7eb] bg-white px-4 py-3 shadow-sm flex-shrink-0">
+        <Space size="middle">
+          <Button icon={<ArrowLeftOutlined />} onClick={goBack}>
+            返回列表
+          </Button>
+          <span className="text-sm text-gray-500">
+            {articleId ? '编辑文章' : '新建文章'}
+          </span>
+        </Space>
         <Space>
           <Button icon={<EyeOutlined />} onClick={() => handleSave(false)}>
             保存草稿
@@ -120,28 +125,32 @@ export default function SaveArticlePage() {
           <Button type="primary" icon={<SaveOutlined />} onClick={() => handleSave(true)}>
             发布文章
           </Button>
-          {/* <Button type="primary" icon={<SaveOutlined />} onClick={() => handleSave(true)}>
-            预览
-          </Button> */}
         </Space>
       </header>
 
       <div className="flex-1 flex gap-4 overflow-hidden">
         <div className="flex-1 flex flex-col gap-4 overflow-hidden">
-          <Card className="flex-1 overflow-hidden flex flex-col border-[#273549]">
+          <Card
+            className="flex-1 overflow-hidden flex flex-col"
+            styles={{
+              body: { padding: 16, display: 'flex', flexDirection: 'column', height: '100%' },
+            }}
+          >
             <Form form={form} layout="vertical" className="flex-1 flex flex-col overflow-hidden">
               <Form.Item name="title" rules={[{ required: true, message: '请输入文章标题' }]}>
                 <Input placeholder="请输入文章标题" size="large" />
               </Form.Item>
 
-              <Form.Item required name="content">
+              <Form.Item required name="content" className="flex-1 mb-0">
                 <Form.Item noStyle shouldUpdate={(prev, cur) => prev.content !== cur.content}>
                   {({ getFieldValue, setFieldValue }) => (
-                    <MarkdownEditor
-                      value={getFieldValue('content') ?? ''}
-                      onChange={value => setFieldValue('content', value)}
-                      uploadImages={handleUploadImages}
-                    />
+                    <div className="h-full rounded-lg border border-[#e5e7eb] overflow-hidden">
+                      <MarkdownEditor
+                        value={getFieldValue('content') ?? ''}
+                        onChange={value => setFieldValue('content', value)}
+                        uploadImages={handleUploadImages}
+                      />
+                    </div>
                   )}
                 </Form.Item>
               </Form.Item>
@@ -151,7 +160,7 @@ export default function SaveArticlePage() {
 
         <div className="w-90 flex flex-col gap-4 overflow-y-auto">
           <Card
-            className="border-[#273549]"
+            className="border border-[#e5e7eb]"
             title={
               <Space>
                 <CalendarOutlined />
@@ -171,7 +180,7 @@ export default function SaveArticlePage() {
           </Card>
 
           <Card
-            className="border-[#273549]"
+            className="border border-[#e5e7eb]"
             title={
               <Space>
                 <TagOutlined />
@@ -248,22 +257,6 @@ export default function SaveArticlePage() {
               </Form.Item>
             </Form>
           </Card>
-
-          {/* <Card
-            className="border-[#273549]"
-            title={
-              <Space>
-                <FileTextOutlined />
-                <span>文章统计</span>
-              </Space>
-            }
-          >
-            <Space direction="vertical" style={{ width: '100%' }} size="large">
-              <p className="text-gray-400">文章字数</p>
-              <p className="text-gray-400">阅读次数</p>
-              <p className="text-gray-400">上次编辑时间</p>
-            </Space>
-          </Card> */}
         </div>
       </div>
       <FullScreenLoading loading={loading} />

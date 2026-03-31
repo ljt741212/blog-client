@@ -6,25 +6,25 @@ import './app.css';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const token = {
-    colorBgBase: '#020617',
-    colorBgContainer: '#111827',
-    colorPrimary: '#6366f1',
-    colorPrimaryHover: '#818cf8',
-    colorPrimaryActive: '#4f46e5',
-    colorLink: '#6366f1',
-    colorLinkHover: '#818cf8',
-    colorLinkActive: '#4f46e5',
-    colorSuccess: '#22c55e',
-    colorWarning: '#f59e0b',
-    colorError: '#f97373',
-    colorInfo: '#38bdf8',
-    colorBorder: '#273549',
-    colorBorderSecondary: '#1f2933',
-    colorTextBase: '#e5e7eb',
+    colorBgBase: '#f3f6fb',
+    colorBgContainer: '#ffffff',
+    colorPrimary: '#2563eb',
+    colorPrimaryHover: '#1d4ed8',
+    colorPrimaryActive: '#1d4ed8',
+    colorLink: '#2563eb',
+    colorLinkHover: '#1d4ed8',
+    colorLinkActive: '#1e3a8a',
+    colorSuccess: '#16a34a',
+    colorWarning: '#eab308',
+    colorError: '#ef4444',
+    colorInfo: '#0ea5e9',
+    colorBorder: '#e2e8f0',
+    colorBorderSecondary: '#cbd5f5',
+    colorTextBase: '#0f172a',
   };
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -34,16 +34,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ConfigProvider
           theme={{
             token,
-            algorithm: theme.darkAlgorithm,
+            algorithm: theme.defaultAlgorithm,
             components: {
               Layout: {
-                bodyBg: '#020617',
-                headerBg: '#111827',
-                siderBg: '#111827',
+                bodyBg: '#f3f6fb',
+                headerBg: '#ffffff',
+                siderBg: '#ffffff',
               },
               Menu: {
-                darkItemBg: '#111827',
-                darkItemSelectedBg: '#273549',
+                itemBg: '#ffffff',
+                itemSelectedBg: '#e5edff',
               },
             },
           }}

@@ -28,18 +28,22 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#020617] via-[#020617] to-[#020617]">
+    <div
+      className="min-h-screen flex items-center justify-center p-4
+      bg-[radial-gradient(circle_at_15%_10%,rgba(37,99,235,0.10),transparent_40%),
+          radial-gradient(circle_at_85%_25%,rgba(124,58,237,0.08),transparent_45%),
+          linear-gradient(to_bottom,#f8fafc,#ffffff)]"
+    >
       <Card
-        className="w-full max-w-md shadow-[0_20px_45px_rgba(15,23,42,0.9)] transform hover:scale-[1.02] transition-all duration-300 border-0"
-        style={{
-          backdropFilter: 'blur(16px)',
-          background: 'linear-gradient(145deg, rgba(31,41,55,0.92), rgba(15,23,42,0.96))',
-          borderRadius: '18px',
-        }}
+        className="w-full max-w-md rounded-2xl border border-[#e5e7eb]
+        bg-white shadow-sm transition-shadow duration-200 hover:shadow-md"
+        style={{ animation: 'login-card-in 420ms cubic-bezier(0.19,1,0.22,1) both' }}
       >
-        <h2 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-[#6366f1] to-[#a855f7] bg-clip-text text-transparent">
-          欢迎登录
-        </h2>
+        <div className="mb-8 text-center">
+          <h2 className="text-[26px] font-semibold tracking-tight text-gray-900">欢迎登录</h2>
+          <p className="mt-2 text-sm text-gray-500">使用你的账号管理博客内容</p>
+          <div className="mx-auto mt-5 h-[2px] w-16 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]" />
+        </div>
 
         <Form
           form={form}
@@ -54,7 +58,11 @@ export default function Login() {
             <Input
               prefix={<UserOutlined className="text-gray-400" />}
               placeholder="用户名"
-              className="rounded-lg bg-[#020617] border-[#273549] text-gray-100 placeholder:text-gray-500 hover:border-[#6366f1] focus:border-[#6366f1] transition-colors"
+              className="rounded-xl border border-[#e5e7eb] bg-white text-gray-900
+              placeholder:text-gray-400
+              hover:border-[#c7d2fe]
+              focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10
+              transition-colors"
             />
           </Form.Item>
 
@@ -62,7 +70,11 @@ export default function Login() {
             <Input.Password
               prefix={<LockOutlined className="text-gray-400" />}
               placeholder="密码"
-              className="rounded-lg bg-[#020617] border-[#273549] text-gray-100 placeholder:text-gray-500 hover:border-[#6366f1] focus:border-[#6366f1] transition-colors"
+              className="rounded-xl border border-[#e5e7eb] bg-white text-gray-900
+              placeholder:text-gray-400
+              hover:border-[#c7d2fe]
+              focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10
+              transition-colors"
             />
           </Form.Item>
 
@@ -70,7 +82,9 @@ export default function Login() {
             <Button
               type="primary"
               htmlType="submit"
-              className="w-full h-12 rounded-lg bg-gradient-to-r from-[#6366f1] to-[#4f46e5] hover:from-[#818cf8] hover:to-[#4f46e5] border-none shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full h-12 rounded-xl bg-[#2563eb] hover:bg-[#1d4ed8] border border-[#1d4ed8]/20
+              shadow-sm hover:shadow-md transition-all duration-200
+              focus:outline-none focus:ring-4 focus:ring-[#2563eb]/20"
               loading={loading}
             >
               登录
@@ -80,7 +94,7 @@ export default function Login() {
           <div className="text-center">
             <a
               href="#"
-              className="text-[#6366f1] hover:text-[#818cf8] transition-colors duration-300"
+              className="text-[#2563eb] hover:text-[#1d4ed8] transition-colors duration-150"
             >
               忘记密码？
             </a>

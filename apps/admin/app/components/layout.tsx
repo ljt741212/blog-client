@@ -124,13 +124,13 @@ const Layout: React.FC = () => {
 
   return (
     <>
-      <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#020617] text-gray-100">
-        <div className="h-12 w-full border-b border-[#9ca3af] flex items-center justify-between pr-8 pl-6 bg-[#111827]">
+      <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#f3f4f6] text-gray-900">
+        <div className="h-12 w-full border-b border-[#e5e7eb] flex items-center justify-between pr-8 pl-6 bg-white shadow-sm">
           <div className="flex items-center gap-3 text-lg font-bold">
             <Logo /> Admin
           </div>
           <div className="flex items-center gap-3">
-            <AntSwitch checkedChildren="暗系" unCheckedChildren="亮系" />
+            <AntSwitch checkedChildren="暗系" unCheckedChildren="亮系" defaultChecked={false} />
             <Dropdown menu={{ items: settingItems }}>
               <SettingOutlined className="text-2xl cursor-pointer" />
             </Dropdown>
@@ -143,11 +143,11 @@ const Layout: React.FC = () => {
             defaultSelectedKeys={['1']}
             defaultOpenKeys={['sub1']}
             mode="inline"
-            theme="dark"
+            theme="light"
             items={items}
           />
           <div className="flex-1 flex flex-col min-h-0">
-            <div className="flex-1 m-8 p-8 rounded-2xl overflow-auto shadow-[0_18px_40px_rgba(15,23,42,0.65)] bg-gradient-to-br from-[#1f2937] via-[#1e293b] to-[#020617]">
+            <div className="flex-1 m-8 p-8 rounded-2xl overflow-auto bg-white shadow-[0_18px_40px_rgba(15,23,42,0.08)] border border-[#e5e7eb]">
               <Outlet />
             </div>
           </div>

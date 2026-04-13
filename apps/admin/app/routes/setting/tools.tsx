@@ -6,14 +6,18 @@ import {
   CloudUploadOutlined,
   CloudDownloadOutlined,
 } from '@ant-design/icons';
-import { Card, Button, Space, Typography, Upload, message } from 'antd';
+import { Card, Button, Space, Typography, Upload, message, Modal } from 'antd';
 
 import { uploadService } from '@/services/upload';
+import { dataTransferService } from '@/services/dataTransfer';
 
 import type { UploadFile, UploadChangeParam } from 'antd/es/upload/interface';
 
 export default function Tools() {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [dbFileList, setDbFileList] = useState<UploadFile[]>([]);
+  const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
   const handleUpload = (info: UploadChangeParam<UploadFile>) => {
     setFileList(info.fileList.slice(-1));
   };
@@ -31,6 +35,51 @@ export default function Tools() {
       console.error(error);
       message.error('上传失败，请稍后重试');
     }
+  };
+
+  const handleDbFileChange = (info: UploadChangeParam<UploadFile>) => {
+    setDbFileList(info.fileList.slice(-1));
+  };
+
+  const handleExportDb = async () => {
+    setExporting(true);
+    try {
+      await dataTransferService.exportAll();
+      message.success('导出已开始（浏览器将下载文件）');
+    } catch (error) {
+      console.error(error);
+      message.error('导出失败，请稍后重试');
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleImportDb = async () => {
+    if (!dbFileList.length || !dbFileList[0].originFileObj) {
+      message.warning('请先选择要导入的备份文件（zip）');
+      return;
+    }
+
+    Modal.confirm({
+      title: '确认导入数据库备份？',
+      content: '导入会先清空现有数据（TRUNCATE 全表），此操作不可恢复，请谨慎操作。',
+      okText: '确认导入',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: async () => {
+        setImporting(true);
+        try {
+          const res = await dataTransferService.importAll(dbFileList[0].originFileObj as File);
+          message.success(`导入成功：${res.data.tables} 张表，${res.data.rows} 行数据`);
+          setDbFileList([]);
+        } catch (error) {
+          console.error(error);
+          message.error('导入失败，请检查备份包或稍后重试');
+        } finally {
+          setImporting(false);
+        }
+      },
+    });
   };
   return (
     <div className="flex justify-center">
@@ -73,16 +122,45 @@ export default function Tools() {
             extra={<Typography.Text type="secondary">保障站点数据安全</Typography.Text>}
           >
             <Typography.Paragraph type="secondary">
-              提供站点数据的备份与恢复入口，方便在需要时快速恢复。此处同样只负责界面展示，备份与恢复逻辑可在后续实现。
+              导出站点数据库全量数据，用于迁移或恢复。导入会清空当前库数据后回放备份包，请谨慎操作。
             </Typography.Paragraph>
-            <Space size="middle">
-              <Button type="primary" icon={<CloudUploadOutlined />}>
-                立即备份
-              </Button>
-              <Button icon={<CloudDownloadOutlined />}>恢复数据</Button>
+            <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+              <Space size="middle" wrap>
+                <Button
+                  type="primary"
+                  icon={<CloudUploadOutlined />}
+                  loading={exporting}
+                  onClick={handleExportDb}
+                >
+                  导出备份（zip）
+                </Button>
+                <Typography.Text type="secondary">将下载一个包含全库数据的备份包</Typography.Text>
+              </Space>
+
+              <Space size="middle" wrap>
+                <Upload
+                  fileList={dbFileList}
+                  onChange={handleDbFileChange}
+                  beforeUpload={() => false}
+                  maxCount={1}
+                  accept=".zip"
+                >
+                  <Button icon={<CloudDownloadOutlined />}>选择备份文件</Button>
+                </Upload>
+                <Button
+                  type="primary"
+                  danger
+                  icon={<CloudDownloadOutlined />}
+                  loading={importing}
+                  onClick={handleImportDb}
+                >
+                  导入恢复
+                </Button>
+                <Typography.Text type="secondary">仅超级管理员可执行</Typography.Text>
+              </Space>
             </Space>
             <Typography.Paragraph type="secondary" style={{ marginTop: 12 }}>
-              建议在接入实际功能时，补充备份策略说明、最近备份时间等信息。
+              建议在迁移前先导出备份；导入后请重新登录并检查站点数据是否完整。
             </Typography.Paragraph>
           </Card>
         </Space>

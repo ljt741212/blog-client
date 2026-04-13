@@ -1,6 +1,7 @@
 export * from './article';
 export * from './category';
 export * from './comment';
+export * from './dataTransfer';
 export * from './dashboard';
 export * from './guestMessage';
 export * from './setting';

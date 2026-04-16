@@ -1,0 +1,29 @@
+# 依赖目录
+node_modules/
+**/node_modules/
+
+# 构建输出
+dist/
+**/dist/
+build/
+**/build/
+.next/
+**/.next/
+
+# 锁文件
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# 日志文件
+*.log
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 其他
+.DS_Store
+coverage/
+.nyc_output/

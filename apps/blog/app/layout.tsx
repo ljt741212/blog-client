@@ -144,6 +144,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AnalyticsLoader />
         <main className="w-full min-h-screen bg-[var(--background)] overflow-x-hidden flex flex-col">
+          <div id="nav-hide-sentinel" className="h-px w-full pointer-events-none" aria-hidden />
           <NavBar />
           <div className="flex-1">{children}</div>
         </main>

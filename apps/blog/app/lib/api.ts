@@ -54,7 +54,7 @@ export async function getArticleCategories(): Promise<Category[]> {
  * @returns 文章标签
  */
 export async function getArticleTags(): Promise<Tag[]> {
-  const result = await get<Tag[]>('/article-tags');
+  const result = await get<Tag[]>('/tags');
   return result.data || [];
 }
 

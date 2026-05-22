@@ -7,7 +7,6 @@ export default [
     index('./routes/data/index.tsx'),
     route('user', './routes/user/index.tsx'),
     route('article', './routes/article/index.tsx'),
-    // route('data', '.'),
     route('comment', './routes/comment/index.tsx'),
     route('category', './routes/category/index.tsx'),
     route('tag', './routes/tag/index.tsx'),

@@ -149,7 +149,7 @@ export default function RootLayout({
           <div className="flex-1">{children}</div>
         </main>
         <Snowfall />
-        <SuspensionPanel threshold={500} qqNumber="你的QQ号" />
+        <SuspensionPanel threshold={500} />
       </body>
     </html>
   );

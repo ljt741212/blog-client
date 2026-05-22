@@ -22,9 +22,6 @@ export const userService = {
   saveUser: (user: User) => {
     return post<User>('/users', user);
   },
-  // getUserDetail: (id: string) => {
-  //   return get<User>(`/users/${id}`);
-  // },
   updateUser: (id: string, payload: Partial<User>) => {
     return put<User>(`/users/${id}`, payload);
   },

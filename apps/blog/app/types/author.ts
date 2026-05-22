@@ -1,5 +1,5 @@
 export interface Author {
-  id: string;
+  id: number;
   username: string;
   avatar?: string | null;
   bio?: string | null;

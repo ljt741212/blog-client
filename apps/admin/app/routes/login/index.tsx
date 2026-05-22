@@ -7,10 +7,7 @@ import { useNavigate } from 'react-router';
 import { userService } from '@/services';
 import { setCookie } from '@/utils';
 
-interface LoginForm {
-  username: string;
-  password: string;
-}
+import type { LoginForm } from '~/types/user';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -19,12 +16,16 @@ export default function Login() {
 
   const onFinish = async (values: LoginForm) => {
     setLoading(true);
-    const { data } = await userService.login(values).finally(() => {
+    try {
+      const { data } = await userService.login(values);
+      setCookie('token', data.token, 7);
+      window.localStorage.setItem('currentUser', JSON.stringify(data.user ?? {}));
+      navigate('/');
+    } catch {
+      // 错误已在 request 拦截器中处理（跳转 /login 或弹出错误提示）
+    } finally {
       setLoading(false);
-    });
-    setCookie('token', data.token, 7);
-    window.localStorage.setItem('currentUser', JSON.stringify(data.user ?? {}));
-    navigate('/');
+    }
   };
 
   return (

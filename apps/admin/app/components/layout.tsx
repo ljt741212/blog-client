@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   SettingOutlined,
@@ -11,7 +11,7 @@ import {
   LogoutOutlined,
   LockOutlined,
 } from '@ant-design/icons';
-import { Menu, Dropdown, Switch as AntSwitch, Form, Modal, Input, message } from 'antd';
+import { Menu, Dropdown, Form, Modal, Input, message } from 'antd';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 
 import { userService } from '@/services/user';
@@ -111,11 +111,15 @@ const Layout: React.FC = () => {
     }
   };
 
-  const menuRef = useRef<MenuProps['items']>(items);
+  const pathSegments = pathname.split('/').filter(Boolean);
+  const selectedKey = pathSegments.length > 0 ? pathSegments[pathSegments.length - 1] : '';
+  const openKeys = pathSegments.length > 1 ? [pathSegments[0]] : [];
+
+  const [menuOpenKeys, setMenuOpenKeys] = useState<string[]>(openKeys);
 
   useEffect(() => {
-    menuRef.current = items;
-  }, []);
+    setMenuOpenKeys(openKeys);
+  }, [pathname]);
 
   const isLogin = getCookie('token');
   if (!isLogin) {
@@ -130,7 +134,6 @@ const Layout: React.FC = () => {
             <Logo /> Admin
           </div>
           <div className="flex items-center gap-3">
-            <AntSwitch checkedChildren="暗系" unCheckedChildren="亮系" defaultChecked={false} />
             <Dropdown menu={{ items: settingItems }}>
               <SettingOutlined className="text-2xl cursor-pointer" />
             </Dropdown>
@@ -140,8 +143,9 @@ const Layout: React.FC = () => {
           <Menu
             onClick={onClick}
             style={{ width: 256 }}
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            selectedKeys={[selectedKey]}
+            openKeys={menuOpenKeys}
+            onOpenChange={setMenuOpenKeys}
             mode="inline"
             theme="light"
             items={items}

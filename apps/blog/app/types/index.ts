@@ -1,5 +1,5 @@
 export * from './article';
-export * from './seeting';
+export * from './setting';
 export * from './common';
 export * from './tag';
 export * from './category';

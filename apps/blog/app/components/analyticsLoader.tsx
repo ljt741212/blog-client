@@ -8,8 +8,8 @@ import { heartbeat } from '@/lib/api';
 export default function AnalyticsLoader() {
   useEffect(() => {
     const interval = setInterval(async () => {
-       await heartbeat();
-    }, 5000);
+      await heartbeat();
+    }, 30000);
     behaviorMonitor.init({
       endpoint: 'http://localhost:3000/api/visitor/visit',
     });

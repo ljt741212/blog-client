@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 
 import { UserOutlined, ClockCircleOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import type { Article } from '@/types/article';
@@ -26,7 +27,7 @@ export default function ArticlesCard({ data }: ArticlesCardProps) {
 
   return (
     <div
-      className="relative rounded-2xl flex items-stretch gap-6 pr-8 py-6 h-48 border backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:shadow-[var(--shadow-2xl)] cursor-pointer"
+      className="relative rounded-2xl flex items-stretch gap-6 pr-8 py-6 h-48 border transition-transform duration-300 hover:scale-[1.02] hover:shadow-[var(--shadow-2xl)] cursor-pointer"
       style={{
         background: 'var(--gradient-card)',
         borderColor: 'var(--border-primary)',
@@ -43,7 +44,16 @@ export default function ArticlesCard({ data }: ArticlesCardProps) {
         }}
       >
         {data.coverImage ? (
-          <img src={data.coverImage} alt={data.title} className="w-full h-full object-cover" />
+          <div className="relative w-full h-full">
+            <Image
+              src={data.coverImage}
+              alt={data.title}
+              fill
+              sizes="128px"
+              className="object-cover"
+              loading="lazy"
+            />
+          </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-xs text-[var(--text-muted)] bg-[var(--background-secondary)]">
             无封面

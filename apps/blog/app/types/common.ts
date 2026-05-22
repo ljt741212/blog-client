@@ -1,13 +1,11 @@
+import type { ApiResponse } from '@/lib/request';
+
+export type { ApiResponse };
+
 export interface Meta {
   current: number;
   pageSize: number;
   total: number;
-}
-
-export interface ApiResponse<T> {
-  code: number;
-  message: string;
-  data: T;
 }
 
 export interface PaginationResponse<T> {

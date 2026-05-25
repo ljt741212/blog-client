@@ -62,7 +62,7 @@ export default function Data() {
     {
       title: 'IP',
       dataIndex: 'ip',
-      return: (value: string) => <Tag color="blue">{value}</Tag>,
+      render: (value: string) => <Tag color="blue">{value}</Tag>,
     },
     {
       title: 'UserAgent',

@@ -15,13 +15,13 @@ import {
 export type ArticleSidebarProps = {
   markdown: string;
   scrollRootId: string;
-  recentTitles?: string[];
+  recentArticles?: { id: string; title: string }[];
 };
 
 export default function ArticleSidebar({
   markdown,
   scrollRootId,
-  recentTitles = ['近期文章标题 1', '近期文章标题 2', '近期文章标题 3', '近期文章标题 4'],
+  recentArticles = [],
 }: ArticleSidebarProps) {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const tocTree = useMemo(() => buildTocTree(extractHeadingsFromMarkdown(markdown)), [markdown]);
@@ -49,9 +49,12 @@ export default function ArticleSidebar({
 
       <Card title="近期文章" size="small">
         <Space orientation="vertical" size={8} className="w-full">
-          {recentTitles.map((title, index) => (
-            <Link key={`${title}-${index}`} href="/articles/placeholder" className="block">
-              <Typography.Text>{title}</Typography.Text>
+          {recentArticles.length === 0 && (
+            <Typography.Text type="secondary">暂无文章</Typography.Text>
+          )}
+          {recentArticles.map(a => (
+            <Link key={a.id} href={`/articles/${a.id}`} className="block">
+              <Typography.Text>{a.title}</Typography.Text>
             </Link>
           ))}
         </Space>

@@ -14,9 +14,8 @@ export default function MessageBoard() {
   // const [loading, setLoading] = useState(false);
 
   const init = async () => {
-    // setLoading(true);
-    const data = await getGuestMessageList();
-    setMessages(data ?? []);
+    const messages = await getGuestMessageList();
+    setMessages(messages ?? []);
   };
   useEffect(() => {
     init();
@@ -26,7 +25,7 @@ export default function MessageBoard() {
     const values = form.getFieldsValue();
     const item = {
       ...values,
-      visitorId: '2',
+      visitorUuid: localStorage.getItem('behaviorMonitor_visitor_id'),
     };
     await createGuestMessage(item);
     message.success('留言提交成功');

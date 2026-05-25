@@ -3,6 +3,7 @@ import { Col, Row } from 'antd';
 import { ArticleCommentsCard, ArticleContentCard, ArticleSidebar } from '@/components/article';
 import { incrementViews, getArticleComments } from '@/lib/api';
 import { get } from '@/lib/request';
+import type { PaginationResponse } from '@/types';
 import type { Article } from '@/types/article';
 
 type ArticleDetailProps = {
@@ -13,12 +14,12 @@ export default async function ArticleDetail({ params }: ArticleDetailProps) {
   const { id } = await params;
 
   let article: Article | null = null;
-  let recentArticles: Article[] = [];
+  let recentArticles: { id: string; title: string }[] = [];
   const [detailRes, listRes, commentsRes, _] = await Promise.all([
     get<Article>(`/posts/${id}`, {
       next: { revalidate: 60 },
     }),
-    get<Article[]>('/posts', {
+    get<PaginationResponse<Article>>('/posts', {
       next: { revalidate: 60 },
     }),
     getArticleComments(id),
@@ -26,14 +27,13 @@ export default async function ArticleDetail({ params }: ArticleDetailProps) {
   ]);
 
   article = detailRes.data;
-  recentArticles = listRes.data ?? [];
+  const allArticles = listRes.data?.items ?? [];
+  recentArticles = allArticles
+    .filter(a => a.id !== (article?.id ?? id))
+    .slice(0, 4)
+    .map(a => ({ id: a.id, title: a.title }));
   const comments = commentsRes ?? [];
   const markdown = article.content || '';
-  const recentTitles =
-    recentArticles
-      ?.filter(a => a.id !== (article?.id ?? id))
-      .slice(0, 4)
-      .map(a => a.title) ?? [];
 
   return (
     <div className="w-full min-h-screen mt-12">
@@ -59,7 +59,7 @@ export default async function ArticleDetail({ params }: ArticleDetailProps) {
               <ArticleSidebar
                 markdown={markdown}
                 scrollRootId="article-scroll-container"
-                recentTitles={recentTitles}
+                recentArticles={recentArticles}
               />
             </div>
           </Col>

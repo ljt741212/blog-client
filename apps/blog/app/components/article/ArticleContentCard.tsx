@@ -27,27 +27,42 @@ export default function ArticleContentCard({
   category = { id: 0, name: '' },
   tags = [],
   markdown,
+  views,
   likes,
 }: ArticleContentCardProps) {
   const [likeCount, setLikeCount] = useState(likes);
+  const [likeLoading, setLikeLoading] = useState(false);
+
   const handleClickLike = async () => {
-    await incrementLikes(Number(articleId));
-    setLikeCount(likeCount + 1);
-    // 查询点赞数
+    if (likeLoading) return;
+    setLikeLoading(true);
+    try {
+      await incrementLikes(Number(articleId));
+      setLikeCount(c => c + 1);
+    } finally {
+      setLikeLoading(false);
+    }
   };
 
   const handleClickShare = async () => {
     const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
-    if (!navigator) {
-      return;
+    const shareTitle = title || (typeof document !== 'undefined' ? document.title : '');
+
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({ url: shareUrl, title: shareTitle, text: title || '' });
+        return;
+      } catch {
+        // user cancelled or not supported, fall through to clipboard
+      }
     }
-    await navigator.clipboard.writeText(shareUrl);
-    message.success('链接已复制到剪贴板');
-    await navigator.share({
-      url: shareUrl,
-      title: title || document.title,
-      text: title || '',
-    });
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      message.success('链接已复制到剪贴板');
+    } catch {
+      message.error('复制失败，请手动复制链接');
+    }
   };
 
   return (
@@ -59,6 +74,8 @@ export default function ArticleContentCard({
           </Typography.Title>
           <Space wrap size={[8, 8]}>
             <Typography.Text type="secondary">ID：{articleId}</Typography.Text>
+            <Divider orientation="vertical" />
+            <Typography.Text type="secondary">阅读：{views}</Typography.Text>
             <Divider orientation="vertical" />
             <Typography.Text type="secondary">分类：</Typography.Text>
             <Tag key={category.id}>{category.name}</Tag>
@@ -95,9 +112,10 @@ export default function ArticleContentCard({
             >
               <button
                 type="button"
-                className="w-14 h-14 flex items-center justify-center rounded-full border border-[var(--ant-color-border)] bg-transparent cursor-pointer hover:border-[var(--ant-color-primary)] hover:text-[var(--ant-color-primary)] transition-colors text-[var(--ant-color-text-tertiary)]"
+                className="w-14 h-14 flex items-center justify-center rounded-full border border-[var(--ant-color-border)] bg-transparent cursor-pointer hover:border-[var(--ant-color-primary)] hover:text-[var(--ant-color-primary)] transition-colors text-[var(--ant-color-text-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="点赞"
                 onClick={handleClickLike}
+                disabled={likeLoading}
               >
                 <LikeOutlined className="text-2xl" />
               </button>

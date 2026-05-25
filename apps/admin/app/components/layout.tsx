@@ -77,14 +77,18 @@ const Layout: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const changePassword = async () => {
-    setLoading(true);
-    const values = await form.validateFields();
-    await userService.changePassword(values).finally(() => {
+    try {
+      setLoading(true);
+      const values = await form.validateFields();
+      await userService.changePassword(values);
+      message.success('密码修改成功');
+      removeCookie('token');
+      navigate('/login');
+    } catch {
+      // validation failed — antd already shows field errors
+    } finally {
       setLoading(false);
-    });
-    message.success('密码修改成功');
-    removeCookie('token');
-    navigate('/login');
+    }
   };
 
   const settingItems: MenuItem[] = [

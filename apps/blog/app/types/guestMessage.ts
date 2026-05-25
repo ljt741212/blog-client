@@ -12,8 +12,11 @@ export interface CreateGuestMessageDto {
   /** 用户 ID（登录用户留言时传） */
   userId?: number;
 
-  /** 访客 ID（游客留言时传） */
+  /** 访客 ID（游客留言时传，数字 DB 记录 ID） */
   visitorId?: number;
+
+  /** 访客 UUID（游客留言时传，behaviorMonitor 生成的 UUID） */
+  visitorUuid?: string | null;
 }
 
 export interface GuestMessage {

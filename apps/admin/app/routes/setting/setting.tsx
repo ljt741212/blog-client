@@ -1,19 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { GlobalOutlined, LinkOutlined, SettingOutlined, PlusOutlined } from '@ant-design/icons';
-import {
-  Form,
-  Input,
-  Button,
-  Space,
-  Switch,
-  Card,
-  Row,
-  Col,
-  Typography,
-  message,
-  Upload,
-} from 'antd';
+import { GlobalOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Space, Card, Row, Col, Typography, message, Upload } from 'antd';
 
 import { settingService } from '@/services/setting';
 import { uploadService } from '@/services/upload';
@@ -261,23 +249,6 @@ export default function Setting() {
             </Col>
             <Col span={24}>
               <Space direction="vertical" size="large" style={{ width: '100%' }}>
-                <Card title={<SectionTitle icon={<SettingOutlined />} title="其他" />}>
-                  <Row gutter={16}>
-                    <Col span={12}>
-                      <Form.Item label="开启评论" name="enableComment" valuePropName="checked">
-                        <Switch />
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item label="开启统计" name="enableAnalytics" valuePropName="checked">
-                        <Switch />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Form.Item label="统计代码（可选）" name="analyticsCode">
-                    <Input.TextArea rows={3} placeholder="粘贴统计脚本或埋点代码" />
-                  </Form.Item>
-                </Card>
                 <Card style={{ textAlign: 'right' }}>
                   <Space size="middle">
                     <Button onClick={() => form.resetFields()}>重置</Button>

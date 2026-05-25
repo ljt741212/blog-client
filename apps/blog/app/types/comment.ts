@@ -4,7 +4,7 @@ export interface CreateCommentDto {
   content: string;
   parentId?: number;
   userId?: number;
-  visitorId?: number;
+  visitorId?: string | null;
 }
 
 /** 后端 by-post 接口返回的 user/visitor 结构 */

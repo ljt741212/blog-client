@@ -13,7 +13,7 @@ import {
   Author,
 } from '@/types';
 
-import { get, post, ApiResponse, put } from './request';
+import { get, post, put } from './request';
 
 /**
  * 获取最新的SEO设置
@@ -36,7 +36,7 @@ export async function getArticles(
   params: PaginationParams & { searchValue?: string }
 ): Promise<PaginationResponse<Article>> {
   const result = await get<PaginationResponse<Article>>(
-    `/posts/page?${new URLSearchParams(params as unknown as Record<string, string>).toString()}`
+    `/posts?${new URLSearchParams(params as unknown as Record<string, string>).toString()}`
   );
   return result.data;
 }
@@ -94,18 +94,18 @@ export async function getChangelogs(): Promise<Changelog[]> {
  * @param dto 访客留言 DTO
  * @returns 访客留言
  */
-export async function createGuestMessage(dto: CreateGuestMessageDto): Promise<ApiResponse<null>> {
-  const result = await post<null>('/guest-messages', dto);
-  return result.data ?? { code: 0, data: null, message: '' };
+export async function createGuestMessage(dto: CreateGuestMessageDto): Promise<GuestMessage | null> {
+  const result = await post<GuestMessage>('/guest-messages', dto);
+  return result.data ?? null;
 }
 
 /**
  * 获取访客留言列表
  * @returns 访客留言列表
  */
-export async function getGuestMessageList(): Promise<ApiResponse<GuestMessage[]>> {
+export async function getGuestMessageList(): Promise<GuestMessage[]> {
   const result = await get<GuestMessage[]>('/guest-messages');
-  return result.data ?? { code: 0, data: [], message: '' };
+  return result.data ?? [];
 }
 
 /**

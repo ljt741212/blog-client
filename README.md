@@ -11,7 +11,7 @@
 ## 项目结构
 
 ```
-client/
+blog-client/
 ├── apps/                    # 应用目录
 │   ├── blog/               # 博客前端应用（Next.js）
 │   └── admin/              # 管理后台应用（React Router）
@@ -27,18 +27,21 @@ client/
 ## 技术栈
 
 ### 核心框架
+
 - **React** ^19.2.3 - UI 框架
 - **TypeScript** ^5.3.3 - 类型系统
 - **Next.js** ^16.1.1 - 博客应用框架（SSR/SSG）
 - **React Router** ^7.10.1 - 管理后台路由框架
 
 ### UI 框架与样式
+
 - **Ant Design** ^6.1.3 - UI 组件库
 - **Tailwind CSS** ^4.1.6 - 原子化 CSS 框架
 - **@ant-design/icons** ^6.1.0 - 图标库
 - **@ant-design/plots** ^2.6.8 - 数据可视化
 
 ### Markdown 编辑
+
 - **bytemd** ^1.21.0 - Markdown 编辑器核心
 - **@bytemd/react** ^1.21.0 - React 封装
 - **@bytemd/plugin-gfm** - GitHub Flavored Markdown 支持
@@ -49,11 +52,13 @@ client/
 - **katex** ^0.16.11 - 数学公式渲染
 
 ### 工具库
+
 - **dayjs** ^1.11.13 - 日期处理
 - **lodash-es** ^4.17.21 - 工具函数库
 - **clsx** ^2.1.1 - 条件类名工具
 
 ### 开发工具
+
 - **pnpm** ^10.6.3 - 包管理器
 - **ESLint** ^8.57.0 - 代码检查
 - **Prettier** ^3.2.5 - 代码格式化
@@ -68,6 +73,7 @@ client/
 基于 Next.js 16 构建的博客前端应用，提供完整的博客浏览功能。
 
 #### 主要功能
+
 - ✅ **文章列表** - 分页展示文章列表，支持搜索
 - ✅ **文章详情** - 文章详情页，支持 Markdown 渲染
 - ✅ **文章分类** - 按分类浏览文章
@@ -79,12 +85,14 @@ client/
 - ✅ **响应式设计** - 适配移动端和桌面端
 
 #### 技术特点
+
 - 使用 Next.js App Router
 - 服务端渲染（SSR）和静态生成（SSG）
 - 支持暗色/亮色主题切换
 - Tailwind CSS 样式系统
 
 #### 启动方式
+
 ```bash
 pnpm dev:blog
 # 或
@@ -99,6 +107,7 @@ pnpm dev
 基于 React Router 7 构建的管理后台应用，提供完整的博客管理功能。
 
 #### 主要功能
+
 - ✅ **仪表盘** - 数据统计和可视化
 - ✅ **用户管理** - 用户列表、创建、编辑、删除
 - ✅ **文章管理** - 文章列表、创建、编辑、删除、状态管理
@@ -108,12 +117,14 @@ pnpm dev
 - ✅ **网站设置** - 基础设置、个人资料、留言管理、更新日志、工具
 
 #### 技术特点
+
 - 使用 React Router 7 进行路由管理
 - 服务端渲染（SSR）支持
 - Ant Design 组件库
 - 完整的权限控制和认证
 
 #### 启动方式
+
 ```bash
 pnpm dev:admin
 # 或
@@ -145,8 +156,8 @@ Markdown 编辑器组件包，基于 ByteMD 构建。
 
 ### 系统要求
 
-- Node.js >= 16.x
-- pnpm >= 8.x
+- Node.js >= 20.x
+- pnpm >= 10.x
 
 ### 安装步骤
 
@@ -154,7 +165,7 @@ Markdown 编辑器组件包，基于 ByteMD 构建。
 
 ```bash
 git clone <repository-url>
-cd Blog-project/client
+cd blog-client
 ```
 
 2. **安装依赖**
@@ -260,6 +271,7 @@ pnpm typecheck         # 类型检查
 ### TypeScript 配置
 
 项目使用统一的 `tsconfig.json` 配置，支持：
+
 - 严格模式
 - 路径别名解析
 - 增量编译
@@ -279,6 +291,7 @@ pnpm typecheck         # 类型检查
 ### Git Hooks
 
 使用 Husky 和 lint-staged 进行：
+
 - 提交前代码格式化
 - 提交前 ESLint 检查
 - Commit 信息规范检查
@@ -355,6 +368,7 @@ pnpm start
 ```
 
 Next.js 应用可以部署到：
+
 - Vercel（推荐）
 - 自托管 Node.js 服务器
 - Docker 容器
@@ -368,19 +382,10 @@ pnpm start
 ```
 
 React Router 应用可以部署到：
+
 - Node.js 服务器
 - Docker 容器
 - 支持 SSR 的平台（AWS、GCP、Azure 等）
-
-### Docker 部署
-
-Admin 应用包含 Dockerfile，可以使用 Docker 部署：
-
-```bash
-cd apps/admin
-docker build -t blog-admin .
-docker run -p 3000:3000 blog-admin
-```
 
 ## 环境变量
 
@@ -394,10 +399,10 @@ NEXT_PUBLIC_API_URL=http://localhost:3004/api
 
 ### Admin 应用
 
-需要在 `apps/admin/.env` 中配置：
+参考 `apps/admin/.env.example`，在 `apps/admin/.env` 中配置：
 
 ```env
-API_URL=http://localhost:3004/api
+VITE_API_URL=http://localhost:3004/api
 ```
 
 ## 常见问题

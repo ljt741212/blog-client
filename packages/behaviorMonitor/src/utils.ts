@@ -6,7 +6,7 @@ export function isBrowser(): boolean {
   return typeof window !== 'undefined' && typeof document !== 'undefined';
 }
 
-export function logDebug(...args: []) {
+export function logDebug(...args: unknown[]) {
   if (!state.config?.debug) return;
   // eslint-disable-next-line no-console
   console.log('[behaviorMonitor]', ...args);

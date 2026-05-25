@@ -8,8 +8,8 @@ import {
 } from '@ant-design/icons';
 import { Card, Button, Space, Typography, Upload, message, Modal } from 'antd';
 
-import { uploadService } from '@/services/upload';
 import { dataTransferService } from '@/services/dataTransfer';
+import { uploadService } from '@/services/upload';
 
 import type { UploadFile, UploadChangeParam } from 'antd/es/upload/interface';
 

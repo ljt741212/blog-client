@@ -23,16 +23,16 @@ export default function Data() {
     const controller = new AbortController();
     visitorService.getOnlineVisitors({
       signal: controller.signal,
-      onmessage: (event) => {
-        if(event.data!==''){
+      onmessage: event => {
+        if (event.data !== '') {
           const data = JSON.parse(event.data);
           setOnlineVisitors(data.data.count);
         }
       },
-      onerror: (err) => {
+      onerror: err => {
         message.error('获取在线访客失败:' + err.message);
         return 5000;
-      }
+      },
     });
     return () => {
       controller.abort();
@@ -109,21 +109,21 @@ export default function Data() {
           <Line data={trendLineData} xField="date" yField="value" seriesField="type" smooth />
         </Card>
         <Card title="访问来源占比" bodyStyle={{ height: 320 }}>
-        <Pie
-  height={260}
-  radius={0.8}
-  data={dashboardStats?.sourceRatio || []}
-  angleField="value"
-  colorField="source"
-  legend={{
-    position: 'right',
-  }}
-  label={{
-    text: (d: object) => `${(d.percent * 100).toFixed(0)}%`,
-    position: 'inside',
-    style: { fontSize: 12, textAlign: 'center' },
-  }}
-/>
+          <Pie
+            height={260}
+            radius={0.8}
+            data={dashboardStats?.sourceRatio || []}
+            angleField="value"
+            colorField="source"
+            legend={{
+              position: 'right',
+            }}
+            label={{
+              text: (d: { percent: number }) => `${(d.percent * 100).toFixed(0)}%`,
+              position: 'inside',
+              style: { fontSize: 12, textAlign: 'center' },
+            }}
+          />
         </Card>
       </div>
 

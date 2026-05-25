@@ -1,4 +1,4 @@
-import { Editor, EditorProps } from '@bytemd/react';
+import { Editor, type EditorProps } from '@bytemd/react';
 import zhHans from 'bytemd/locales/zh_Hans.json';
 
 import plugins from './plugins';

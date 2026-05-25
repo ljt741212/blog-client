@@ -1,4 +1,4 @@
-import { Viewer, ViewerProps } from '@bytemd/react';
+import { Viewer, type ViewerProps } from '@bytemd/react';
 
 import plugins from './plugins';
 import './viewer.css';

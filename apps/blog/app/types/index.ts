@@ -7,3 +7,4 @@ export * from './comment';
 export * from './changelog';
 export * from './guestMessage';
 export * from './author';
+export * from './siteConfig';

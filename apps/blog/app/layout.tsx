@@ -5,7 +5,7 @@ import { SuspensionPanel } from './components';
 import AnalyticsLoader from './components/analyticsLoader';
 import NavBar from './components/navBar';
 import Snowfall from './components/Snowfall';
-import { getSeoSettings } from './lib/api';
+import { getSeoSettings, getSiteConfig } from './lib/api';
 
 import type { Metadata } from 'next';
 
@@ -134,16 +134,33 @@ function parseRobots(robots: string | null): Metadata['robots'] {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteConfig = await getSiteConfig();
+  const hasCustomBg = !!siteConfig?.backgroundImage;
+
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" className={hasCustomBg ? 'has-custom-bg' : undefined}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {hasCustomBg && (
+          <>
+            <div
+              className="fixed inset-0 -z-10"
+              style={{
+                backgroundImage: `url(${siteConfig.backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
+            <style>{`:root{--page-bg:transparent}`}</style>
+          </>
+        )}
         <AnalyticsLoader />
-        <main className="w-full min-h-screen bg-[var(--background)] overflow-x-hidden flex flex-col">
+        <main className="w-full min-h-screen overflow-x-hidden flex flex-col">
           <div id="nav-hide-sentinel" className="h-px w-full pointer-events-none" aria-hidden />
           <NavBar />
           <div className="flex-1">{children}</div>

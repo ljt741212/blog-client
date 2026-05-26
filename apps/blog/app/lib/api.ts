@@ -11,6 +11,7 @@ import {
   CreateGuestMessageDto,
   GuestMessage,
   Author,
+  SiteConfig,
 } from '@/types';
 
 import { get, post, put } from './request';
@@ -23,6 +24,16 @@ export async function getSeoSettings(): Promise<SeoSetting | null> {
     next: { revalidate: 3600 }, // 缓存1小时
   });
   return result.data || null;
+}
+
+/**
+ * 获取站点配置（背景图等）
+ */
+export async function getSiteConfig(): Promise<SiteConfig | null> {
+  const result = await get<SiteConfig>('/site-config', {
+    next: { revalidate: 300 }, // 缓存5分钟
+  });
+  return result.data ?? null;
 }
 
 /**

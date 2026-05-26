@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-import { GlobalOutlined, LinkOutlined, PlusOutlined } from '@ant-design/icons';
+import { GlobalOutlined, LinkOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Space, Card, Row, Col, Typography, message, Upload } from 'antd';
 
 import { settingService } from '@/services/setting';
+import { siteConfigService } from '@/services/siteConfig';
 import { uploadService } from '@/services/upload';
 
 import type { Setting as SiteSetting } from '~/types/setting';
@@ -12,29 +13,41 @@ import type { Setting as SiteSetting } from '~/types/setting';
 export default function Setting() {
   const [form] = Form.useForm<SiteSetting>();
   const [loading, setLoading] = useState(false);
+  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async () => {
       setLoading(true);
-      const { data } = await settingService.getSetting().finally(() => {
+      try {
+        const [{ data: settingData }, siteConfig] = await Promise.all([
+          settingService.getSetting(),
+          siteConfigService.get(),
+        ]);
+        form.setFieldsValue(settingData);
+        setBackgroundImage(siteConfig.data?.backgroundImage || null);
+      } finally {
         setLoading(false);
-      });
-      form.setFieldsValue(data);
+      }
     };
     init();
   }, [form]);
 
   const handleSubmit = async (values: SiteSetting) => {
     setLoading(true);
-    const payload: SiteSetting = {
-      seo: values.seo,
-      links: values.links ?? [],
-      icp: values.icp,
-    };
-    await settingService.saveSetting(payload).finally(() => {
+    try {
+      const payload: SiteSetting = {
+        seo: values.seo,
+        links: values.links ?? [],
+        icp: values.icp,
+      };
+      await Promise.all([
+        settingService.saveSetting(payload),
+        siteConfigService.save({ backgroundImage }),
+      ]);
+      message.success('保存成功');
+    } finally {
       setLoading(false);
-    });
-    message.success('保存成功');
+    }
   };
 
   const handleUploadImages = async (
@@ -245,6 +258,45 @@ export default function Setting() {
                     </Form.Item>
                   </Col>
                 </Row>
+              </Card>
+            </Col>
+            <Col span={24}>
+              <Card
+                title={<SectionTitle icon={<PictureOutlined />} title="背景设置" />}
+                extra={<Typography.Text type="secondary">自定义站点背景图</Typography.Text>}
+              >
+                <Space direction="vertical" size="middle">
+                  <Upload
+                    maxCount={1}
+                    listType="picture-card"
+                    fileList={
+                      backgroundImage
+                        ? [
+                            {
+                              uid: '-1',
+                              name: 'background',
+                              status: 'done' as const,
+                              url: backgroundImage,
+                            },
+                          ]
+                        : []
+                    }
+                    customRequest={async ({ file, onSuccess }) => {
+                      const results = await handleUploadImages([file as File]);
+                      if (results?.length) {
+                        setBackgroundImage(results[0].url);
+                        onSuccess?.(results);
+                      }
+                    }}
+                    onRemove={() => setBackgroundImage(null)}
+                  >
+                    <PlusOutlined />
+                    <div className="ant-upload-text">上传</div>
+                  </Upload>
+                  <Typography.Text type="secondary">
+                    建议尺寸 1920×1080，支持 jpg / png / webp；留空则使用默认渐变背景
+                  </Typography.Text>
+                </Space>
               </Card>
             </Col>
             <Col span={24}>

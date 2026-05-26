@@ -10,3 +10,4 @@ export * from './user';
 export * from './updateLog';
 export * from './upload';
 export * from './visitor';
+export * from './siteConfig';

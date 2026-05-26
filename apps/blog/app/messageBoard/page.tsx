@@ -38,7 +38,7 @@ export default function MessageBoard() {
 
   return (
     <div className="flex flex-col max-h-screen">
-      <div className="flex-1 flex gap-12 p-32 pt-18 bg-[var(--background)] max-w-full overflow-x-hidden">
+      <div className="flex-1 flex gap-12 p-32 pt-18 bg-[var(--page-bg)] max-w-full overflow-x-hidden">
         <MessageBoardList messages={messages} />
         <MessageBoardForm form={form} onSubmit={handleSubmit} onReset={handleReset} />
       </div>

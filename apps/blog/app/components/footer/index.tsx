@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { RssOutlined } from '@ant-design/icons';
+import { LinkOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
 const BLOG_START_DATE = new Date('2025-05-18');
@@ -52,7 +52,7 @@ export default function Footer() {
             href="/rss.xml"
             className="inline-flex items-center gap-1 text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
           >
-            <RssOutlined />
+            <LinkOutlined />
             RSS
           </Link>
         </div>

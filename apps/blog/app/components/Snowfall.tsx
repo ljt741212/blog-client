@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useId } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface SnowfallProps {
   count?: number;
@@ -10,75 +10,99 @@ interface SnowfallProps {
   zIndex?: number;
 }
 
-interface Flake {
-  left: number;
-  size: number;
-  fallDuration: number;
-  swayDuration: number;
-  delay: number;
-}
-
-const genFlakes = (count: number, speed: number): Flake[] =>
-  Array.from({ length: count }).map(() => ({
-    left: Math.random() * 100,
-    size: Math.random() * 2.5 + 1,
-    fallDuration: (Math.random() * 5 + 5) / speed,
-    swayDuration: (Math.random() * 3 + 2) / speed,
-    delay: Math.random() * 8,
-  }));
+type Snowflake = {
+  x: number;
+  y: number;
+  radius: number;
+  speedY: number;
+  speedX: number;
+  opacity: number;
+};
 
 const Snowfall: React.FC<SnowfallProps> = ({
   count = 40,
+  color = '#ffffff',
+  speed = 1,
   opacity = 0.6,
   zIndex = 50,
-  speed = 1,
 }) => {
-  const id = useId();
-  const [flakes, setFlakes] = useState<Flake[]>(() => []);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
-    setFlakes(genFlakes(count, speed));
-  }, [count, speed]);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const handleResize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+    window.addEventListener('resize', handleResize);
+
+    const snowflakes: Snowflake[] = Array.from({ length: count }).map(() => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 2 + 1.5,
+      speedY: (Math.random() * 0.5 + 0.5) * speed,
+      speedX: (Math.random() - 0.5) * 0.5 * speed,
+      opacity: Math.random() * 0.7 + 0.3,
+    }));
+
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      snowflakes.forEach(flake => {
+        ctx.globalAlpha = flake.opacity * opacity;
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        flake.y += flake.speedY;
+        flake.x += flake.speedX;
+
+        if (flake.y > height) {
+          flake.y = -flake.radius;
+          flake.x = Math.random() * width;
+        }
+        if (flake.x > width) flake.x = 0;
+        if (flake.x < 0) flake.x = width;
+      });
+
+      animationRef.current = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [count, color, speed, opacity]);
 
   return (
-    <div
+    <canvas
+      ref={canvasRef}
       aria-hidden
       style={{
         position: 'fixed',
         inset: 0,
         pointerEvents: 'none',
         zIndex,
-        opacity,
       }}
-    >
-      {flakes.map((flake, i) => (
-        <div
-          key={`${id}-${i}`}
-          style={{
-            position: 'absolute',
-            left: `${flake.left}%`,
-            top: `-${flake.size * 2}px`,
-            width: `${flake.size}px`,
-            height: `${flake.size}px`,
-            borderRadius: '50%',
-            background: '#ffffff',
-            animation: `snowFall ${flake.fallDuration}s ${flake.delay}s linear infinite,
-                         snowSway ${flake.swayDuration}s ${flake.delay}s ease-in-out infinite`,
-          }}
-        />
-      ))}
-
-      <style>{`
-        @keyframes snowFall {
-          0% { transform: translateY(0); }
-          100% { transform: translateY(100vh); }
-        }
-        @keyframes snowSway {
-          0%, 100% { transform: translateX(0); }
-          50% { transform: translateX(${15 * speed}px); }
-        }
-      `}</style>
-    </div>
+    />
   );
 };
 

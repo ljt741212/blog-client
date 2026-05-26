@@ -35,14 +35,17 @@ const getBaseURL = (): string => {
     return apiUrl;
   }
 
-  // 客户端：使用相对路径 /api，交给 Next.js rewrite（/api -> http://localhost:3004/api）
+  // 客户端：使用相对路径 /api，交给 Next.js rewrite
   if (typeof window !== 'undefined') {
     return '/api';
   }
 
   // 服务端：必须是绝对地址，否则 Node fetch 会报 “Failed to parse URL”
-  // 与 admin 中 Vite 代理保持一致，指向同一个后端
-  const basePath = apiUrl && !apiUrl.startsWith('http') ? apiUrl : '/api';
+  // 优先使用环境变量 API_URL / NEXT_PUBLIC_API_URL，未配置时回退到 localhost（仅开发环境）
+  if (apiUrl && apiUrl.startsWith('http')) {
+    return apiUrl.replace(/\/+$/, '');
+  }
+  const basePath = (apiUrl || '/api').replace(/\/+$/, '');
   return `http://localhost:3004${basePath.startsWith('/') ? '' : '/'}${basePath}`;
 };
 

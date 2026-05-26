@@ -8,7 +8,6 @@ export type MessageBoardListProps = {
 };
 
 export function MessageBoardList({ messages }: MessageBoardListProps) {
-  console.log(messages);
   return (
     <div className="flex-1 flex flex-col gap-6">
       <div>

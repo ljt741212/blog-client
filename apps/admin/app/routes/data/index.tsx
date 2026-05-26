@@ -119,7 +119,14 @@ export default function Data() {
               position: 'right',
             }}
             label={{
-              text: (d: { percent: number }) => `${(d.percent * 100).toFixed(0)}%`,
+              text: (d: Record<string, unknown>) => {
+                const total = (dashboardStats?.sourceRatio || []).reduce(
+                  (sum, item) => sum + (Number(item.value) || 0),
+                  0
+                );
+                const pct = total > 0 ? ((Number(d.value) || 0) / total) * 100 : 0;
+                return `${pct.toFixed(0)}%`;
+              },
               position: 'inside',
               style: { fontSize: 12, textAlign: 'center' },
             }}
@@ -129,7 +136,7 @@ export default function Data() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 flex-1">
         <Card title="文章分类浏览量" className="xl:col-span-2" bodyStyle={{ height: 320 }}>
-          <Column data={dashboardStats?.categoryViews} />
+          <Column data={dashboardStats?.categoryViews} xField="name" yField="views" />
         </Card>
         <Card title="实时访客列表" bodyStyle={{ padding: 0 }}>
           <Table

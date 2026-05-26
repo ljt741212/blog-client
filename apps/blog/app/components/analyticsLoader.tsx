@@ -11,7 +11,7 @@ export default function AnalyticsLoader() {
       await heartbeat();
     }, 30000);
     behaviorMonitor.init({
-      endpoint: 'http://localhost:3000/api/visitor/visit',
+      endpoint: '/api/visitor/visit',
     });
     return () => clearInterval(interval);
   }, []);

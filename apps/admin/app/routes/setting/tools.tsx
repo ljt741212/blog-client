@@ -28,11 +28,9 @@ export default function Tools() {
     }
 
     try {
-      const res = await uploadService.upload(fileList[0].originFileObj as File);
+      await uploadService.upload(fileList[0].originFileObj as File);
       message.success('上传成功');
-      console.log('上传结果：', res);
     } catch (error) {
-      console.error(error);
       message.error('上传失败，请稍后重试');
     }
   };
@@ -47,7 +45,6 @@ export default function Tools() {
       await dataTransferService.exportAll();
       message.success('导出已开始（浏览器将下载文件）');
     } catch (error) {
-      console.error(error);
       message.error('导出失败，请稍后重试');
     } finally {
       setExporting(false);
@@ -73,7 +70,6 @@ export default function Tools() {
           message.success(`导入成功：${res.data.tables} 张表，${res.data.rows} 行数据`);
           setDbFileList([]);
         } catch (error) {
-          console.error(error);
           message.error('导入失败，请检查备份包或稍后重试');
         } finally {
           setImporting(false);

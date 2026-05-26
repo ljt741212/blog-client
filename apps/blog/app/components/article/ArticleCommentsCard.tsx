@@ -60,7 +60,6 @@ export default function ArticleCommentsCard({
       // 重新加载评论列表
       loadComments();
     } catch (error) {
-      console.error('发表评论失败', error);
       message.error('发表评论失败，请稍后重试');
     } finally {
       setSubmitting(false);

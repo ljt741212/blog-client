@@ -10,24 +10,26 @@ import typescript from '@rollup/plugin-typescript';
  *           dist/index.cjs.js (CommonJS)
  *           dist/index.umd.js (UMD, global name: BehaviorMonitor)
  */
+const isProd = process.env.NODE_ENV === 'production';
+
 export default {
   input: 'index.ts',
   output: [
     {
       file: 'dist/index.esm.js',
       format: 'esm',
-      sourcemap: true
+      sourcemap: !isProd
     },
     {
       file: 'dist/index.cjs.js',
       format: 'cjs',
-      sourcemap: true
+      sourcemap: !isProd
     },
     {
       file: 'dist/index.umd.js',
       format: 'umd',
       name: 'BehaviorMonitor',
-      sourcemap: true
+      sourcemap: !isProd
     }
   ],
   plugins: [

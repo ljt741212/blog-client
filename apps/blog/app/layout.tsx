@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { SuspensionPanel } from './components';
 import AnalyticsLoader from './components/analyticsLoader';
+import Constellation from './components/Constellation';
 import NavBar from './components/navBar';
 import Snowfall from './components/Snowfall';
 import { getSeoSettings, getSiteConfig } from './lib/api';
@@ -165,7 +166,8 @@ export default async function RootLayout({
           <NavBar />
           <div className="flex-1">{children}</div>
         </main>
-        <Snowfall />
+        <Constellation />
+        {false && <Snowfall />}
         <SuspensionPanel threshold={500} />
       </body>
     </html>

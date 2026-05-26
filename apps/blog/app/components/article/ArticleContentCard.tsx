@@ -1,12 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { LikeOutlined, ShareAltOutlined } from '@ant-design/icons';
+import {
+  LikeOutlined,
+  ShareAltOutlined,
+  CopyOutlined,
+  CheckOutlined,
+  ReadOutlined,
+} from '@ant-design/icons';
 import { Badge, Card, Divider, Space, Tag, Typography, message } from 'antd';
 import { Viewer } from 'markdownEditor';
 
 import { incrementLikes } from '@/lib/api';
+
+function calcReadingTime(text: string): number {
+  return Math.max(1, Math.ceil(text.length / 500));
+}
+
+function CodeCopyButton({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      message.success('代码已复制');
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded text-xs
+        bg-[var(--background-secondary)] border border-[var(--border-primary)]
+        text-[var(--text-muted)] hover:text-[var(--primary)] hover:border-[var(--primary)]
+        transition-colors opacity-0 group-hover:opacity-100"
+    >
+      {copied ? <CheckOutlined /> : <CopyOutlined />}
+      {copied ? '已复制' : '复制'}
+    </button>
+  );
+}
 
 export type ArticleContentCardProps = {
   articleId: string;
@@ -32,6 +68,37 @@ export default function ArticleContentCard({
 }: ArticleContentCardProps) {
   const [likeCount, setLikeCount] = useState(likes);
   const [likeLoading, setLikeLoading] = useState(false);
+  const viewerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!viewerRef.current) return;
+    const container = viewerRef.current;
+    // Wait for bytemd to finish rendering
+    const timer = setTimeout(() => {
+      const pres = container.querySelectorAll('pre');
+      pres.forEach(pre => {
+        if (pre.closest('[data-code-copy]')) return;
+        const code = pre.querySelector('code');
+        const text = code?.textContent ?? '';
+        if (!text.trim()) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative group';
+        wrapper.setAttribute('data-code-copy', 'true');
+        pre.parentNode?.insertBefore(wrapper, pre);
+        wrapper.appendChild(pre);
+
+        const btnSpan = document.createElement('span');
+        wrapper.appendChild(btnSpan);
+
+        import('react-dom/client').then(({ createRoot }) => {
+          createRoot(btnSpan).render(<CodeCopyButton code={text} />);
+        });
+      });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [markdown]);
 
   const handleClickLike = async () => {
     if (likeLoading) return;
@@ -77,6 +144,13 @@ export default function ArticleContentCard({
             <Divider orientation="vertical" />
             <Typography.Text type="secondary">阅读：{views}</Typography.Text>
             <Divider orientation="vertical" />
+            <Space size={4}>
+              <ReadOutlined className="text-[var(--text-muted)]" />
+              <Typography.Text type="secondary">
+                约 {calcReadingTime(markdown)} 分钟
+              </Typography.Text>
+            </Space>
+            <Divider orientation="vertical" />
             <Typography.Text type="secondary">分类：</Typography.Text>
             <Tag key={category.id}>{category.name}</Tag>
             <Divider orientation="vertical" />
@@ -89,7 +163,7 @@ export default function ArticleContentCard({
 
         <Divider style={{ margin: '8px 0' }} />
 
-        <div className="w-full">
+        <div ref={viewerRef} className="w-full">
           <Viewer value={markdown} />
         </div>
 

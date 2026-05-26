@@ -18,10 +18,6 @@ const menuItems = [
       label: '留言板',
       href: '/messageBoard',
     },
-    {
-      label: '关于博客',
-      href: '/aboutBlog',
-    },
   ],
   [
     {
@@ -54,7 +50,7 @@ export default function NavBar() {
       {
         threshold: 0,
         rootMargin: `-${HIDE_OFFSET_PX}px 0px 0px 0px`,
-      },
+      }
     );
 
     observer.observe(sentinel);

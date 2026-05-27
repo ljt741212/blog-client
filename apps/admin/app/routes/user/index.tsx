@@ -74,36 +74,43 @@ export default function UserPage() {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      width: 60,
     },
     {
       title: '用户名',
       dataIndex: 'username',
       key: 'username',
+      width: 120,
     },
     {
       title: '权限',
       dataIndex: 'role',
       key: 'role',
+      width: 80,
     },
     {
       title: 'gitHub账号',
       dataIndex: 'github',
       key: 'github',
+      width: 140,
     },
     {
       title: '创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      width: 180,
     },
     {
       title: '用户状态',
       dataIndex: 'status',
       key: 'status',
+      width: 100,
       render: (status: number) => <Switch checked={status === UserStatusEnum.ENABLED} />,
     },
     {
       title: '操作',
       key: 'action',
+      width: 60,
       render: (_: string, record: User) => {
         return (
           <div className="flex items-center gap-2">

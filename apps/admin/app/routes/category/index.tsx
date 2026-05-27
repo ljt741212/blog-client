@@ -79,20 +79,21 @@ export default function CategoryPage() {
       title: '分类名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text: string) => <p className="max-w-[200px] truncate text-sm">{text}</p>,
+      width: 150,
+      render: (text: string) => <p className="truncate text-sm">{text}</p>,
     },
     {
       title: '分类描述',
       dataIndex: 'description',
       key: 'description',
-      render: (text: string) => (
-        <p className="max-w-[200px] truncate text-sm text-gray-500">{text}</p>
-      ),
+      width: 200,
+      render: (text: string) => <p className="truncate text-sm text-gray-500">{text}</p>,
     },
     {
       title: '分类状态',
       dataIndex: 'status',
       key: 'status',
+      width: 120,
       render: (status: number, record: Category) => (
         <Switch
           checked={status === CategoryStatusEnum.ENABLED}
@@ -112,6 +113,7 @@ export default function CategoryPage() {
     {
       title: '操作',
       key: 'action',
+      width: 80,
       render: (_: string, record: Category) => {
         return (
           <div className="flex items-center gap-2">

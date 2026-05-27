@@ -154,7 +154,7 @@ const Layout: React.FC = () => {
             theme="light"
             items={items}
           />
-          <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 flex flex-col min-h-0 min-w-0">
             <div className="flex-1 m-8 p-8 rounded-2xl overflow-auto bg-white shadow-[0_18px_40px_rgba(15,23,42,0.08)] border border-[#e5e7eb]">
               <Outlet />
             </div>

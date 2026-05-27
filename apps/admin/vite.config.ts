@@ -9,6 +9,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  base: '/admin/',
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
   resolve: {
     alias: {

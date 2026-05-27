@@ -2,11 +2,21 @@
 
 import type { ReactNode } from 'react';
 
-import { UserOutlined, ClockCircleOutlined, EyeOutlined, LikeOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  ClockCircleOutlined,
+  EyeOutlined,
+  LikeOutlined,
+  ReadOutlined,
+} from '@ant-design/icons';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 import type { Article } from '@/types/article';
+
+function calcReadingTime(text: string): number {
+  return Math.max(1, Math.ceil(text.length / 500));
+}
 
 const MetaIcon = ({ children }: { children: ReactNode }) => (
   <span className="inline-flex items-center justify-center w-3.5 h-3.5 text-[var(--text-muted)]">
@@ -73,6 +83,12 @@ export default function ArticlesCard({ data }: ArticlesCardProps) {
               <ClockCircleOutlined />
             </MetaIcon>
             <span>{data.publishTime ? new Date(data.publishTime).toLocaleDateString() : ''}</span>
+          </span>
+          <span className="inline-flex items-center gap-1 text-[var(--text-disabled)]">
+            <MetaIcon>
+              <ReadOutlined />
+            </MetaIcon>
+            <span>{calcReadingTime(data.content || '')} 分钟</span>
           </span>
           <span className="inline-flex items-center gap-1 text-[var(--text-disabled)]">
             <MetaIcon>

@@ -84,7 +84,7 @@ export default function NavBar() {
       aria-hidden={hidden}
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full h-12
      backdrop-blur-xl backdrop-saturate-150 border-b border-[var(--border-primary)] 
-     bg-[var(--background-secondary)]/60 px-32
+     bg-[var(--background-secondary)]/20 px-32
      transition-[transform,opacity] duration-500 ease-in-out
      "
       style={{

@@ -3,6 +3,8 @@ import type { PaginationResponse } from '@/types';
 
 import type {
   LoginForm,
+  LoginByCodeForm,
+  SendCodeForm,
   LoginResponse,
   User,
   UserPageQueryDto,
@@ -12,6 +14,12 @@ import type {
 export const userService = {
   login: (data: LoginForm) => {
     return post<LoginResponse>('/users/login', data);
+  },
+  sendCode: (data: SendCodeForm) => {
+    return post<void>('/users/send-code', data);
+  },
+  loginByCode: (data: LoginByCodeForm) => {
+    return post<LoginResponse>('/users/login-by-code', data);
   },
   getUserList: (params: UserPageQueryDto) => {
     return get<PaginationResponse<User>>('/users/page', { params });

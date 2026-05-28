@@ -161,13 +161,13 @@ export default async function RootLayout({
           </>
         )}
         <AnalyticsLoader />
+        <GeometricRibbons />
         <main className="w-full min-h-screen overflow-x-hidden flex flex-col">
           <div id="nav-hide-sentinel" className="h-px w-full pointer-events-none" aria-hidden />
           <NavBar />
           <div className="flex-1">{children}</div>
         </main>
         <Snowfall zIndex={0} count={60} />
-        <GeometricRibbons />
         <SuspensionPanel threshold={500} />
       </body>
     </html>

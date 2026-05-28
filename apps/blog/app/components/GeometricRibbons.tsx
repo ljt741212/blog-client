@@ -22,7 +22,6 @@ export default function GeometricRibbons() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animRef = useRef<number | null>(null);
   const ribbonsRef = useRef<(Section[] | null)[]>([]);
-  const scrollRef = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -34,6 +33,8 @@ export default function GeometricRibbons() {
     let H = window.innerHeight;
     canvas.width = W;
     canvas.height = H;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
     ctx.globalAlpha = 0.5;
 
     const SPEED = 200;
@@ -45,13 +46,10 @@ export default function GeometricRibbons() {
       H = window.innerHeight;
       canvas.width = W;
       canvas.height = H;
-    };
-    const onScroll = () => {
-      scrollRef.current =
-        window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
     };
     window.addEventListener('resize', onResize);
-    window.addEventListener('scroll', onScroll);
 
     function addRibbon() {
       // Qzdy: Math.round(random(1,9)) > 5 → ~44% right, ~56% left
@@ -131,17 +129,12 @@ export default function GeometricRibbons() {
       }
 
       const c = `hsla(${s.hue}, 60%, 50%, ${s.alpha})`;
-      ctx.save();
-      if (scrollRef.current !== 0) {
-        ctx.translate(0, scrollRef.current * -0.2);
-      }
       ctx.beginPath();
       ctx.moveTo(s.p1x, s.p1y);
       ctx.lineTo(s.p2x, s.p2y);
       ctx.lineTo(s.p3x, s.p3y);
       ctx.fillStyle = c;
       ctx.fill();
-      ctx.restore();
 
       return false;
     }
@@ -175,7 +168,6 @@ export default function GeometricRibbons() {
 
     return () => {
       window.removeEventListener('resize', onResize);
-      window.removeEventListener('scroll', onScroll);
       if (animRef.current !== null) cancelAnimationFrame(animRef.current);
     };
   }, []);
@@ -186,9 +178,10 @@ export default function GeometricRibbons() {
       aria-hidden
       style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
         pointerEvents: 'none',
-        zIndex: -1,
+        zIndex: 0,
       }}
     />
   );

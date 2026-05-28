@@ -123,7 +123,7 @@ export default function TagPage() {
                 setIsModalOpen(true);
               }}
             />
-            {record.status === TagStatusEnum.ENABLED ? (
+            {record.status === TagStatusEnum.DISABLED ? (
               <DeleteOutlined
                 className="text-red-500 hover:text-red-600 cursor-pointer text-lg"
                 onClick={() => deleteTag(record.id)}

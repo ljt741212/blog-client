@@ -63,7 +63,7 @@ export default function UserPage() {
   };
 
   const saveUser = async (userInfo: Partial<User>) => {
-    await userService.saveUser(userInfo as User as User);
+    await userService.saveUser(userInfo as User);
     message.success('保存成功');
     setSaveUserModalVisible(false);
     await refetch();

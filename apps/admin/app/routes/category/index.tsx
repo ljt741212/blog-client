@@ -125,7 +125,7 @@ export default function CategoryPage() {
                 setIsModalOpen(true);
               }}
             />
-            {record.status === 0 ? (
+            {record.status === CategoryStatusEnum.DISABLED ? (
               <DeleteOutlined
                 className="text-red-500 hover:text-red-600 cursor-pointer text-lg"
                 onClick={() => deleteCategory(record.id as unknown as string)}

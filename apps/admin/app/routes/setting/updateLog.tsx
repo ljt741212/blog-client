@@ -198,7 +198,7 @@ export default function UpdateLogPage() {
               setModalVisible(true);
               form.setFieldsValue({
                 ...record,
-                releaseDate: dayjs(record.releaseDate) as unknown as string,
+                releaseDate: dayjs(record.releaseDate),
               });
             }}
           />

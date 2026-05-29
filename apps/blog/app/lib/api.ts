@@ -44,11 +44,13 @@ export async function getSiteConfig(): Promise<SiteConfig | null> {
  * @returns 文章列表
  */
 export async function getArticles(
-  params: PaginationParams & { searchValue?: string }
+  params: PaginationParams & { searchValue?: string; categoryId?: number; tagId?: number }
 ): Promise<PaginationResponse<Article>> {
-  const result = await get<PaginationResponse<Article>>(
-    `/posts?${new URLSearchParams(params as unknown as Record<string, string>).toString()}`
-  );
+  const query = Object.entries(params)
+    .filter(([, v]) => v !== undefined && v !== null && v !== '')
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+    .join('&');
+  const result = await get<PaginationResponse<Article>>(`/posts?${query}`);
   return result.data;
 }
 /**

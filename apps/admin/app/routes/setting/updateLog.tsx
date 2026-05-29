@@ -151,6 +151,7 @@ export default function UpdateLogPage() {
       title: '标题',
       dataIndex: 'title',
       key: 'title',
+      width: 200,
       ellipsis: true,
     },
     {
@@ -178,6 +179,7 @@ export default function UpdateLogPage() {
       title: '内容概览',
       dataIndex: 'content',
       key: 'content',
+      width: 200,
       ellipsis: true,
       render: (text: string) => (
         <Typography.Text type="secondary">{text?.split('\n')[0] ?? '--'}</Typography.Text>
@@ -196,8 +198,9 @@ export default function UpdateLogPage() {
               setModalVisible(true);
               form.setFieldsValue({
                 ...record,
-                releaseDate: dayjs(record.releaseDate) as unknown as string,
-              });
+                releaseDate: dayjs(record.releaseDate),
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              } as any);
             }}
           />
           <DeleteOutlined

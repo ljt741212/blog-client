@@ -51,7 +51,7 @@ export default function ArticleCommentsCard({
     setSubmitting(true);
     try {
       await commentArticle({
-        postId: articleId,
+        postId: Number(articleId),
         content: trimmed,
         visitorId: localStorage.getItem('behaviorMonitor_visitor_id'),
       });

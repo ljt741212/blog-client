@@ -27,6 +27,15 @@ export const dataTransferService = {
     a.remove();
     URL.revokeObjectURL(url);
   },
+  importWordPress: (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return request<{ imported: number; skipped: number }>('/data-transfer/import-wordpress', {
+      method: 'POST',
+      body: formData,
+      timeout: 5 * 60 * 1000,
+    }) as Promise<ResponseData<{ imported: number; skipped: number }>>;
+  },
   importAll: (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -37,4 +46,3 @@ export const dataTransferService = {
     }) as Promise<ResponseData<{ tables: number; rows: number }>>;
   },
 };
-

@@ -26,7 +26,7 @@ interface UserProfileFormValues {
 export default function UserInfo() {
   const [form] = Form.useForm<UserProfileFormValues>() as [FormInstance<UserProfileFormValues>];
   const [loading, setLoading] = useState(false);
-  const currentUser = useRef<User>();
+  const currentUser = useRef<User | undefined>(undefined);
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -39,9 +39,11 @@ export default function UserInfo() {
 
   const handleSubmit = async (values: UserProfileFormValues) => {
     setLoading(true);
-    await userService.updateUser(currentUser.current?.id as string, values as Partial<User>).finally(() => {
-      setLoading(false);
-    });
+    await userService
+      .updateUser(currentUser.current?.id as string, values as Partial<User>)
+      .finally(() => {
+        setLoading(false);
+      });
     message.success('信息修改成功');
   };
 

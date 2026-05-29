@@ -52,7 +52,7 @@ const Snowfall: React.FC<SnowfallProps> = ({
     const snowflakes: Snowflake[] = Array.from({ length: count }).map(() => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      radius: Math.random() * 2 + 1.5,
+      radius: Math.random() * 2.5 + 2,
       speedY: (Math.random() * 0.5 + 0.5) * speed,
       speedX: (Math.random() - 0.5) * 0.5 * speed,
       opacity: Math.random() * 0.7 + 0.3,

@@ -1,4 +1,4 @@
-import { Col, Row } from 'antd';
+import { Affix, Col, Row } from 'antd';
 
 import { ArticleCommentsCard, ArticleContentCard, ArticleSidebar } from '@/components/article';
 import { incrementViews, getArticleComments } from '@/lib/api';
@@ -55,13 +55,13 @@ export default async function ArticleDetail({ params }: ArticleDetailProps) {
           </Col>
 
           <Col xs={24} lg={6}>
-            <div className="lg:sticky lg:top-6">
+            <Affix offsetTop={56}>
               <ArticleSidebar
                 markdown={markdown}
                 scrollRootId="article-scroll-container"
                 recentArticles={recentArticles}
               />
-            </div>
+            </Affix>
           </Col>
         </Row>
       </div>

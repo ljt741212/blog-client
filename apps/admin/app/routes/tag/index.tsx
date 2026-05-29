@@ -79,26 +79,21 @@ export default function TagPage() {
       title: '标签名称',
       dataIndex: 'name',
       key: 'name',
-      render: (text: string) => (
-        <p className="max-w-[200px] truncate text-sm" title={text}>
-          {text}
-        </p>
-      ),
+      width: 150,
+      render: (text: string) => <p className="truncate text-sm">{text}</p>,
     },
     {
       title: '标签描述',
       dataIndex: 'description',
       key: 'description',
-      render: (text: string) => (
-        <p className="max-w-[200px] truncate text-sm text-gray-500" title={text}>
-          {text}
-        </p>
-      ),
+      width: 200,
+      render: (text: string) => <p className="truncate text-sm text-gray-500">{text}</p>,
     },
     {
       title: '标签状态',
       dataIndex: 'status',
       key: 'status',
+      width: 120,
       render: (status: number, record: Tag) => (
         <Switch
           checked={status === TagStatusEnum.ENABLED}
@@ -116,6 +111,7 @@ export default function TagPage() {
     {
       title: '操作',
       key: 'action',
+      width: 80,
       render: (_: string, record: Tag) => {
         return (
           <div className="flex items-center gap-4">
@@ -127,7 +123,7 @@ export default function TagPage() {
                 setIsModalOpen(true);
               }}
             />
-            {record.status === TagStatusEnum.ENABLED ? (
+            {record.status === TagStatusEnum.DISABLED ? (
               <DeleteOutlined
                 className="text-red-500 hover:text-red-600 cursor-pointer text-lg"
                 onClick={() => deleteTag(record.id)}

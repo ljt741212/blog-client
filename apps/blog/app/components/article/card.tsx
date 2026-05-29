@@ -104,7 +104,7 @@ export default function ArticlesCard({ data }: ArticlesCardProps) {
           </span>
         </p>
         <h3 className="h-7 font-bold text-lg truncate text-[var(--text-primary)]">{data.title}</h3>
-        <p className="flex-1 text-base line-clamp-2 overflow-hidden text-[var(--text-tertiary)]">
+        <p className="flex-1 text-[15px] line-clamp-3 overflow-hidden text-[var(--text-tertiary)]">
           {data.summary}
         </p>
       </div>

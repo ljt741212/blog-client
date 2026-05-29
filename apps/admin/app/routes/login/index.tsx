@@ -1,107 +1,189 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Card } from 'antd';
+import {
+  UserOutlined,
+  LockOutlined,
+  MailOutlined,
+  SafetyCertificateOutlined,
+} from '@ant-design/icons';
+import { Form, Input, Button, message } from 'antd';
 import { useNavigate } from 'react-router';
 
 import { userService } from '@/services';
 import { setCookie } from '@/utils';
 
-import type { LoginForm } from '~/types/user';
+type LoginMode = 'password' | 'code';
 
 export default function Login() {
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<LoginMode>('password');
+  const [sending, setSending] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const onFinish = async (values: LoginForm) => {
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  const startCountdown = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setCountdown(60);
+    timerRef.current = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const handleSendCode = async () => {
+    try {
+      const email = form.getFieldValue('email');
+      if (!email) {
+        message.warning('请先输入邮箱');
+        return;
+      }
+      setSending(true);
+      await userService.sendCode({ email });
+      message.success('验证码已发送');
+      startCountdown();
+    } catch {
+      // 错误已在拦截器处理
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const onFinish = async (values: Record<string, string>) => {
     setLoading(true);
     try {
-      const { data } = await userService.login(values);
+      let data: { token: string; user: unknown };
+
+      if (mode === 'password') {
+        const res = await userService.login({
+          username: values.username,
+          password: values.password,
+        });
+        data = res.data;
+      } else {
+        const res = await userService.loginByCode({
+          email: values.email,
+          code: values.code,
+        });
+        data = res.data;
+      }
+
       setCookie('token', data.token, 7);
       window.localStorage.setItem('currentUser', JSON.stringify(data.user ?? {}));
-      navigate('/');
+      navigate('/', { replace: true });
     } catch {
-      // 错误已在 request 拦截器中处理（跳转 /login 或弹出错误提示）
+      // 错误已在 request 拦截器中处理
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4
-      bg-[radial-gradient(circle_at_15%_10%,rgba(37,99,235,0.10),transparent_40%),
-          radial-gradient(circle_at_85%_25%,rgba(124,58,237,0.08),transparent_45%),
-          linear-gradient(to_bottom,#f8fafc,#ffffff)]"
-    >
-      <Card
-        className="w-full max-w-md rounded-2xl border border-[#e5e7eb]
-        bg-white shadow-sm transition-shadow duration-200 hover:shadow-md"
-        style={{ animation: 'login-card-in 420ms cubic-bezier(0.19,1,0.22,1) both' }}
-      >
-        <div className="mb-8 text-center">
-          <h2 className="text-[26px] font-semibold tracking-tight text-gray-900">欢迎登录</h2>
-          <p className="mt-2 text-sm text-gray-500">使用你的账号管理博客内容</p>
-          <div className="mx-auto mt-5 h-[2px] w-16 rounded-full bg-gradient-to-r from-[#2563eb] to-[#1d4ed8]" />
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-[#f5f7fa] p-4">
+      <div className="w-full max-w-[400px]">
+        <h1 className="mb-8 text-2xl font-semibold text-center text-[#1e293b]">博客管理后台</h1>
 
-        <Form
-          form={form}
-          name="login"
-          onFinish={onFinish}
-          autoComplete="off"
-          layout="vertical"
-          size="large"
-          className="space-y-4"
-        >
-          <Form.Item name="username" rules={[{ required: true, message: '请输入用户名！' }]}>
-            <Input
-              prefix={<UserOutlined className="text-gray-400" />}
-              placeholder="用户名"
-              className="rounded-xl border border-[#e5e7eb] bg-white text-gray-900
-              placeholder:text-gray-400
-              hover:border-[#c7d2fe]
-              focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10
-              transition-colors"
-            />
-          </Form.Item>
-
-          <Form.Item name="password" rules={[{ required: true, message: '请输入密码！' }]}>
-            <Input.Password
-              prefix={<LockOutlined className="text-gray-400" />}
-              placeholder="密码"
-              className="rounded-xl border border-[#e5e7eb] bg-white text-gray-900
-              placeholder:text-gray-400
-              hover:border-[#c7d2fe]
-              focus:border-[#2563eb] focus:ring-4 focus:ring-[#2563eb]/10
-              transition-colors"
-            />
-          </Form.Item>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="w-full h-12 rounded-xl bg-[#2563eb] hover:bg-[#1d4ed8] border border-[#1d4ed8]/20
-              shadow-sm hover:shadow-md transition-all duration-200
-              focus:outline-none focus:ring-4 focus:ring-[#2563eb]/20"
-              loading={loading}
+        <div className="bg-white rounded-lg border border-[#e5e7eb] p-8">
+          {/* 模式切换 */}
+          <div className="flex border-b border-[#e5e7eb] mb-6 -mx-2">
+            <button
+              type="button"
+              onClick={() => {
+                setMode('password');
+                form.resetFields();
+              }}
+              className={`flex-1 pb-3 text-sm border-b-2 transition-colors ${
+                mode === 'password'
+                  ? 'border-[#2563eb] text-[#2563eb] font-medium'
+                  : 'border-transparent text-[#6b7280] hover:text-[#374151]'
+              }`}
             >
+              密码登录
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode('code');
+                form.resetFields();
+              }}
+              className={`flex-1 pb-3 text-sm border-b-2 transition-colors ${
+                mode === 'code'
+                  ? 'border-[#2563eb] text-[#2563eb] font-medium'
+                  : 'border-transparent text-[#6b7280] hover:text-[#374151]'
+              }`}
+            >
+              验证码登录
+            </button>
+          </div>
+
+          <Form
+            form={form}
+            name="login"
+            onFinish={onFinish}
+            autoComplete="off"
+            layout="vertical"
+            size="large"
+            requiredMark={false}
+            key={mode}
+          >
+            {mode === 'password' ? (
+              <>
+                <Form.Item name="username" rules={[{ required: true, message: '请输入用户名' }]}>
+                  <Input prefix={<UserOutlined />} placeholder="用户名" />
+                </Form.Item>
+
+                <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]}>
+                  <Input.Password prefix={<LockOutlined />} placeholder="密码" />
+                </Form.Item>
+              </>
+            ) : (
+              <>
+                <Form.Item
+                  name="email"
+                  rules={[
+                    { required: true, message: '请输入邮箱' },
+                    { type: 'email', message: '邮箱格式不正确' },
+                  ]}
+                >
+                  <Input prefix={<MailOutlined />} placeholder="邮箱" />
+                </Form.Item>
+
+                <Form.Item name="code" rules={[{ required: true, message: '请输入验证码' }]}>
+                  <div className="flex gap-2">
+                    <Input
+                      prefix={<SafetyCertificateOutlined />}
+                      placeholder="验证码"
+                      maxLength={6}
+                    />
+                    <Button onClick={handleSendCode} loading={sending} disabled={countdown > 0}>
+                      {countdown > 0 ? `${countdown}s` : '获取验证码'}
+                    </Button>
+                  </div>
+                </Form.Item>
+              </>
+            )}
+
+            <Button type="primary" htmlType="submit" className="w-full" loading={loading}>
               登录
             </Button>
-          </Form.Item>
-
-          <div className="text-center">
-            <a
-              href="#"
-              className="text-[#2563eb] hover:text-[#1d4ed8] transition-colors duration-150"
-            >
-              忘记密码？
-            </a>
-          </div>
-        </Form>
-      </Card>
+          </Form>
+        </div>
+      </div>
     </div>
   );
 }

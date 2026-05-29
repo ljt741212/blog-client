@@ -9,30 +9,48 @@ import {
 import { Card, Button, Space, Typography, Upload, message, Modal } from 'antd';
 
 import { dataTransferService } from '@/services/dataTransfer';
-import { uploadService } from '@/services/upload';
 
 import type { UploadFile, UploadChangeParam } from 'antd/es/upload/interface';
 
 export default function Tools() {
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [wpFileList, setWpFileList] = useState<UploadFile[]>([]);
   const [dbFileList, setDbFileList] = useState<UploadFile[]>([]);
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
-  const handleUpload = (info: UploadChangeParam<UploadFile>) => {
-    setFileList(info.fileList.slice(-1));
+  const [wpImporting, setWpImporting] = useState(false);
+
+  const handleWpFileChange = (info: UploadChangeParam<UploadFile>) => {
+    setWpFileList(info.fileList.slice(-1));
   };
-  const handleImport = async () => {
-    if (!fileList.length || !fileList[0].originFileObj) {
-      message.warning('请先选择要上传的文件');
+
+  const handleWpImport = async () => {
+    if (!wpFileList.length || !wpFileList[0].originFileObj) {
+      message.warning('请先选择 WordPress 导出的 XML 文件');
       return;
     }
 
-    try {
-      await uploadService.upload(fileList[0].originFileObj as File);
-      message.success('上传成功');
-    } catch (error) {
-      message.error('上传失败，请稍后重试');
-    }
+    Modal.confirm({
+      title: '确认导入 WordPress 文章？',
+      content: '将从 XML 文件中解析并导入文章，已存在的文章会跳过。',
+      okText: '确认导入',
+      cancelText: '取消',
+      onOk: async () => {
+        setWpImporting(true);
+        try {
+          const res = await dataTransferService.importWordPress(
+            wpFileList[0].originFileObj as File
+          );
+          message.success(
+            `导入完成：成功导入 ${res.data.imported} 篇，跳过 ${res.data.skipped} 篇`
+          );
+          setWpFileList([]);
+        } catch {
+          message.error('导入失败，请检查文件格式或稍后重试');
+        } finally {
+          setWpImporting(false);
+        }
+      },
+    });
   };
 
   const handleDbFileChange = (info: UploadChangeParam<UploadFile>) => {
@@ -85,26 +103,37 @@ export default function Tools() {
             title={
               <Space align="center">
                 <ImportOutlined />
-                <span>文章导入</span>
+                <span>导入 WordPress 文章</span>
               </Space>
             }
-            extra={<Typography.Text type="secondary">从其他平台迁移内容</Typography.Text>}
+            extra={
+              <Typography.Text type="secondary">
+                从 WordPress 导出的 XML 文件迁移内容
+              </Typography.Text>
+            }
           >
             <Typography.Paragraph type="secondary">
-              支持将外部文章批量导入到当前博客系统。此区域仅展示操作入口，具体导入逻辑可在后续接入。
+              上传 WordPress 导出的 WXR
+              文件（.xml），系统将解析其中的文章并导入到当前博客。已存在的文章会自动跳过。
             </Typography.Paragraph>
             <Space size="middle">
-              <Upload fileList={fileList} onChange={handleUpload} beforeUpload={() => false}>
-                <Button type="primary" icon={<ImportOutlined />}>
-                  <span>选择文件</span>
-                </Button>
+              <Upload
+                fileList={wpFileList}
+                onChange={handleWpFileChange}
+                beforeUpload={() => false}
+                maxCount={1}
+                accept=".xml"
+              >
+                <Button icon={<ImportOutlined />}>选择 XML 文件</Button>
               </Upload>
-              <Button type="primary" icon={<ImportOutlined />} onClick={handleImport}>
-                导入文章
+              <Button
+                type="primary"
+                icon={<ImportOutlined />}
+                loading={wpImporting}
+                onClick={handleWpImport}
+              >
+                开始导入
               </Button>
-              <Typography.Text type="secondary">
-                点击按钮目前不会触发实际导入，仅用于界面展示。
-              </Typography.Text>
             </Space>
           </Card>
 

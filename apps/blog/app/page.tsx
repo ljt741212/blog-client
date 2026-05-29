@@ -18,21 +18,25 @@ export default function Home() {
   const [articles, setArticle] = useState<Article[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchValue, setSearchValue] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [categoryId, setCategoryId] = useState<number | undefined>();
   const [pagInfo, setPagInfo] = useState({
     current: 1,
     pageSize: 10,
     total: 0,
   });
 
-  const fetchArticles = async (current: number = 1, pageSize: number = 10) => {
-    setLoading(true);
+  const fetchArticles = async (
+    current: number = 1,
+    pageSize: number = 10,
+    overrides?: { categoryId?: number; searchValue?: string }
+  ) => {
+    const cid = overrides && 'categoryId' in overrides ? overrides.categoryId : categoryId;
+    const keyword = overrides && 'searchValue' in overrides ? overrides.searchValue : searchValue;
     const data = await getArticles({
-      searchValue,
+      searchValue: keyword || undefined,
+      categoryId: cid,
       current,
       pageSize,
-    }).finally(() => {
-      setLoading(false);
     });
     const { items, meta } = data;
     setArticle(items);
@@ -58,12 +62,7 @@ export default function Home() {
             ))}
           </div>
 
-          <Pagination
-            className="mt-8 dark-pagination"
-            {...pagInfo}
-            onChange={fetchArticles}
-            loading={loading}
-          />
+          <Pagination className="mt-8 dark-pagination" {...pagInfo} onChange={fetchArticles} />
         </div>
         <div className="flex w-80 flex-col gap-8">
           <div
@@ -73,7 +72,10 @@ export default function Home() {
             <Search
               placeholder="文章搜索"
               size="large"
-              onSearch={() => fetchArticles(1, 10)}
+              onSearch={value => {
+                setCategoryId(undefined);
+                fetchArticles(1, 10, { searchValue: value, categoryId: undefined });
+              }}
               value={searchValue}
               onChange={e => setSearchValue(e.target.value)}
             />
@@ -84,13 +86,34 @@ export default function Home() {
           >
             <h3 className="text-sm font-semibold text-[var(--text-secondary)]">文章分类</h3>
             <ul className="category-scroll flex flex-col gap-2 max-h-64 overflow-y-auto">
-              {categories.map((item, index) => (
+              <li
+                className={`h-8 px-2 flex items-center justify-between rounded-md cursor-pointer transition-colors duration-200 hover:bg-[var(--background)] hover:text-[var(--primary)] ${
+                  categoryId === undefined
+                    ? 'bg-[var(--background)] text-[var(--primary)] font-medium'
+                    : ''
+                }`}
+                onClick={() => {
+                  setCategoryId(undefined);
+                  fetchArticles(1, 10, { categoryId: undefined });
+                }}
+              >
+                全部
+              </li>
+              {categories.map(item => (
                 <li
-                  key={index}
-                  className="h-8 px-2 flex items-center justify-between rounded-md cursor-pointer transition-colors duration-200 hover:bg-[var(--background)] hover:text-[var(--primary)]"
-                  // onClick={() => setSearchValue(item.name)}
+                  key={item.id}
+                  className={`h-8 px-2 flex items-center justify-between rounded-md cursor-pointer transition-colors duration-200 hover:bg-[var(--background)] hover:text-[var(--primary)] ${
+                    categoryId === item.id
+                      ? 'bg-[var(--background)] text-[var(--primary)] font-medium'
+                      : ''
+                  }`}
+                  onClick={() => {
+                    const newId = categoryId === item.id ? undefined : item.id;
+                    setCategoryId(newId);
+                    fetchArticles(1, 10, { categoryId: newId });
+                  }}
                 >
-                  {item.name}{' '}
+                  {item.name}
                 </li>
               ))}
             </ul>

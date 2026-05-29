@@ -64,22 +64,27 @@ export default function CommentPage() {
       title: '评论内容',
       dataIndex: 'content',
       key: 'content',
+      width: 250,
+      ellipsis: true,
     },
     {
       title: '评论用户',
       dataIndex: 'user',
       key: 'user',
+      width: 120,
       render: (_: unknown, record: Comment) => record.user?.username ?? record.visitor?.ip ?? '-',
     },
     {
       title: '评论时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      width: 180,
     },
     {
       title: '评论状态',
       dataIndex: 'status',
       key: 'status',
+      width: 120,
       render: (status: CommentStatusEnum, record: Comment) => {
         return (
           <Switch
@@ -102,11 +107,13 @@ export default function CommentPage() {
       title: '评论文章',
       dataIndex: 'post',
       key: 'post',
+      width: 150,
       render: (post: Comment['post']) => post?.title ?? '-',
     },
     {
       title: '操作',
       key: 'action',
+      width: 60,
       render: (_: string, record: Comment) => {
         return (
           <div className="flex items-center gap-2">

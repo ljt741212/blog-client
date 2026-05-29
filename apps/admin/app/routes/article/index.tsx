@@ -93,51 +93,61 @@ export default function ArticlePage() {
       title: '文章标题',
       dataIndex: 'title',
       key: 'title',
+      width: 200,
+      ellipsis: true,
     },
     {
       title: '封面图片',
       dataIndex: 'coverImage',
       key: 'coverImage',
+      width: 100,
       render: (text: string) => <Image src={text} width={60} height={40} />,
     },
     {
       title: '作者',
       dataIndex: 'author',
       key: 'author',
+      width: 100,
     },
     {
       title: '创建时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      width: 180,
       render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: '更新时间',
       dataIndex: 'updatedAt',
       key: 'updatedAt',
+      width: 180,
       render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: '文章标签',
       dataIndex: 'tags',
       key: 'tags',
+      width: 120,
     },
     {
       title: '文章分类',
       dataIndex: 'category',
       key: 'category',
+      width: 100,
     },
     {
       title: '文章状态',
       dataIndex: 'status',
       key: 'status',
+      width: 80,
       render: (status: ArticleStatusEnum) => (
-        <p className="max-w-[200px] truncate text-sm">{ArticleStatusMap[status]}</p>
+        <p className="truncate text-sm">{ArticleStatusMap[status]}</p>
       ),
     },
     {
       title: '操作',
       key: 'action',
+      width: 120,
       render: (_: string, record: SaveArticleDto) => {
         return (
           <div className="flex items-center gap-2">
@@ -171,7 +181,7 @@ export default function ArticlePage() {
   ];
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <Input
           prefix={<SearchOutlined />}

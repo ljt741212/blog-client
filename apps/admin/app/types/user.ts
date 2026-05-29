@@ -15,6 +15,15 @@ export interface LoginForm {
   password: string;
 }
 
+export interface LoginByCodeForm {
+  email: string;
+  code: string;
+}
+
+export interface SendCodeForm {
+  email: string;
+}
+
 /** 与后端用户接口一致：JSON 小驼峰 */
 export interface User {
   id: string;

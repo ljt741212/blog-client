@@ -69,27 +69,33 @@ export default function GuestMessagePage() {
       title: '留言内容',
       dataIndex: 'content',
       key: 'content',
+      width: 250,
+      ellipsis: true,
     },
     {
       title: '留言者昵称',
       dataIndex: 'nickname',
       key: 'nickname',
+      width: 120,
     },
     {
       title: '留言者邮箱',
       dataIndex: 'email',
       key: 'email',
+      width: 180,
     },
     {
       title: '留言时间',
       dataIndex: 'createdAt',
       key: 'createdAt',
+      width: 180,
       render: (text: string) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: '留言状态',
       dataIndex: 'status',
       key: 'status',
+      width: 120,
       render: (status: GuestMessageStatus, record: GuestMessage) => (
         <Switch
           checked={status === 'approved'}
@@ -104,6 +110,7 @@ export default function GuestMessagePage() {
     {
       title: '操作',
       key: 'action',
+      width: 80,
       render: (_: string, record: GuestMessage) => {
         return (
           <Button type="link" onClick={() => deleteGuestMessage(record.id)}>

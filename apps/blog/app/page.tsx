@@ -19,7 +19,6 @@ export default function Home() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [categoryId, setCategoryId] = useState<number | undefined>();
-  const [loading, setLoading] = useState(false);
   const [pagInfo, setPagInfo] = useState({
     current: 1,
     pageSize: 10,
@@ -31,7 +30,6 @@ export default function Home() {
     pageSize: number = 10,
     overrides?: { categoryId?: number; searchValue?: string }
   ) => {
-    setLoading(true);
     const cid = overrides && 'categoryId' in overrides ? overrides.categoryId : categoryId;
     const keyword = overrides && 'searchValue' in overrides ? overrides.searchValue : searchValue;
     const data = await getArticles({
@@ -39,8 +37,6 @@ export default function Home() {
       categoryId: cid,
       current,
       pageSize,
-    }).finally(() => {
-      setLoading(false);
     });
     const { items, meta } = data;
     setArticle(items);
@@ -66,12 +62,7 @@ export default function Home() {
             ))}
           </div>
 
-          <Pagination
-            className="mt-8 dark-pagination"
-            {...pagInfo}
-            onChange={fetchArticles}
-            loading={loading}
-          />
+          <Pagination className="mt-8 dark-pagination" {...pagInfo} onChange={fetchArticles} />
         </div>
         <div className="flex w-80 flex-col gap-8">
           <div

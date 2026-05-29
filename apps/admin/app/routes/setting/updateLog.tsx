@@ -199,7 +199,8 @@ export default function UpdateLogPage() {
               form.setFieldsValue({
                 ...record,
                 releaseDate: dayjs(record.releaseDate),
-              });
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              } as any);
             }}
           />
           <DeleteOutlined

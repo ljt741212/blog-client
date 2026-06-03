@@ -153,17 +153,17 @@ export default async function RootLayout({
   } catch {
     // build-time: API not available
   }
-  const hasCustomBg = !!siteConfig?.backgroundImage;
+  const bgImage = siteConfig?.backgroundImage;
 
   return (
-    <html lang="zh-CN" className={hasCustomBg ? 'has-custom-bg' : undefined}>
+    <html lang="zh-CN" className={bgImage ? 'has-custom-bg' : undefined}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {hasCustomBg && (
+        {bgImage && (
           <>
             <div
               className="fixed inset-0 -z-10"
               style={{
-                backgroundImage: `url(${siteConfig.backgroundImage})`,
+                backgroundImage: `url(${bgImage})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',

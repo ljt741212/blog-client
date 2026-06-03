@@ -41,41 +41,56 @@ jobs:
   deploy:
     needs: typecheck
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        run: |
-          set -e
-          if [ -d /opt/blog-client-repo ]; then
-            cd /opt/blog-client-repo
-            git fetch origin main
-            git reset --hard origin/main
-          else
-            git clone git@github.com:ljt741212/blog-client.git /opt/blog-client-repo
-          fi
+      - uses: actions/checkout@v4
 
-      - name: Build admin
-        run: |
-          set -e
-          docker run --rm \
-            --memory=1.5g \
-            -e NODE_OPTIONS="--max-old-space-size=1024" \
-            -v /opt/blog-client-repo:/app \
-            -v /opt/blog-client/admin-dist:/output \
-            node:22-alpine sh -c "
-              corepack enable &&
-              corepack prepare pnpm@10.6.3 --activate &&
-              cd /app &&
-              pnpm install --frozen-lockfile &&
-              pnpm build:admin &&
-              rm -rf /output/* &&
-              cp -r apps/admin/build/client/* /output/
-            "
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.6.3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build:admin
+
+      - name: Deploy admin static files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: 'apps/admin/build/client/'
+          target: '/opt/blog-client/admin-dist/'
+          strip_components: 4
+          rm: true
+          overwrite: true
 
       - name: Sync nginx config
-        run: |
-          set -e
-          cp -f /opt/blog-client-repo/deploy/nginx-blog.conf /etc/nginx/conf.d/blog.conf
-          docker run --rm --pid host -v /etc/nginx/conf.d:/etc/nginx/conf.d -v /var/run:/var/run nginx:alpine nginx -t
-          docker run --rm --pid host -v /etc/nginx/conf.d:/etc/nginx/conf.d -v /var/run:/var/run nginx:alpine nginx -s reload
-          echo ">>> admin deployed successfully"
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: 'deploy/nginx-blog.conf'
+          target: '/opt/blog-client/'
+          strip_components: 1
+          overwrite: true
+
+      - name: Reload nginx
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            cp -f /opt/blog-client/nginx-blog.conf /etc/nginx/conf.d/blog.conf
+            nginx -t && nginx -s reload
+            echo ">>> admin deployed successfully"

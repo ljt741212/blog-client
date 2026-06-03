@@ -65,7 +65,22 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-      - uses: appleboy/ssh-action@v1
+      - uses: actions/checkout@v4
+
+      - name: Copy deploy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: 'deploy/*'
+          target: '/opt/blog-client/'
+          strip_components: 1
+          overwrite: true
+
+      - name: Deploy blog
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
@@ -74,6 +89,9 @@ jobs:
           script: |
             set -e
             cd /opt/blog-client
+
+            echo ">>> logging in to GHCR..."
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
             echo ">>> pulling latest image..."
             docker compose pull

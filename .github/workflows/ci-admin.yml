@@ -60,17 +60,30 @@ jobs:
       - name: Build admin
         run: pnpm build:admin
 
-      - name: Deploy to server
+      - name: Deploy admin static files
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
-          source: 'apps/admin/build/client/*'
+          source: 'apps/admin/build/client/'
           target: '/opt/blog-client/admin-dist/'
-          strip_components: 3
+          strip_components: 4
           rm: true
+          overwrite: true
+
+      - name: Sync nginx config
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          source: 'deploy/nginx-blog.conf'
+          target: '/opt/blog-client/'
+          strip_components: 1
+          overwrite: true
 
       - name: Reload nginx
         uses: appleboy/ssh-action@v1

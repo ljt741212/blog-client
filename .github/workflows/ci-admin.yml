@@ -51,7 +51,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
           else
-            git clone https://github.com/ljt741212/blog-client.git /opt/blog-client-repo
+            git clone git@github.com:ljt741212/blog-client.git /opt/blog-client-repo
           fi
 
       - name: Build admin

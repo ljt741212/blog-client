@@ -51,7 +51,7 @@ const createRequest = (baseURL: string) => {
         // token 过期或未授权，清除 token 并跳转到登录页
         removeCookie('token');
         message.error('未授权，请重新登录');
-        window.location.href = '/login';
+        window.location.href = '/admin/login';
         throw new RequestError(401, '未授权，请重新登录');
       }
       throw new RequestError(response.status, response.statusText ?? '请求失败');

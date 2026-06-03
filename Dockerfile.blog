@@ -38,4 +38,4 @@ COPY --from=builder /app/apps/blog/public ./apps/blog/public
 
 EXPOSE 3005
 
-CMD ["node", "server.js"]
+CMD ["node", "apps/blog/server.js"]

@@ -58,7 +58,7 @@ jobs:
         run: |
           set -e
           docker run --rm \
-            -e NODE_OPTIONS="--max-old-space-size=512" \
+            -e NODE_OPTIONS="--max-old-space-size=768" \
             -v /opt/blog-client-repo:/app \
             -v /opt/blog-client/admin-dist:/output \
             node:22-alpine sh -c "

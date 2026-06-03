@@ -6,6 +6,8 @@ on:
     paths:
       - 'apps/blog/**'
       - 'packages/**'
+      - 'Dockerfile.blog'
+      - 'deploy/**'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'package.json'
@@ -35,24 +37,32 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter blog lint
 
-  build:
+  build-and-push:
     needs: lint
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
         with:
-          version: 10.6.3
-      - uses: actions/setup-node@v4
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
         with:
-          node-version: 20
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build:blog
+          context: .
+          file: Dockerfile.blog
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/blog-client:latest
 
   deploy:
-    needs: build
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - uses: appleboy/ssh-action@v1
@@ -62,8 +72,21 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
           script: |
-            cd /var/www/blog-client
-            git pull origin main 2>/dev/null || git pull origin master
-            pnpm install --frozen-lockfile
-            pnpm build:blog
-            pm2 reload blog
+            set -e
+            cd /opt/blog-client
+
+            echo ">>> pulling latest image..."
+            docker compose pull
+
+            echo ">>> restarting blog..."
+            docker compose up -d --remove-orphans
+
+            echo ">>> syncing nginx config..."
+            cp -f nginx-blog.conf /etc/nginx/conf.d/blog.conf
+            nginx -t && nginx -s reload
+
+            echo ">>> cleaning up old images..."
+            docker image prune -f
+
+            echo ">>> container status:"
+            docker compose ps

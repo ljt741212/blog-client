@@ -7,10 +7,12 @@ on:
       - 'apps/admin/**'
       - 'packages/**'
       - 'deploy/**'
+      - '.github/workflows/ci-admin.yml'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'package.json'
       - 'tsconfig.json'
+  workflow_dispatch:
   pull_request:
     branches: [main, master]
     paths:

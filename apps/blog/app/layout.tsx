@@ -1,6 +1,8 @@
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import './globals.css';
+import type { SeoSetting, SiteConfig } from '@/types';
+
 import { SuspensionPanel } from './components';
 import AnalyticsLoader from './components/analyticsLoader';
 import GeometricRibbons from './components/GeometricRibbons';

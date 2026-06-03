@@ -59,7 +59,7 @@ export default function ArticleCommentsCard({
       setContent('');
       // 重新加载评论列表
       loadComments();
-    } catch (error) {
+    } catch {
       message.error('发表评论失败，请稍后重试');
     } finally {
       setSubmitting(false);

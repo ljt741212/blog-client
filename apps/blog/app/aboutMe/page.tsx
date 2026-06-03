@@ -54,6 +54,7 @@ export default async function AboutMe() {
             }}
           >
             {avatar ? (
+              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={avatar}
                 alt={nickname ?? ''}

@@ -63,7 +63,8 @@ jobs:
           echo ">>> syncing deploy files..."
           cp -f deploy/docker-compose.yml /opt/blog-client/docker-compose.yml
           cp -f deploy/nginx-blog.conf /etc/nginx/conf.d/blog.conf
-          nginx -t && nginx -s reload
+          docker run --rm --pid host -v /etc/nginx/conf.d:/etc/nginx/conf.d -v /var/run:/var/run nginx:alpine nginx -t
+          docker run --rm --pid host -v /etc/nginx/conf.d:/etc/nginx/conf.d -v /var/run:/var/run nginx:alpine nginx -s reload
 
           echo ">>> building blog image..."
           docker build -f Dockerfile.blog -t blog-client:latest .

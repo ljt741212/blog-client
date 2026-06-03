@@ -15,4 +15,5 @@ services:
 
 networks:
   blog_network:
+    name: blog-server_blog_network
     external: true

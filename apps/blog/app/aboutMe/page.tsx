@@ -4,6 +4,8 @@ import { getAuthor } from '@/lib/api';
 
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: '关于我',
 };
@@ -54,7 +56,6 @@ export default async function AboutMe() {
             }}
           >
             {avatar ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={avatar}
                 alt={nickname ?? ''}

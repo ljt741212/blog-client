@@ -1,6 +1,6 @@
 services:
   blog:
-    image: ghcr.io/ljt741212/blog-client:latest
+    image: blog-client:latest
     container_name: blog-client
     restart: always
     ports:

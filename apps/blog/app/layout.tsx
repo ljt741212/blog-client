@@ -34,7 +34,12 @@ const defaultMetadata: Metadata = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seoSettings = await getSeoSettings();
+  let seoSettings: SeoSetting | null = null;
+  try {
+    seoSettings = await getSeoSettings();
+  } catch {
+    // build-time: API not available, use defaults
+  }
 
   if (!seoSettings) {
     return defaultMetadata;
@@ -140,7 +145,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteConfig = await getSiteConfig();
+  let siteConfig: SiteConfig | null = null;
+  try {
+    siteConfig = await getSiteConfig();
+  } catch {
+    // build-time: API not available
+  }
   const hasCustomBg = !!siteConfig?.backgroundImage;
 
   return (

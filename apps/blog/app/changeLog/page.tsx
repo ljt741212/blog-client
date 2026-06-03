@@ -1,6 +1,8 @@
 import { getChangelogs } from '@/lib/api';
 import type { Changelog, ChangelogType } from '@/types';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: '更新日志',
   description: '博客与系统的版本更新记录',

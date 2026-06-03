@@ -6,6 +6,8 @@ import { get } from '@/lib/request';
 import type { PaginationResponse } from '@/types';
 import type { Article } from '@/types/article';
 
+export const dynamic = 'force-dynamic';
+
 type ArticleDetailProps = {
   params: { id: string };
 };

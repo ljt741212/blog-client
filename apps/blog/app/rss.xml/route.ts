@@ -9,6 +9,8 @@ function escapeXml(s: string): string {
     .replace(/'/g, '&apos;');
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const [seo, articlesRes] = await Promise.all([
     getSeoSettings(),

@@ -15,7 +15,7 @@ export default async function ArticleDetail({ params }: ArticleDetailProps) {
 
   let article: Article | null = null;
   let recentArticles: { id: string; title: string }[] = [];
-  const [detailRes, listRes, commentsRes, _] = await Promise.all([
+  const [detailRes, listRes, commentsRes] = await Promise.all([
     get<Article>(`/posts/${id}`, {
       next: { revalidate: 60 },
     }),

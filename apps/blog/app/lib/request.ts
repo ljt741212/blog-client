@@ -92,7 +92,7 @@ const createRequest = () => {
     let data: ApiResponse<T>;
     try {
       data = await response.json();
-    } catch (error) {
+    } catch {
       throw new RequestError(0, '响应解析失败，不是有效的JSON格式');
     }
 

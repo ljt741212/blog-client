@@ -75,5 +75,6 @@ jobs:
         run: |
           set -e
           cp -f /opt/blog-client-repo/deploy/nginx-blog.conf /etc/nginx/conf.d/blog.conf
-          nginx -t && nginx -s reload
+          docker run --rm --pid host -v /etc/nginx/conf.d:/etc/nginx/conf.d -v /var/run:/var/run nginx:alpine nginx -t
+          docker run --rm --pid host -v /etc/nginx/conf.d:/etc/nginx/conf.d -v /var/run:/var/run nginx:alpine nginx -s reload
           echo ">>> admin deployed successfully"

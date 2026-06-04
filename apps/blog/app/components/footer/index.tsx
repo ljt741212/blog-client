@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { LinkOutlined } from '@ant-design/icons';
 import Link from 'next/link';
@@ -31,19 +31,14 @@ const quotes = [
 ];
 
 export default function Footer() {
-  const [days, setDays] = useState(0);
-  const [quote, setQuote] = useState('');
-
-  useEffect(() => {
-    setDays(Math.floor((Date.now() - BLOG_START_DATE.getTime()) / 86400000));
-    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
-  }, []);
+  const [days] = useState(() => Math.floor((Date.now() - BLOG_START_DATE.getTime()) / 86400000));
+  const [quote] = useState(() => quotes[Math.floor(Math.random() * quotes.length)]);
 
   return (
     <footer className="bg-[var(--background)] text-[var(--foreground)]">
       <div className="w-full px-32 py-6 flex flex-col items-center gap-2 text-sm">
         <div className="flex items-center gap-4 text-[var(--text-muted)] text-xs">
-          <span>已稳定运行 {days} 天</span>
+          <span suppressHydrationWarning>已稳定运行 {days} 天</span>
           <span className="text-[var(--border-primary)]">|</span>
           <span>粤ICP备2026000000号-1</span>
           <span className="text-[var(--border-primary)]">|</span>
@@ -55,7 +50,9 @@ export default function Footer() {
             RSS
           </Link>
         </div>
-        <p className="text-xs text-[var(--text-tertiary)] italic">&ldquo;{quote}&rdquo;</p>
+        <p className="text-xs text-[var(--text-tertiary)] italic" suppressHydrationWarning>
+          &ldquo;{quote}&rdquo;
+        </p>
       </div>
     </footer>
   );

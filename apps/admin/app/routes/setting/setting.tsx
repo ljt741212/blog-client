@@ -1,19 +1,36 @@
 import React, { useEffect, useState } from 'react';
 
 import { GlobalOutlined, LinkOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Card, Row, Col, Typography, message, Upload } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  Space,
+  Card,
+  Row,
+  Col,
+  Typography,
+  message,
+  Upload,
+  DatePicker,
+} from 'antd';
+import dayjs from 'dayjs';
 
 import { settingService } from '@/services/setting';
 import { siteConfigService } from '@/services/siteConfig';
 import { uploadService } from '@/services/upload';
 
 import type { Setting as SiteSetting } from '~/types/setting';
+import type { SiteConfig } from '~/types/siteConfig';
+
+interface FormValues extends SiteSetting {
+  siteConfig: SiteConfig;
+}
 
 // 博客基础设置页
 export default function Setting() {
-  const [form] = Form.useForm<SiteSetting>();
+  const [form] = Form.useForm<FormValues>();
   const [loading, setLoading] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -23,8 +40,10 @@ export default function Setting() {
           settingService.getSetting(),
           siteConfigService.get(),
         ]);
-        form.setFieldsValue(settingData);
-        setBackgroundImage(siteConfig.data?.backgroundImage || null);
+        form.setFieldsValue({
+          ...settingData,
+          siteConfig: siteConfig?.data ?? {},
+        });
       } finally {
         setLoading(false);
       }
@@ -32,7 +51,7 @@ export default function Setting() {
     init();
   }, [form]);
 
-  const handleSubmit = async (values: SiteSetting) => {
+  const handleSubmit = async (values: FormValues) => {
     setLoading(true);
     try {
       const payload: SiteSetting = {
@@ -42,7 +61,7 @@ export default function Setting() {
       };
       await Promise.all([
         settingService.saveSetting(payload),
-        siteConfigService.save({ backgroundImage }),
+        siteConfigService.save(values.siteConfig ?? {}),
       ]);
       message.success('保存成功');
     } finally {
@@ -262,41 +281,55 @@ export default function Setting() {
             </Col>
             <Col span={24}>
               <Card
-                title={<SectionTitle icon={<PictureOutlined />} title="背景设置" />}
-                extra={<Typography.Text type="secondary">自定义站点背景图</Typography.Text>}
+                title={<SectionTitle icon={<PictureOutlined />} title="站点设置" />}
+                extra={<Typography.Text type="secondary">网站信息与背景图</Typography.Text>}
               >
-                <Space direction="vertical" size="middle">
-                  <Upload
-                    maxCount={1}
-                    listType="picture-card"
-                    fileList={
-                      backgroundImage
-                        ? [
-                            {
-                              uid: '-1',
-                              name: 'background',
-                              status: 'done' as const,
-                              url: backgroundImage,
-                            },
-                          ]
-                        : []
-                    }
-                    customRequest={async ({ file, onSuccess }) => {
-                      const results = await handleUploadImages([file as File]);
-                      if (results?.length) {
-                        setBackgroundImage(results[0].url);
-                        onSuccess?.(results);
-                      }
-                    }}
-                    onRemove={() => setBackgroundImage(null)}
-                  >
-                    <PlusOutlined />
-                    <div className="ant-upload-text">上传</div>
-                  </Upload>
-                  <Typography.Text type="secondary">
-                    建议尺寸 1920×1080，支持 jpg / png / webp；留空则使用默认渐变背景
-                  </Typography.Text>
-                </Space>
+                <Row gutter={16}>
+                  <Col span={8}>
+                    <Form.Item label="背景图片" name={['siteConfig', 'backgroundImage']}>
+                      <Form.Item noStyle shouldUpdate>
+                        {({ getFieldValue, setFieldValue }) => {
+                          const url = getFieldValue(['siteConfig', 'backgroundImage']);
+                          return (
+                            <Upload
+                              maxCount={1}
+                              listType="picture-card"
+                              fileList={url ? [{ uid: '-1', name: 'bg', status: 'done', url }] : []}
+                              customRequest={async ({ file, onSuccess }) => {
+                                const results = await handleUploadImages([file as File]);
+                                if (results?.length) {
+                                  setFieldValue(['siteConfig', 'backgroundImage'], results[0].url);
+                                  onSuccess?.(results);
+                                }
+                              }}
+                              onRemove={() =>
+                                setFieldValue(['siteConfig', 'backgroundImage'], undefined)
+                              }
+                            >
+                              <PlusOutlined />
+                              <div className="ant-upload-text">上传</div>
+                            </Upload>
+                          );
+                        }}
+                      </Form.Item>
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item
+                      label="网站开始时间"
+                      name={['siteConfig', 'siteStartedAt']}
+                      getValueProps={v => ({ value: v ? dayjs(v) : null })}
+                      normalize={d => (d ? d.toISOString() : null)}
+                    >
+                      <DatePicker style={{ width: '100%' }} placeholder="选择网站开始运行日期" />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="页脚的一句话" name={['siteConfig', 'footerText']}>
+                      <Input placeholder="留空则不显示" maxLength={500} />
+                    </Form.Item>
+                  </Col>
+                </Row>
               </Card>
             </Col>
             <Col span={24}>

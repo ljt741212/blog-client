@@ -66,9 +66,6 @@ export async function generateMetadata(): Promise<Metadata> {
       address: false,
       telephone: false,
     },
-    // metadataBase: seoSettings.canonicalUrl
-    //   ? new URL(seoSettings.canonicalUrl)
-    //   : undefined,
     alternates: seoSettings.canonicalUrl
       ? {
           canonical: seoSettings.canonicalUrl,
@@ -104,7 +101,6 @@ export async function generateMetadata(): Promise<Metadata> {
       shortcut: '/favicon-16x16.png',
       apple: '/apple-touch-icon.png',
     },
-    // manifest: "/site.webmanifest",
   };
 
   return metadata;

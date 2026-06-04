@@ -1,7 +1,20 @@
 import React, { useEffect, useState } from 'react';
 
 import { GlobalOutlined, LinkOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Space, Card, Row, Col, Typography, message, Upload } from 'antd';
+import {
+  Form,
+  Input,
+  Button,
+  Space,
+  Card,
+  Row,
+  Col,
+  Typography,
+  message,
+  Upload,
+  DatePicker,
+} from 'antd';
+import dayjs from 'dayjs';
 
 import { settingService } from '@/services/setting';
 import { siteConfigService } from '@/services/siteConfig';
@@ -14,6 +27,8 @@ export default function Setting() {
   const [form] = Form.useForm<SiteSetting>();
   const [loading, setLoading] = useState(false);
   const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [dailyQuote, setDailyQuote] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -25,6 +40,8 @@ export default function Setting() {
         ]);
         form.setFieldsValue(settingData);
         setBackgroundImage(siteConfig.data?.backgroundImage || null);
+        setStartDate(siteConfig.data?.startDate || null);
+        setDailyQuote(siteConfig.data?.dailyQuote || null);
       } finally {
         setLoading(false);
       }
@@ -42,7 +59,7 @@ export default function Setting() {
       };
       await Promise.all([
         settingService.saveSetting(payload),
-        siteConfigService.save({ backgroundImage }),
+        siteConfigService.save({ backgroundImage, startDate, dailyQuote }),
       ]);
       message.success('保存成功');
     } finally {
@@ -296,6 +313,28 @@ export default function Setting() {
                   <Typography.Text type="secondary">
                     建议尺寸 1920×1080，支持 jpg / png / webp；留空则使用默认渐变背景
                   </Typography.Text>
+
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <Typography.Text strong>网站开始时间</Typography.Text>
+                      <DatePicker
+                        style={{ width: '100%', marginTop: 8 }}
+                        placeholder="选择网站开始运行日期"
+                        value={startDate ? dayjs(startDate) : null}
+                        onChange={date => setStartDate(date ? date.format('YYYY-MM-DD') : null)}
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <Typography.Text strong>每日一句</Typography.Text>
+                      <Input
+                        style={{ marginTop: 8 }}
+                        placeholder="Footer 展示的每日一句"
+                        value={dailyQuote ?? ''}
+                        onChange={e => setDailyQuote(e.target.value || null)}
+                        maxLength={200}
+                      />
+                    </div>
+                  </div>
                 </Space>
               </Card>
             </Col>

@@ -5,9 +5,11 @@ import { useState } from 'react';
 import { LinkOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 
-const BLOG_START_DATE = new Date('2025-05-18');
+import { useSiteConfig } from '@/context/SiteConfigContext';
 
-const quotes = [
+const FALLBACK_START_DATE = '2025-05-18';
+
+const FALLBACK_QUOTES = [
   '代码是写给人看的，顺便能在机器上运行。',
   '优秀的代码本身就是最好的文档。',
   '先让它能工作，再让它变优雅。',
@@ -31,8 +33,20 @@ const quotes = [
 ];
 
 export default function Footer() {
-  const [days] = useState(() => Math.floor((Date.now() - BLOG_START_DATE.getTime()) / 86400000));
-  const [quote] = useState(() => quotes[Math.floor(Math.random() * quotes.length)]);
+  const siteConfig = useSiteConfig();
+  const startDateStr = siteConfig?.startDate || FALLBACK_START_DATE;
+  const dailyQuote = siteConfig?.dailyQuote;
+
+  const [days] = useState(() => {
+    const start = new Date(startDateStr).getTime();
+    return Math.floor((Date.now() - start) / 86400000);
+  });
+
+  const [randomQuote] = useState(
+    () => FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)]
+  );
+
+  const quote = dailyQuote || randomQuote;
 
   return (
     <footer className="bg-[var(--background)] text-[var(--foreground)]">

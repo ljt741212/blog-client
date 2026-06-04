@@ -8,7 +8,7 @@ import {
   ArrowLeftOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
-import { Form, Input, Card, Select, DatePicker, Button, Space, message, Upload } from 'antd';
+import { Form, Input, Modal, Card, Select, DatePicker, Button, Space, message, Upload } from 'antd';
 import dayjs from 'dayjs';
 import { Editor as MarkdownEditor } from 'markdownEditor';
 import { useSearchParams, useNavigate } from 'react-router';
@@ -34,6 +34,12 @@ export default function SaveArticlePage() {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
+  const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+  const [tagModalOpen, setTagModalOpen] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newTagName, setNewTagName] = useState('');
+  const [creatingCategory, setCreatingCategory] = useState(false);
+  const [creatingTag, setCreatingTag] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -82,6 +88,47 @@ export default function SaveArticlePage() {
     return res?.data?.url;
   };
 
+  const refreshCategories = async () => {
+    const res = await categoryService.getCategoryAll();
+    setCategories(res?.data ?? []);
+  };
+
+  const refreshTags = async () => {
+    const res = await tagService.getTagAll();
+    setTags(res?.data ?? []);
+  };
+
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    setCreatingCategory(true);
+    try {
+      await categoryService.saveCategory({
+        name: newCategoryName.trim(),
+        status: 1,
+      });
+      await refreshCategories();
+      message.success('分类创建成功');
+      setCategoryModalOpen(false);
+      setNewCategoryName('');
+    } finally {
+      setCreatingCategory(false);
+    }
+  };
+
+  const handleCreateTag = async () => {
+    if (!newTagName.trim()) return;
+    setCreatingTag(true);
+    try {
+      await tagService.saveTag({ name: newTagName.trim() });
+      await refreshTags();
+      message.success('标签创建成功');
+      setTagModalOpen(false);
+      setNewTagName('');
+    } finally {
+      setCreatingTag(false);
+    }
+  };
+
   const handleSave = async (isPublish = false) => {
     const values = await form.validateFields();
     const articleData: Partial<SaveArticleDto> = {
@@ -114,9 +161,7 @@ export default function SaveArticlePage() {
           <Button icon={<ArrowLeftOutlined />} onClick={goBack}>
             返回列表
           </Button>
-          <span className="text-sm text-gray-500">
-            {articleId ? '编辑文章' : '新建文章'}
-          </span>
+          <span className="text-sm text-gray-500">{articleId ? '编辑文章' : '新建文章'}</span>
         </Space>
         <Space>
           <Button icon={<EyeOutlined />} onClick={() => handleSave(false)}>
@@ -194,13 +239,17 @@ export default function SaveArticlePage() {
                 name="categoryId"
                 rules={[{ required: true, message: '请选择文章分类' }]}
               >
-                <Select
-                  placeholder="请选择分类"
-                  options={categories.map(cat => ({
-                    value: cat.id,
-                    label: cat.name,
-                  }))}
-                />
+                <div className="flex gap-2">
+                  <Select
+                    className="flex-1"
+                    placeholder="请选择分类"
+                    options={categories.map(cat => ({
+                      value: cat.id,
+                      label: cat.name,
+                    }))}
+                  />
+                  <Button icon={<PlusOutlined />} onClick={() => setCategoryModalOpen(true)} />
+                </div>
               </Form.Item>
 
               <Form.Item
@@ -208,14 +257,18 @@ export default function SaveArticlePage() {
                 name="tagIds"
                 rules={[{ required: true, message: '请选择文章标签' }]}
               >
-                <Select
-                  mode="multiple"
-                  placeholder="请选择标签"
-                  options={tags.map(tag => ({
-                    value: tag.id,
-                    label: tag.name,
-                  }))}
-                />
+                <div className="flex gap-2">
+                  <Select
+                    className="flex-1"
+                    mode="multiple"
+                    placeholder="请选择标签"
+                    options={tags.map(tag => ({
+                      value: tag.id,
+                      label: tag.name,
+                    }))}
+                  />
+                  <Button icon={<PlusOutlined />} onClick={() => setTagModalOpen(true)} />
+                </div>
               </Form.Item>
 
               <Form.Item
@@ -260,6 +313,46 @@ export default function SaveArticlePage() {
         </div>
       </div>
       <FullScreenLoading loading={loading} />
+
+      <Modal
+        title="新增分类"
+        open={categoryModalOpen}
+        onOk={handleCreateCategory}
+        confirmLoading={creatingCategory}
+        onCancel={() => {
+          setCategoryModalOpen(false);
+          setNewCategoryName('');
+        }}
+        okText="创建"
+        cancelText="取消"
+      >
+        <Input
+          placeholder="请输入分类名称"
+          value={newCategoryName}
+          onChange={e => setNewCategoryName(e.target.value)}
+          onPressEnter={handleCreateCategory}
+        />
+      </Modal>
+
+      <Modal
+        title="新增标签"
+        open={tagModalOpen}
+        onOk={handleCreateTag}
+        confirmLoading={creatingTag}
+        onCancel={() => {
+          setTagModalOpen(false);
+          setNewTagName('');
+        }}
+        okText="创建"
+        cancelText="取消"
+      >
+        <Input
+          placeholder="请输入标签名称"
+          value={newTagName}
+          onChange={e => setNewTagName(e.target.value)}
+          onPressEnter={handleCreateTag}
+        />
+      </Modal>
     </div>
   );
 }

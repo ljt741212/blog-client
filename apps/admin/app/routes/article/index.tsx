@@ -1,13 +1,7 @@
 import { useState } from 'react';
 
-import {
-  SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  CheckOutlined,
-  CloseOutlined,
-} from '@ant-design/icons';
-import { Button, Input, Table, message, Image } from 'antd';
+import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Input, Modal, Switch, Table, message, Image } from 'antd';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
 
@@ -17,12 +11,6 @@ import type { Pagination } from '@/types/index';
 
 import type { SaveArticleDto, ArticlePageQueryDto } from '~/types/article';
 import { ArticleStatusEnum } from '~/types/article';
-
-const ArticleStatusMap = {
-  [ArticleStatusEnum.DRAFT]: '草稿',
-  [ArticleStatusEnum.PUBLISHED]: '发布',
-  [ArticleStatusEnum.ARCHIVED]: '归档',
-};
 
 export default function ArticlePage() {
   const navigate = useNavigate();
@@ -70,16 +58,19 @@ export default function ArticlePage() {
     queryFn: (params?: Partial<ArticlePageQueryDto>) => fetchArticleList(params),
   });
 
-  const deleteArticle = async (id: string) => {
-    await articleService.deleteArticle(id);
-    message.success('删除成功');
-    await refetch();
-  };
-
-  const importArticle = async () => {
-    // await articleService.importArticle();
-    message.success('导入成功');
-    await refetch();
+  const deleteArticle = (id: string) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: '确定要删除这篇文章吗？此操作不可撤销。',
+      okText: '确认删除',
+      cancelText: '取消',
+      okButtonProps: { danger: true },
+      onOk: async () => {
+        await articleService.deleteArticle(id);
+        message.success('删除成功');
+        await refetch();
+      },
+    });
   };
 
   const changeStatus = async (id: number, status: ArticleStatusEnum) => {
@@ -139,15 +130,26 @@ export default function ArticlePage() {
       title: '文章状态',
       dataIndex: 'status',
       key: 'status',
-      width: 80,
-      render: (status: ArticleStatusEnum) => (
-        <p className="truncate text-sm">{ArticleStatusMap[status]}</p>
+      width: 100,
+      render: (_status: ArticleStatusEnum, record: SaveArticleDto) => (
+        <Switch
+          checked={record.status === ArticleStatusEnum.PUBLISHED}
+          disabled={record.status === ArticleStatusEnum.ARCHIVED}
+          checkedChildren="发布"
+          unCheckedChildren="草稿"
+          onChange={checked =>
+            changeStatus(
+              record.id as unknown as number,
+              checked ? ArticleStatusEnum.PUBLISHED : ArticleStatusEnum.DRAFT
+            )
+          }
+        />
       ),
     },
     {
       title: '操作',
       key: 'action',
-      width: 120,
+      width: 80,
       render: (_: string, record: SaveArticleDto) => {
         return (
           <div className="flex items-center gap-2">
@@ -159,21 +161,6 @@ export default function ArticlePage() {
               className="text-red-500 hover:text-red-600 cursor-pointer text-lg"
               onClick={() => deleteArticle(record.id as unknown as string)}
             />
-            {record.status === ArticleStatusEnum.PUBLISHED ? (
-              <CheckOutlined
-                className="text-green-500 hover:text-green-600 cursor-pointer text-lg"
-                onClick={() =>
-                  changeStatus(record.id as unknown as number, ArticleStatusEnum.DRAFT)
-                }
-              />
-            ) : (
-              <CloseOutlined
-                className="text-red-500 hover:text-red-600 cursor-pointer text-lg"
-                onClick={() =>
-                  changeStatus(record.id as unknown as number, ArticleStatusEnum.PUBLISHED)
-                }
-              />
-            )}
           </div>
         );
       },
@@ -193,14 +180,9 @@ export default function ArticlePage() {
           }}
           style={{ width: 200 }}
         />
-        <div className="flex items-center gap-2">
-          <Button type="default" onClick={() => editArticle()}>
-            添加文章
-          </Button>
-          <Button type="default" onClick={() => importArticle()}>
-            批量导入
-          </Button>
-        </div>
+        <Button type="default" onClick={() => editArticle()}>
+          添加文章
+        </Button>
       </div>
       <Table
         dataSource={data ?? []}

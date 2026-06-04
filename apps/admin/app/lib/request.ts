@@ -56,7 +56,16 @@ const createRequest = (baseURL: string) => {
         }
         throw new RequestError(401, '未授权，请重新登录');
       }
-      throw new RequestError(response.status, response.statusText ?? '请求失败');
+
+      let errorMsg = response.statusText || '请求失败';
+      try {
+        const body = await response.json();
+        errorMsg = body.msg || body.message || errorMsg;
+      } catch {
+        // 响应体不是 JSON，用 statusText
+      }
+      message.error(errorMsg);
+      throw new RequestError(response.status, errorMsg);
     }
 
     const data = await response.json();

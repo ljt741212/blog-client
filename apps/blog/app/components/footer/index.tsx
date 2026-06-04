@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { LinkOutlined } from '@ant-design/icons';
 import Link from 'next/link';
@@ -31,10 +31,13 @@ const quotes = [
 ];
 
 export default function Footer() {
-  const [days] = useState(() =>
-    Math.floor((Date.now() - BLOG_START_DATE.getTime()) / 86400000)
-  );
-  const [quote] = useState(() => quotes[Math.floor(Math.random() * quotes.length)]);
+  const [days, setDays] = useState(0);
+  const [quote, setQuote] = useState('');
+
+  useEffect(() => {
+    setDays(Math.floor((Date.now() - BLOG_START_DATE.getTime()) / 86400000));
+    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+  }, []);
 
   return (
     <footer className="bg-[var(--background)] text-[var(--foreground)]">

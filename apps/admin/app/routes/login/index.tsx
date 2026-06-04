@@ -9,6 +9,7 @@ import {
 import { Form, Input, Button, message } from 'antd';
 import { useNavigate } from 'react-router';
 
+import { RequestError } from '@/lib/request';
 import { userService } from '@/services';
 import { setCookie } from '@/utils';
 
@@ -57,8 +58,10 @@ export default function Login() {
       await userService.sendCode({ email });
       message.success('验证码已发送');
       startCountdown();
-    } catch {
-      // 错误已在拦截器处理
+    } catch (err) {
+      if (err instanceof RequestError) {
+        message.error(err.message);
+      }
     } finally {
       setSending(false);
     }
@@ -86,8 +89,10 @@ export default function Login() {
       setCookie('token', data.token, 7);
       window.localStorage.setItem('currentUser', JSON.stringify(data.user ?? {}));
       navigate('/', { replace: true });
-    } catch {
-      // 错误已在 request 拦截器中处理
+    } catch (err) {
+      if (err instanceof RequestError) {
+        message.error(err.message);
+      }
     } finally {
       setLoading(false);
     }

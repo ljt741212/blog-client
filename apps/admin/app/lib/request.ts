@@ -48,10 +48,12 @@ const createRequest = (baseURL: string) => {
   const responseInterceptor = async <T>(response: Response): Promise<ResponseData<T>> => {
     if (!response.ok) {
       if (response.status === 401) {
-        // token 过期或未授权，清除 token 并跳转到登录页
         removeCookie('token');
-        message.error('未授权，请重新登录');
-        window.location.href = '/admin/login';
+        // 如果已经登录页了，不再重定向——让登录页自己处理错误
+        if (!window.location.pathname.startsWith('/admin/login')) {
+          message.error('未授权，请重新登录');
+          window.location.href = '/admin/login';
+        }
         throw new RequestError(401, '未授权，请重新登录');
       }
       throw new RequestError(response.status, response.statusText ?? '请求失败');

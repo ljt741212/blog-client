@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { getAuthor } from '@/lib/api';
@@ -56,9 +57,11 @@ export default async function AboutMe() {
             }}
           >
             {avatar ? (
-              <img
+              <Image
                 src={avatar}
                 alt={nickname ?? ''}
+                width={96}
+                height={96}
                 className="mb-4 h-24 w-24 rounded-full object-cover border-2"
                 style={{ borderColor: 'var(--border-primary)' }}
               />

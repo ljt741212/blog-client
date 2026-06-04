@@ -325,10 +325,10 @@ export default function Setting() {
                       />
                     </div>
                     <div className="flex-1">
-                      <Typography.Text strong>每日一句</Typography.Text>
+                      <Typography.Text strong>页脚的一句话</Typography.Text>
                       <Input
                         style={{ marginTop: 8 }}
-                        placeholder="Footer 展示的每日一句"
+                        placeholder="留空则随机展示默认句子"
                         value={dailyQuote ?? ''}
                         onChange={e => setDailyQuote(e.target.value || null)}
                         maxLength={200}

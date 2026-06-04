@@ -279,8 +279,8 @@ export default function Setting() {
             </Col>
             <Col span={24}>
               <Card
-                title={<SectionTitle icon={<PictureOutlined />} title="背景设置" />}
-                extra={<Typography.Text type="secondary">自定义站点背景图</Typography.Text>}
+                title={<SectionTitle icon={<PictureOutlined />} title="站点设置" />}
+                extra={<Typography.Text type="secondary">网站信息与背景图</Typography.Text>}
               >
                 <Space direction="vertical" size="middle">
                   <Upload

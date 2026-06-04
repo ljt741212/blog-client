@@ -102,14 +102,11 @@ export default function SaveArticlePage() {
     if (!newCategoryName.trim()) return;
     setCreatingCategory(true);
     try {
-      const res = await categoryService.saveCategory({
+      await categoryService.saveCategory({
         name: newCategoryName.trim(),
         status: 1,
       });
       await refreshCategories();
-      if (res?.data?.id) {
-        form.setFieldValue('categoryId', res.data.id);
-      }
       message.success('分类创建成功');
       setCategoryModalOpen(false);
       setNewCategoryName('');
@@ -122,12 +119,8 @@ export default function SaveArticlePage() {
     if (!newTagName.trim()) return;
     setCreatingTag(true);
     try {
-      const res = await tagService.saveTag({ name: newTagName.trim() });
+      await tagService.saveTag({ name: newTagName.trim() });
       await refreshTags();
-      if (res?.data?.id) {
-        const currentTagIds: number[] = form.getFieldValue('tagIds') ?? [];
-        form.setFieldValue('tagIds', [...currentTagIds, res.data.id]);
-      }
       message.success('标签创建成功');
       setTagModalOpen(false);
       setNewTagName('');

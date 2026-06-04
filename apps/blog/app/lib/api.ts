@@ -11,6 +11,7 @@ import {
   CreateGuestMessageDto,
   GuestMessage,
   Author,
+  IcpInfo,
   SiteConfig,
 } from '@/types';
 
@@ -32,6 +33,16 @@ export async function getSeoSettings(): Promise<SeoSetting | null> {
 export async function getSiteConfig(): Promise<SiteConfig | null> {
   const result = await get<SiteConfig>('/site-config', {
     next: { revalidate: 300 }, // 缓存5分钟
+  });
+  return result.data ?? null;
+}
+
+/**
+ * 获取ICP备案信息
+ */
+export async function getIcpInfo(): Promise<IcpInfo | null> {
+  const result = await get<IcpInfo>('/icp-info/latest', {
+    next: { revalidate: 3600 },
   });
   return result.data ?? null;
 }

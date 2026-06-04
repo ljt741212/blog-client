@@ -8,7 +8,6 @@ import AnalyticsLoader from './components/analyticsLoader';
 import GeometricRibbons from './components/GeometricRibbons';
 import NavBar from './components/navBar';
 import Snowfall from './components/Snowfall';
-import { SiteConfigProvider } from './context/SiteConfigContext';
 import { getSeoSettings, getSiteConfig } from './lib/api';
 
 import type { Metadata } from 'next';
@@ -169,17 +168,15 @@ export default async function RootLayout({
             <style>{`:root{--page-bg:transparent}`}</style>
           </>
         )}
-        <SiteConfigProvider config={siteConfig}>
-          <AnalyticsLoader />
-          <GeometricRibbons />
-          <main className="w-full min-h-screen overflow-x-hidden flex flex-col">
-            <div id="nav-hide-sentinel" className="h-px w-full pointer-events-none" aria-hidden />
-            <NavBar />
-            <div className="flex-1">{children}</div>
-          </main>
-          <Snowfall zIndex={0} count={60} />
-          <SuspensionPanel threshold={500} />
-        </SiteConfigProvider>
+        <AnalyticsLoader />
+        <GeometricRibbons />
+        <main className="w-full min-h-screen overflow-x-hidden flex flex-col">
+          <div id="nav-hide-sentinel" className="h-px w-full pointer-events-none" aria-hidden />
+          <NavBar />
+          <div className="flex-1">{children}</div>
+        </main>
+        <Snowfall zIndex={0} count={60} />
+        <SuspensionPanel threshold={500} />
       </body>
     </html>
   );

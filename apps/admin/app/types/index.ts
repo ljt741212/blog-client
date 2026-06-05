@@ -1,3 +1,5 @@
+export * from './ai';
+
 export interface Meta {
   current: number;
   pageSize: number;

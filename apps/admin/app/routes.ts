@@ -15,5 +15,6 @@ export default [
     route('setting/guestMessage', './routes/setting/guestMessage.tsx'),
     route('setting/updateLog', './routes/setting/updateLog.tsx'),
     route('setting/tools', './routes/setting/tools.tsx'),
+    route('setting/aiConfig', './routes/setting/aiConfig.tsx'),
   ]),
 ] satisfies RouteConfig;

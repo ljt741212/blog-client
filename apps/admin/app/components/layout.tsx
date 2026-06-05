@@ -65,6 +65,7 @@ const items: MenuItem[] = [
       { key: 'guestMessage', label: '留言管理' },
       { key: 'updateLog', label: '更新日志' },
       { key: 'tools', label: '工具' },
+      { key: 'aiConfig', label: 'AI 配置' },
     ],
   },
 ];

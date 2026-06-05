@@ -65,6 +65,15 @@ export default function Data() {
       render: (value: string) => <Tag color="blue">{value}</Tag>,
     },
     {
+      title: '位置',
+      dataIndex: 'location',
+      render: (value: string) => (
+        <p className="text-sm max-w-[80px] truncate" title={value}>
+          {value ?? '-'}
+        </p>
+      ),
+    },
+    {
       title: 'UserAgent',
       dataIndex: 'userAgent',
       render: (value: string) => (

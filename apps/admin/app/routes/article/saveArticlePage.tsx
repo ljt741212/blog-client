@@ -49,24 +49,23 @@ export default function SaveArticlePage() {
       ]);
       setCategories(categoryRes?.data ?? []);
       setTags(tagRes?.data ?? []);
-    };
-    loadData();
-  }, []);
 
-  useEffect(() => {
-    const loadArticle = async () => {
       if (!articleId) return;
       const res = await articleService.getArticleById(articleId);
       const article = res?.data ?? {};
       form.setFieldsValue({
-        ...article,
+        title: article.title,
+        content: article.content,
+        summary: article.summary,
+        coverImage: article.coverImage,
         publishTime: article.publishTime ? dayjs(article.publishTime) : undefined,
         tagIds: article.tags?.map(tag => tag.id) ?? [],
         categoryId: article.category?.id,
       });
     };
-    loadArticle();
-  }, [articleId, form]);
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleUploadImages = async (
     files: File[]
@@ -154,6 +153,45 @@ export default function SaveArticlePage() {
     navigate('/article');
   };
 
+  const CategorySelect = ({
+    value,
+    onChange,
+  }: {
+    value?: number;
+    onChange?: (v: number) => void;
+  }) => (
+    <div className="flex gap-2">
+      <Select
+        className="flex-1"
+        placeholder="请选择分类"
+        value={value}
+        onChange={onChange}
+        options={categories.map(cat => ({ value: cat.id, label: cat.name }))}
+      />
+      <Button icon={<PlusOutlined />} onClick={() => setCategoryModalOpen(true)} />
+    </div>
+  );
+
+  const TagSelect = ({
+    value,
+    onChange,
+  }: {
+    value?: number[];
+    onChange?: (v: number[]) => void;
+  }) => (
+    <div className="flex gap-2">
+      <Select
+        className="flex-1"
+        mode="multiple"
+        placeholder="请选择标签"
+        value={value}
+        onChange={onChange}
+        options={tags.map(tag => ({ value: tag.id, label: tag.name }))}
+      />
+      <Button icon={<PlusOutlined />} onClick={() => setTagModalOpen(true)} />
+    </div>
+  );
+
   return (
     <div className="h-screen flex flex-col gap-4 bg-[#f3f4f6]">
       <header className="flex items-center justify-between rounded-xl border border-[#e5e7eb] bg-white px-4 py-3 shadow-sm flex-shrink-0">
@@ -239,17 +277,7 @@ export default function SaveArticlePage() {
                 name="categoryId"
                 rules={[{ required: true, message: '请选择文章分类' }]}
               >
-                <div className="flex gap-2">
-                  <Select
-                    className="flex-1"
-                    placeholder="请选择分类"
-                    options={categories.map(cat => ({
-                      value: cat.id,
-                      label: cat.name,
-                    }))}
-                  />
-                  <Button icon={<PlusOutlined />} onClick={() => setCategoryModalOpen(true)} />
-                </div>
+                <CategorySelect />
               </Form.Item>
 
               <Form.Item
@@ -257,18 +285,7 @@ export default function SaveArticlePage() {
                 name="tagIds"
                 rules={[{ required: true, message: '请选择文章标签' }]}
               >
-                <div className="flex gap-2">
-                  <Select
-                    className="flex-1"
-                    mode="multiple"
-                    placeholder="请选择标签"
-                    options={tags.map(tag => ({
-                      value: tag.id,
-                      label: tag.name,
-                    }))}
-                  />
-                  <Button icon={<PlusOutlined />} onClick={() => setTagModalOpen(true)} />
-                </div>
+                <TagSelect />
               </Form.Item>
 
               <Form.Item

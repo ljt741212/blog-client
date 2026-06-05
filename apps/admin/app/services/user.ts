@@ -16,10 +16,10 @@ export const userService = {
     return post<LoginResponse>('/users/login', data);
   },
   sendCode: (data: SendCodeForm) => {
-    return post<void>('/users/send-code', data);
+    return post<void>('/users/send-email-code', data);
   },
   loginByCode: (data: LoginByCodeForm) => {
-    return post<LoginResponse>('/users/login-by-code', data);
+    return post<LoginResponse>('/users/email-login', data);
   },
   getUserList: (params: UserPageQueryDto) => {
     return get<PaginationResponse<User>>('/users/page', { params });

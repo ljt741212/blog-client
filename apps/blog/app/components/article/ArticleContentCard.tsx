@@ -2,21 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import {
-  LikeOutlined,
-  ShareAltOutlined,
-  CopyOutlined,
-  CheckOutlined,
-  ReadOutlined,
-} from '@ant-design/icons';
+import { LikeOutlined, ShareAltOutlined, CopyOutlined, CheckOutlined } from '@ant-design/icons';
 import { Badge, Card, Divider, Space, Tag, Typography, message } from 'antd';
 import { Viewer } from 'markdownEditor';
 
 import { incrementLikes } from '@/lib/api';
-
-function calcReadingTime(text: string): number {
-  return Math.max(1, Math.ceil(text.length / 500));
-}
 
 function CodeCopyButton({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
@@ -55,6 +45,7 @@ export type ArticleContentCardProps = {
   markdown: string;
   views: number;
   likes: number;
+  publishTime?: string;
 };
 
 export default function ArticleContentCard({
@@ -65,6 +56,7 @@ export default function ArticleContentCard({
   markdown,
   views,
   likes,
+  publishTime,
 }: ArticleContentCardProps) {
   const [likeCount, setLikeCount] = useState(likes);
   const [likeLoading, setLikeLoading] = useState(false);
@@ -144,13 +136,14 @@ export default function ArticleContentCard({
             <Divider orientation="vertical" />
             <Typography.Text type="secondary">阅读：{views}</Typography.Text>
             <Divider orientation="vertical" />
-            <Space size={4}>
-              <ReadOutlined className="text-[var(--text-muted)]" />
-              <Typography.Text type="secondary">
-                约 {calcReadingTime(markdown)} 分钟
-              </Typography.Text>
-            </Space>
-            <Divider orientation="vertical" />
+            {publishTime && (
+              <>
+                <Typography.Text type="secondary">
+                  发布于 {new Date(publishTime).toLocaleDateString('zh-CN')}
+                </Typography.Text>
+                <Divider orientation="vertical" />
+              </>
+            )}
             <Typography.Text type="secondary">分类：</Typography.Text>
             <Tag key={category.id}>{category.name}</Tag>
             <Divider orientation="vertical" />

@@ -11,6 +11,8 @@ import type { Pagination } from '@/types/index';
 import type { SaveArticleDto, ArticlePageQueryDto } from '~/types/article';
 import { ArticleStatusEnum } from '~/types/article';
 
+import type { ColumnsType } from 'antd/es/table';
+
 export default function ArticlePage() {
   const [searchValue, setSearchValue] = useState('');
   const [pagination, setPagination] = useState<Pagination>({
@@ -74,7 +76,7 @@ export default function ArticlePage() {
     await refetch();
   };
 
-  const columns = [
+  const columns: ColumnsType<SaveArticleDto> = [
     {
       title: '文章标题',
       dataIndex: 'title',
@@ -126,6 +128,7 @@ export default function ArticlePage() {
       dataIndex: 'status',
       key: 'status',
       width: 100,
+      fixed: 'right',
       render: (_status: ArticleStatusEnum, record: SaveArticleDto) => (
         <Switch
           checked={record.status === ArticleStatusEnum.PUBLISHED}
@@ -145,6 +148,7 @@ export default function ArticlePage() {
       title: '操作',
       key: 'action',
       width: 80,
+      fixed: 'right',
       render: (_: string, record: SaveArticleDto) => {
         return (
           <div className="flex items-center gap-2">

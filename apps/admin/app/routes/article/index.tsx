@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Button, Input, Modal, Switch, Table, message, Image } from 'antd';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router';
 
 import { useQuery } from '@/hooks';
 import { articleService } from '@/services/article';
@@ -13,7 +12,6 @@ import type { SaveArticleDto, ArticlePageQueryDto } from '~/types/article';
 import { ArticleStatusEnum } from '~/types/article';
 
 export default function ArticlePage() {
-  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState('');
   const [pagination, setPagination] = useState<Pagination>({
     current: 1,
@@ -45,12 +43,9 @@ export default function ArticlePage() {
     return items;
   };
 
-  const editArticle = async (articleId?: string) => {
-    if (articleId) {
-      navigate(`/article/save?articleId=${articleId}`);
-      return;
-    }
-    navigate(`/article/save`);
+  const editArticle = (articleId?: string) => {
+    const url = articleId ? `/admin/article/save?articleId=${articleId}` : '/admin/article/save';
+    window.open(url, '_blank');
   };
 
   const { data, isLoading, refetch } = useQuery({

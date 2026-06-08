@@ -276,15 +276,17 @@ export default function SaveArticlePage() {
 
         <div className="w-90 flex flex-col gap-4 overflow-y-auto">
           <Card className="border border-[#e5e7eb]">
-            <Form.Item noStyle shouldUpdate={(prev, cur) => prev.content !== cur.content}>
-              {({ getFieldValue }) => (
-                <AiPanel
-                  selectedText={selectedText}
-                  editorContent={getFieldValue('content')}
-                  onInsert={handleAiInsert}
-                />
-              )}
-            </Form.Item>
+            <Form form={form}>
+              <Form.Item noStyle shouldUpdate={(prev, cur) => prev.content !== cur.content}>
+                {({ getFieldValue }) => (
+                  <AiPanel
+                    selectedText={selectedText}
+                    editorContent={getFieldValue('content')}
+                    onInsert={handleAiInsert}
+                  />
+                )}
+              </Form.Item>
+            </Form>
           </Card>
 
           <Card

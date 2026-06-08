@@ -168,20 +168,6 @@ export default function SaveArticlePage() {
     }
   }, []);
 
-  const handleAiInsert = useCallback(
-    (text: string) => {
-      const content: string = form.getFieldValue('content') ?? '';
-      if (selectedText && content.includes(selectedText)) {
-        const newContent = content.replace(selectedText, text);
-        form.setFieldValue('content', newContent);
-        setSelectedText('');
-      } else {
-        form.setFieldValue('content', content + '\n\n' + text);
-      }
-    },
-    [form, selectedText]
-  );
-
   const CategorySelect = ({
     value,
     onChange,
@@ -279,11 +265,7 @@ export default function SaveArticlePage() {
             <Form form={form}>
               <Form.Item noStyle shouldUpdate={(prev, cur) => prev.content !== cur.content}>
                 {({ getFieldValue }) => (
-                  <AiPanel
-                    selectedText={selectedText}
-                    editorContent={getFieldValue('content')}
-                    onInsert={handleAiInsert}
-                  />
+                  <AiPanel selectedText={selectedText} editorContent={getFieldValue('content')} />
                 )}
               </Form.Item>
             </Form>

@@ -51,6 +51,7 @@ export default async function ArticleDetail({ params }: ArticleDetailProps) {
                 markdown={markdown}
                 views={article?.views ?? 0}
                 likes={article?.likes ?? 0}
+                publishTime={article?.publishTime ?? undefined}
               />
               <ArticleCommentsCard articleId={String(article?.id ?? id)} comments={comments} />
             </div>

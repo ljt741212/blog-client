@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 import {
   SaveOutlined,
@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { Editor as MarkdownEditor } from 'markdownEditor';
 import { useSearchParams, useNavigate } from 'react-router';
 
+import AiPanel from '@/components/AiPanel';
 import FullScreenLoading from '@/components/loading';
 import { articleService } from '@/services/article';
 import { categoryService } from '@/services/category';
@@ -40,6 +41,8 @@ export default function SaveArticlePage() {
   const [newTagName, setNewTagName] = useState('');
   const [creatingCategory, setCreatingCategory] = useState(false);
   const [creatingTag, setCreatingTag] = useState(false);
+  const [selectedText, setSelectedText] = useState('');
+  const editorContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -153,6 +156,18 @@ export default function SaveArticlePage() {
     navigate('/article');
   };
 
+  const handleEditorMouseUp = useCallback(() => {
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed) {
+      setSelectedText('');
+      return;
+    }
+    const container = editorContainerRef.current;
+    if (container && container.contains(selection.anchorNode)) {
+      setSelectedText(selection.toString());
+    }
+  }, []);
+
   const CategorySelect = ({
     value,
     onChange,
@@ -227,7 +242,11 @@ export default function SaveArticlePage() {
               <Form.Item required name="content" className="flex-1 mb-0">
                 <Form.Item noStyle shouldUpdate={(prev, cur) => prev.content !== cur.content}>
                   {({ getFieldValue, setFieldValue }) => (
-                    <div className="h-full rounded-lg border border-[#e5e7eb] overflow-hidden">
+                    <div
+                      ref={editorContainerRef}
+                      onMouseUp={handleEditorMouseUp}
+                      className="h-full rounded-lg border border-[#e5e7eb] overflow-hidden"
+                    >
                       <MarkdownEditor
                         value={getFieldValue('content') ?? ''}
                         onChange={value => setFieldValue('content', value)}
@@ -242,6 +261,16 @@ export default function SaveArticlePage() {
         </div>
 
         <div className="w-90 flex flex-col gap-4 overflow-y-auto">
+          <Card className="border border-[#e5e7eb]">
+            <Form form={form}>
+              <Form.Item noStyle shouldUpdate={(prev, cur) => prev.content !== cur.content}>
+                {({ getFieldValue }) => (
+                  <AiPanel selectedText={selectedText} editorContent={getFieldValue('content')} />
+                )}
+              </Form.Item>
+            </Form>
+          </Card>
+
           <Card
             className="border border-[#e5e7eb]"
             title={

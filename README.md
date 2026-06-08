@@ -1,465 +1,195 @@
-# Blog Client
-
 <p align="center">
-  博客系统前端项目 - 基于 Monorepo 架构的现代化前端应用
+  <a href="https://www.cx330.cloud" target="_blank">
+    <img src="https://img.shields.io/badge/🌐-cx330.cloud-blue?style=for-the-badge" alt="Blog" />
+  </a>
+  <a href="https://github.com/ljt741212/blog-server" target="_blank">
+    <img src="https://img.shields.io/badge/🔧-后端仓库-blue?style=for-the-badge" alt="Backend" />
+  </a>
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&style=for-the-badge" alt="React 19" />
+  <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js&style=for-the-badge" alt="Next.js 16" />
+  <img src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&style=for-the-badge" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/license-ISC-green?style=for-the-badge" alt="License" />
 </p>
 
-## 项目简介
+<h1 align="center">CX330 Blog</h1>
 
-这是一个基于 Monorepo 架构的博客系统前端项目，使用 pnpm workspace 管理多个应用和共享包。项目包含用户端博客应用和管理后台应用，采用现代化的前端技术栈，提供完整的博客功能和管理功能。
+<p align="center">
+  一个现代化的全栈博客系统前端，Monorepo 架构，含用户端博客和管理后台。<br/>
+  深度集成 AI 写作助手，暗色主题，SSR 服务端渲染。
+</p>
 
-## 项目结构
+<p align="center">
+  <b>🏠 博客地址：</b><a href="https://www.cx330.cloud" target="_blank">https://www.cx330.cloud</a> &nbsp;|&nbsp;
+  <b>🔧 后端仓库：</b><a href="https://github.com/ljt741212/blog-server" target="_blank">blog-server</a>
+</p>
+
+---
+
+## ✨ 功能亮点
+
+### 📝 博客（用户端）
+
+| 模块             | 功能                                                    |
+| ---------------- | ------------------------------------------------------- |
+| 🏠 **首页**      | 文章列表分页、分类筛选、关键词搜索                      |
+| 📄 **文章详情**  | Markdown 渲染、代码高亮、自动目录导航、评论区、点赞分享 |
+| 🏷️ **分类/标签** | 按分类浏览文章，侧栏快速切换                            |
+| 💬 **评论系统**  | 文章评论、回复                                          |
+| 📋 **留言板**    | 访客留言，管理员可回复                                  |
+| 📝 **更新日志**  | 系统更新记录展示                                        |
+| 👤 **关于页面**  | 关于博客 / 关于我                                       |
+| 🌙 **暗色主题**  | CSS 变量驱动的深色主题，蓝紫粉渐变配色                  |
+| 🔍 **SEO**       | SSR + 动态 generateMetadata                             |
+| 📡 **RSS**       | 自动生成 RSS 订阅源                                     |
+| ❄️ **特效**      | 雪花特效、悬浮快捷面板                                  |
+
+### 🤖 AI 写作助手（管理后台）
+
+| 功能            | 说明                                           |
+| --------------- | ---------------------------------------------- |
+| ✏️ **AI 续写**  | 选中文字或光标位置，AI 自动续写，保持风格一致  |
+| ✨ **AI 润色**  | 打磨句式，让表达更清晰流畅                     |
+| 📝 **生成摘要** | 自动提取文章核心内容，180 字以内               |
+| 💡 **标题建议** | 根据文章内容生成 5 个标题方案                  |
+| 💬 **文章建议** | 全栈工程师视角 review 文章，指出改进点         |
+| 🔌 **多模型**   | 支持 OpenAI / DeepSeek / Anthropic，后台可切换 |
+
+### 🛠️ 管理后台
+
+| 模块             | 功能                                                |
+| ---------------- | --------------------------------------------------- |
+| 📊 **数据看板**  | 核心指标可视化                                      |
+| 📝 **文章管理**  | 新建/编辑/删除/草稿/发布，Markdown 编辑器 + AI 助理 |
+| 👥 **用户管理**  | 注册用户管理，权限控制                              |
+| 💬 **评论管理**  | 评论审核、删除                                      |
+| 🏷️ **分类/标签** | 文章分类和标签的 CRUD                               |
+| ⚙️ **网站设置**  | 基础配置、个人信息、留言管理、更新日志、工具箱      |
+
+---
+
+## 🏗️ 技术栈
+
+| 分类       | 技术                                                    |
+| ---------- | ------------------------------------------------------- |
+| **框架**   | React 19 · Next.js 16 · React Router 7                  |
+| **语言**   | TypeScript 5                                            |
+| **样式**   | Tailwind CSS 4 · Ant Design 6                           |
+| **编辑器** | ByteMD + GFM + 代码高亮 + 数学公式 + Mermaid + 图片缩放 |
+| **构建**   | Vite 6 · Turbopack                                      |
+| **包管理** | pnpm 10 · Monorepo workspace                            |
+| **质量**   | ESLint · Prettier · Husky · Commitlint · lint-staged    |
+| **认证**   | JWT Bearer Token                                        |
+| **部署**   | Docker + GitHub Actions CI/CD · Nginx                   |
+
+---
+
+## 📁 项目结构
 
 ```
 blog-client/
-├── apps/                    # 应用目录
-│   ├── blog/               # 博客前端应用（Next.js）
-│   └── admin/              # 管理后台应用（React Router）
-├── packages/                # 共享包目录
-│   ├── behaviorMonitor/    # 行为监控 SDK
-│   └── markdownEditor/     # Markdown 编辑器组件
-├── package.json            # 根 package.json
-├── pnpm-workspace.yaml     # pnpm workspace 配置
-├── tsconfig.json           # TypeScript 配置
-└── README.md
+├── apps/
+│   ├── blog/                    # 用户端博客（Next.js 16 SSR）
+│   │   └── app/
+│   │       ├── page.tsx              # 首页（文章列表 + 搜索 + 分类）
+│   │       ├── articles/[id]/        # 文章详情（Markdown + 目录 + 评论）
+│   │       ├── messageBoard/         # 留言板
+│   │       ├── changeLog/            # 更新日志
+│   │       ├── aboutMe/              # 关于我
+│   │       ├── components/           # NavBar、Footer、文章卡片、评论区、侧栏等
+│   │       ├── lib/                  # API 封装 · 请求工具
+│   │       └── types/                # TypeScript 类型
+│   │
+│   └── admin/                   # 管理后台（React Router 7 SPA）
+│       └── app/
+│           ├── routes/
+│           │   ├── data/             # 数据看板
+│           │   ├── article/          # 文章管理 + 编辑页（含 AI 面板）
+│           │   ├── user/             # 用户管理
+│           │   ├── comment/          # 评论管理
+│           │   ├── category/         # 分类管理
+│           │   ├── tag/              # 标签管理
+│           │   ├── setting/          # 网站设置 · AI 配置 · 工具箱
+│           │   └── login/            # 登录
+│           ├── components/           # AiPanel · Layout · Loading
+│           ├── services/             # AI · 文章 · 用户 · 上传等 API
+│           └── hooks/                # useQuery 自定义 hook
+│
+├── packages/
+│   ├── markdownEditor/          # ByteMD 编辑器和预览组件封装
+│   └── behaviorMonitor/         # 访客行为监控 SDK
+│
+├── package.json                 # Monorepo 根配置
+├── pnpm-workspace.yaml
+└── tsconfig.json
 ```
 
-## 技术栈
+---
 
-### 核心框架
+## 🚀 快速开始
 
-- **React** ^19.2.3 - UI 框架
-- **TypeScript** ^5.3.3 - 类型系统
-- **Next.js** ^16.1.1 - 博客应用框架（SSR/SSG）
-- **React Router** ^7.10.1 - 管理后台路由框架
+### 环境要求
 
-### UI 框架与样式
+- **Node.js** >= 20
+- **pnpm** >= 10
 
-- **Ant Design** ^6.1.3 - UI 组件库
-- **Tailwind CSS** ^4.1.6 - 原子化 CSS 框架
-- **@ant-design/icons** ^6.1.0 - 图标库
-- **@ant-design/plots** ^2.6.8 - 数据可视化
-
-### Markdown 编辑
-
-- **bytemd** ^1.21.0 - Markdown 编辑器核心
-- **@bytemd/react** ^1.21.0 - React 封装
-- **@bytemd/plugin-gfm** - GitHub Flavored Markdown 支持
-- **@bytemd/plugin-highlight** - 代码高亮
-- **@bytemd/plugin-math** - 数学公式支持
-- **@bytemd/plugin-medium-zoom** - 图片缩放
-- **highlight.js** ^11.10.0 - 代码高亮库
-- **katex** ^0.16.11 - 数学公式渲染
-
-### 工具库
-
-- **dayjs** ^1.11.13 - 日期处理
-- **lodash-es** ^4.17.21 - 工具函数库
-- **clsx** ^2.1.1 - 条件类名工具
-
-### 开发工具
-
-- **pnpm** ^10.6.3 - 包管理器
-- **ESLint** ^8.57.0 - 代码检查
-- **Prettier** ^3.2.5 - 代码格式化
-- **Husky** ^9.0.11 - Git hooks
-- **lint-staged** ^15.2.2 - 暂存文件检查
-- **@commitlint/cli** ^19.8.1 - Commit 信息规范
-
-## 应用说明
-
-### Blog 应用（用户端）
-
-基于 Next.js 16 构建的博客前端应用，提供完整的博客浏览功能。
-
-#### 主要功能
-
-- ✅ **文章列表** - 分页展示文章列表，支持搜索
-- ✅ **文章详情** - 文章详情页，支持 Markdown 渲染
-- ✅ **文章分类** - 按分类浏览文章
-- ✅ **评论系统** - 文章评论功能
-- ✅ **留言板** - 访客留言功能
-- ✅ **更新日志** - 系统更新日志展示
-- ✅ **关于页面** - 关于博客、关于我等页面
-- ✅ **SEO 优化** - 服务端渲染，SEO 友好
-- ✅ **响应式设计** - 适配移动端和桌面端
-
-#### 技术特点
-
-- 使用 Next.js App Router
-- 服务端渲染（SSR）和静态生成（SSG）
-- 支持暗色/亮色主题切换
-- Tailwind CSS 样式系统
-
-#### 启动方式
+### 安装
 
 ```bash
-pnpm dev:blog
-# 或
-cd apps/blog
-pnpm dev
-```
-
-应用将在 `http://localhost:3000` 启动。
-
-### Admin 应用（管理后台）
-
-基于 React Router 7 构建的管理后台应用，提供完整的博客管理功能。
-
-#### 主要功能
-
-- ✅ **仪表盘** - 数据统计和可视化
-- ✅ **用户管理** - 用户列表、创建、编辑、删除
-- ✅ **文章管理** - 文章列表、创建、编辑、删除、状态管理
-- ✅ **评论管理** - 评论审核和管理
-- ✅ **分类管理** - 文章分类管理
-- ✅ **标签管理** - 文章标签管理
-- ✅ **网站设置** - 基础设置、个人资料、留言管理、更新日志、工具
-
-#### 技术特点
-
-- 使用 React Router 7 进行路由管理
-- 服务端渲染（SSR）支持
-- Ant Design 组件库
-- 完整的权限控制和认证
-
-#### 启动方式
-
-```bash
-pnpm dev:admin
-# 或
-cd apps/admin
-pnpm dev
-```
-
-应用将在 `http://localhost:5173` 启动。
-
-## 共享包说明
-
-### behaviorMonitor
-
-行为监控 SDK，用于追踪用户行为。
-
-- **构建工具**: Rollup
-- **输出格式**: CJS、ESM、UMD
-- **用途**: 用户行为数据收集和分析
-
-### markdownEditor
-
-Markdown 编辑器组件包，基于 ByteMD 构建。
-
-- **核心库**: ByteMD
-- **功能**: 支持 GFM、代码高亮、数学公式、图片缩放等
-- **用途**: 在管理后台中用于文章编辑
-
-## 快速开始
-
-### 系统要求
-
-- Node.js >= 20.x
-- pnpm >= 10.x
-
-### 安装步骤
-
-1. **克隆项目**
-
-```bash
-git clone <repository-url>
+git clone https://github.com/ljt741212/blog-client.git
 cd blog-client
-```
-
-2. **安装依赖**
-
-```bash
 pnpm install
 ```
 
-3. **启动开发服务器**
+### 启动
 
 ```bash
-# 启动博客应用
+# 启动用户端博客（http://localhost:3000）
 pnpm dev:blog
 
-# 启动管理后台
+# 启动管理后台（http://localhost:5173/admin/）
 pnpm dev:admin
 ```
 
-## 可用脚本
+> 两个应用通过 Vite proxy / Next.js rewrite 将 `/api` 转发到后端，默认 `http://localhost:3004`。
 
-### 根目录脚本
+---
 
-```bash
-# 开发
-pnpm dev:blog          # 启动博客应用开发服务器
-pnpm dev:admin         # 启动管理后台开发服务器
-
-# 构建
-pnpm build             # 构建所有应用
-pnpm build:blog        # 构建博客应用
-pnpm build:admin       # 构建管理后台
-
-# 代码质量
-pnpm lint              # 运行 ESLint 检查
-pnpm lint:fix          # 运行 ESLint 并自动修复
-pnpm format            # 格式化代码（Prettier）
-pnpm typecheck         # 类型检查（仅 admin）
-
-# Git hooks
-pnpm prepare           # 初始化 Husky
-```
-
-### Blog 应用脚本
+## 🔧 可用脚本
 
 ```bash
-cd apps/blog
-
-pnpm dev               # 启动开发服务器
-pnpm build             # 构建生产版本
-pnpm start             # 启动生产服务器
-pnpm lint              # 代码检查
+pnpm dev:blog      # 启动博客开发服务器
+pnpm dev:admin     # 启动管理后台开发服务器
+pnpm build         # 构建所有应用
+pnpm lint          # ESLint 检查
+pnpm lint:fix      # ESLint 自动修复
+pnpm format        # Prettier 格式化
+pnpm typecheck     # TypeScript 类型检查
 ```
 
-### Admin 应用脚本
+---
 
-```bash
-cd apps/admin
+## 🌍 环境变量
 
-pnpm dev               # 启动开发服务器
-pnpm build             # 构建生产版本
-pnpm start             # 启动生产服务器
-pnpm typecheck         # 类型检查
-```
-
-## 代码规范
-
-项目遵循统一的代码规范：
-
-### 格式化规则
-
-- **单引号** - 字符串使用单引号
-- **分号** - 语句末尾使用分号
-- **缩进** - 2 个空格
-- **行宽** - 100 字符
-- **尾逗号** - ES5 兼容模式
-- **箭头函数** - 单参数时省略括号
-
-### 导入顺序
-
-1. React
-2. 第三方库（按字母序）
-3. 内部别名（@/、~/）
-4. 父级/兄弟/index
-5. type 导入
-
-各组之间空一行，组内按字母序排列。
-
-### 路径别名
-
-- `@/` - 应用根目录
-- `~/` - 应用根目录（备用）
-- `@components/*` - 组件目录
-- `@markdownEditor/*` - Markdown 编辑器包
-
-**注意**: 禁止使用 `../` 跨多级引用，应使用路径别名。
-
-### 未使用变量
-
-以 `_` 开头的参数或变量视为有意忽略，不会报未使用警告。
-
-## 项目配置
-
-### TypeScript 配置
-
-项目使用统一的 `tsconfig.json` 配置，支持：
-
-- 严格模式
-- 路径别名解析
-- 增量编译
-- 声明文件生成
-
-### ESLint 配置
-
-- 使用 TypeScript ESLint 插件
-- 支持 React Hooks 规则
-- 导入顺序检查
-- 禁止相对路径跨级引用
-
-### Prettier 配置
-
-统一的代码格式化规则，确保代码风格一致。
-
-### Git Hooks
-
-使用 Husky 和 lint-staged 进行：
-
-- 提交前代码格式化
-- 提交前 ESLint 检查
-- Commit 信息规范检查
-
-## 开发指南
-
-### 添加新功能
-
-1. **在 Blog 应用中添加页面**
-
-```bash
-cd apps/blog
-# 在 app/ 目录下创建新的路由文件
-```
-
-2. **在 Admin 应用中添加路由**
-
-```bash
-cd apps/admin
-# 在 app/routes/ 目录下创建新的路由文件
-# 在 app/routes.ts 中注册路由
-```
-
-3. **创建共享组件**
-
-```bash
-# 在 packages/ 目录下创建新的包
-# 或直接在应用中使用 @/ 别名引用组件
-```
-
-### 使用共享包
-
-在应用中使用 workspace 包：
-
-```json
-{
-  "dependencies": {
-    "behaviorMonitor": "workspace:*",
-    "markdownEditor": "workspace:*"
-  }
-}
-```
-
-### API 集成
-
-两个应用都需要与后端 API 集成：
-
-- Blog 应用：调用后端 API 获取文章、评论等数据
-- Admin 应用：调用后端 API 进行 CRUD 操作
-
-确保后端服务已启动并配置正确的 API 地址。
-
-## 构建与部署
-
-### 开发环境构建
-
-```bash
-# 构建所有应用
-pnpm build
-
-# 构建单个应用
-pnpm build:blog
-pnpm build:admin
-```
-
-### 生产环境部署
-
-#### Blog 应用（Next.js）
-
-```bash
-cd apps/blog
-pnpm build
-pnpm start
-```
-
-Next.js 应用可以部署到：
-
-- Vercel（推荐）
-- 自托管 Node.js 服务器
-- Docker 容器
-
-#### Admin 应用（React Router）
-
-```bash
-cd apps/admin
-pnpm build
-pnpm start
-```
-
-React Router 应用可以部署到：
-
-- Node.js 服务器
-- Docker 容器
-- 支持 SSR 的平台（AWS、GCP、Azure 等）
-
-## 环境变量
-
-### Blog 应用
-
-需要在 `apps/blog/.env.local` 中配置：
+### Blog（`apps/blog/.env.local`）
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3004/api
 ```
 
-### Admin 应用
-
-参考 `apps/admin/.env.example`，在 `apps/admin/.env` 中配置：
+### Admin（`apps/admin/.env`）
 
 ```env
 VITE_API_URL=http://localhost:3004/api
 ```
 
-## 常见问题
+---
 
-### 1. pnpm 安装失败
+## 📄 许可证
 
-确保使用正确的 pnpm 版本：
+ISC License
 
-```bash
-corepack enable
-corepack prepare pnpm@10.6.3 --activate
-```
+---
 
-### 2. 类型错误
-
-运行类型检查：
-
-```bash
-pnpm typecheck
-```
-
-### 3. 构建失败
-
-清理缓存并重新安装：
-
-```bash
-rm -rf node_modules
-rm -rf apps/*/node_modules
-rm -rf packages/*/node_modules
-pnpm install
-```
-
-### 4. 路径别名不生效
-
-检查 `tsconfig.json` 中的 `paths` 配置，确保与应用的路由配置一致。
-
-## 贡献指南
-
-1. Fork 本项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
-
-## 许可证
-
-本项目采用 UNLICENSED 许可证。
-
-## 作者
-
-linzai
-
-## 相关链接
-
-- [Next.js 文档](https://nextjs.org/docs)
-- [React Router 文档](https://reactrouter.com/)
-- [Ant Design 文档](https://ant.design/)
-- [Tailwind CSS 文档](https://tailwindcss.com/)
-- [ByteMD 文档](https://bytemd.js.org/)
-- [pnpm 文档](https://pnpm.io/)
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/ljt741212">linzai</a>
+</p>

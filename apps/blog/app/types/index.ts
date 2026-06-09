@@ -8,4 +8,5 @@ export * from './changelog';
 export * from './guestMessage';
 export * from './author';
 export * from './siteConfig';
+export * from './friendLink';
 export * from './icpInfo';

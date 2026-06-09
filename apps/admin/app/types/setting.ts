@@ -13,13 +13,6 @@ export interface SeoSetting {
   metaViewport?: string | null;
 }
 
-export interface FriendLink {
-  id?: number;
-  name: string;
-  url: string;
-  description?: string;
-}
-
 export interface IcpInfo {
   icpNumber?: string;
   icpUrl?: string;
@@ -28,6 +21,5 @@ export interface IcpInfo {
 
 export interface Setting {
   seo: SeoSetting;
-  links?: FriendLink[];
   icp?: IcpInfo;
 }

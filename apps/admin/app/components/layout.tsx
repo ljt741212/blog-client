@@ -10,6 +10,7 @@ import {
   HomeOutlined,
   LogoutOutlined,
   LockOutlined,
+  LinkOutlined,
 } from '@ant-design/icons';
 import { Menu, Dropdown, Form, Modal, Input, message } from 'antd';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
@@ -54,6 +55,11 @@ const items: MenuItem[] = [
     key: 'tag',
     label: '文章标签管理',
     icon: <TagOutlined />,
+  },
+  {
+    key: 'friendLink',
+    label: '友链管理',
+    icon: <LinkOutlined />,
   },
   {
     key: 'setting',

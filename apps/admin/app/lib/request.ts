@@ -137,6 +137,9 @@ const put = <T>(url: string, data?: object, config?: RequestConfig) =>
 const del = <T>(url: string, config?: RequestConfig) =>
   request<T>(url, { ...config, method: 'DELETE' });
 
+const patch = <T>(url: string, data?: object, config?: RequestConfig) =>
+  request<T>(url, { ...config, method: 'PATCH', body: JSON.stringify(data) });
+
 export type { ResponseData, RequestConfig };
-export { get, post, put, del, RequestError };
+export { get, post, put, del, patch, RequestError };
 export default request;

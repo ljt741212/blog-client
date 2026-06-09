@@ -58,10 +58,14 @@ export default function Setting() {
         seo: values.seo,
         icp: values.icp,
       };
-      await Promise.all([
-        settingService.saveSetting(payload),
-        siteConfigService.save(values.siteConfig ?? {}),
-      ]);
+      const siteConfig = { ...values.siteConfig };
+      // 将 undefined 转为 null，否则 JSON.stringify 会丢弃该字段，后端无法清除
+      for (const key of Object.keys(siteConfig) as (keyof typeof siteConfig)[]) {
+        if (siteConfig[key] === undefined) {
+          siteConfig[key] = null;
+        }
+      }
+      await Promise.all([settingService.saveSetting(payload), siteConfigService.save(siteConfig)]);
       message.success('保存成功');
     } finally {
       setLoading(false);

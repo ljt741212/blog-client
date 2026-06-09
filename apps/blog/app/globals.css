@@ -3,7 +3,7 @@
 :root {
   /* 亮色基础：干净偏冷白 + 淡灰作为分层背景 */
   --background: #f3f6fb; /* 页面主背景 */
-  --page-bg: var(--background); /* 页面容器背景，可由 layout 覆盖以透出自定义背景图 */
+  --page-bg: transparent; /* 页面容器背景，默认透明以透出 body 渐变和特效 */
   --background-elevated: #ffffff; /* 提升层：卡片、侧栏 */
   --background-secondary: #eef2f9;
   --background-tertiary: #e2e8f0;

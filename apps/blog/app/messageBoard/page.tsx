@@ -18,7 +18,6 @@ export default function MessageBoard() {
     setMessages(messages ?? []);
   };
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     init();
   }, []);
 

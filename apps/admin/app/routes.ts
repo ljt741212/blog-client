@@ -16,5 +16,6 @@ export default [
     route('setting/updateLog', './routes/setting/updateLog.tsx'),
     route('setting/tools', './routes/setting/tools.tsx'),
     route('setting/aiConfig', './routes/setting/aiConfig.tsx'),
+    route('friendLink', './routes/friendLink/index.tsx'),
   ]),
 ] satisfies RouteConfig;

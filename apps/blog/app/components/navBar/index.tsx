@@ -18,6 +18,10 @@ const menuItems = [
       label: '留言板',
       href: '/messageBoard',
     },
+    {
+      label: '友链',
+      href: '/friendLinks',
+    },
   ],
   [
     {
@@ -35,7 +39,6 @@ export default function NavBar() {
     if (!sentinel) return;
 
     const HIDE_OFFSET_PX = 128;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHidden(window.scrollY >= HIDE_OFFSET_PX);
 
     const updateByRect = () => {

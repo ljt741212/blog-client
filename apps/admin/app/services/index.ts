@@ -3,6 +3,7 @@ export * from './category';
 export * from './comment';
 export * from './dataTransfer';
 export * from './dashboard';
+export * from './friendLink';
 export * from './guestMessage';
 export * from './setting';
 export * from './tag';

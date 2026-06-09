@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { GlobalOutlined, LinkOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons';
+import { GlobalOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   Form,
   Input,
@@ -56,7 +56,6 @@ export default function Setting() {
     try {
       const payload: SiteSetting = {
         seo: values.seo,
-        links: values.links ?? [],
         icp: values.icp,
       };
       await Promise.all([
@@ -209,52 +208,6 @@ export default function Setting() {
                       </Form.Item>
                     </Col>
                   </Row>
-                </Card>
-
-                <Card
-                  title={<SectionTitle icon={<LinkOutlined />} title="友情链接" />}
-                  extra={<Typography.Text type="secondary">展示合作与推荐</Typography.Text>}
-                >
-                  <Form.List name="links">
-                    {(fields, { add, remove }) => (
-                      <Space direction="vertical" style={{ width: '100%' }} size="middle">
-                        {fields.map(({ key, name, ...restField }) => (
-                          <Card key={key} type="inner" size="small">
-                            <Row gutter={12} align="middle">
-                              <Col span={6}>
-                                <Form.Item
-                                  {...restField}
-                                  label="名称"
-                                  name={[name, 'name']}
-                                  rules={[{ required: true, message: '请输入名称' }]}
-                                >
-                                  <Input placeholder="名称" />
-                                </Form.Item>
-                              </Col>
-                              <Col span={16}>
-                                <Form.Item
-                                  {...restField}
-                                  label="链接"
-                                  name={[name, 'url']}
-                                  rules={[{ required: true, message: '请输入链接' }]}
-                                >
-                                  <Input placeholder="https://example.com" />
-                                </Form.Item>
-                              </Col>
-                              <Col span={2} style={{ textAlign: 'right' }}>
-                                <Button danger type="text" onClick={() => remove(name)}>
-                                  删除
-                                </Button>
-                              </Col>
-                            </Row>
-                          </Card>
-                        ))}
-                        <Button type="dashed" onClick={() => add()} block>
-                          新增友情链接
-                        </Button>
-                      </Space>
-                    )}
-                  </Form.List>
                 </Card>
               </Space>
             </Col>

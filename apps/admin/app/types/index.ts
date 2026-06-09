@@ -1,4 +1,5 @@
 export * from './ai';
+export * from './friendLink';
 
 export interface Meta {
   current: number;

@@ -13,6 +13,8 @@ import {
   Author,
   IcpInfo,
   SiteConfig,
+  FriendLink,
+  ApplyFriendLinkDto,
 } from '@/types';
 
 import { get, post, put } from './request';
@@ -159,6 +161,22 @@ export async function incrementViews(id: number): Promise<boolean> {
 export async function incrementLikes(id: number): Promise<boolean> {
   const result = await put<boolean>(`/posts/${id}/likes`);
   return result.data ?? false;
+}
+
+/**
+ * 获取友情链接列表
+ */
+export async function getFriendLinks(): Promise<FriendLink[]> {
+  const result = await get<FriendLink[]>('/friend-links?status=1');
+  return result.data ?? [];
+}
+
+/**
+ * 申请友链
+ */
+export async function applyFriendLink(dto: ApplyFriendLinkDto): Promise<FriendLink | null> {
+  const result = await post<FriendLink>('/friend-links/apply', dto);
+  return result.data ?? null;
 }
 
 /**

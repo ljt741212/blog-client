@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import NavLink from './navLink';
 
@@ -33,51 +33,37 @@ const menuItems = [
 
 export default function NavBar() {
   const [hidden, setHidden] = useState(false);
+  const prevScrollY = useRef(0);
 
   useEffect(() => {
-    const sentinel = document.getElementById('nav-hide-sentinel');
-    if (!sentinel) return;
-
     const HIDE_OFFSET_PX = 128;
 
-    const updateByRect = () => {
-      const top = sentinel.getBoundingClientRect().top;
-      setHidden(top <= -HIDE_OFFSET_PX);
-    };
-
-    const observer = new IntersectionObserver(
-      entries => {
-        const entry = entries[0];
-        setHidden(!entry?.isIntersecting);
-      },
-      {
-        threshold: 0,
-        rootMargin: `-${HIDE_OFFSET_PX}px 0px 0px 0px`,
-      }
-    );
-
-    observer.observe(sentinel);
-    updateByRect();
-
     let rafId: number | null = null;
-    const onScrollOrResize = () => {
+    const onScroll = () => {
       if (rafId !== null) return;
       rafId = window.requestAnimationFrame(() => {
         rafId = null;
-        updateByRect();
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY <= 0) {
+          setHidden(false);
+        } else if (currentScrollY > prevScrollY.current && currentScrollY > HIDE_OFFSET_PX) {
+          setHidden(true);
+        } else if (currentScrollY < prevScrollY.current) {
+          setHidden(false);
+        }
+
+        prevScrollY.current = currentScrollY;
       });
     };
 
-    window.addEventListener('scroll', onScrollOrResize, { passive: true });
-    window.addEventListener('resize', onScrollOrResize);
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', onScrollOrResize);
-      window.removeEventListener('resize', onScrollOrResize);
+      window.removeEventListener('scroll', onScroll);
       if (rafId !== null) {
         window.cancelAnimationFrame(rafId);
       }
-      observer.disconnect();
     };
   }, []);
 

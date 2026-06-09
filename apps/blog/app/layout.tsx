@@ -12,6 +12,8 @@ import { getSeoSettings, getSiteConfig } from './lib/api';
 
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

@@ -39,7 +39,6 @@ export default function NavBar() {
     if (!sentinel) return;
 
     const HIDE_OFFSET_PX = 128;
-    setHidden(window.scrollY >= HIDE_OFFSET_PX);
 
     const updateByRect = () => {
       const top = sentinel.getBoundingClientRect().top;

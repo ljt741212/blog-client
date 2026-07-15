@@ -15,7 +15,7 @@ COPY packages/markdownEditor/package.json ./packages/markdownEditor/package.json
 
 # Fetch and install all dependencies
 RUN pnpm fetch --frozen-lockfile
-RUN pnpm install --frozen-lockfile --offline
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY apps/blog ./apps/blog

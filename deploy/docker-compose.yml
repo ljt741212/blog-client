@@ -1,15 +1,24 @@
 services:
-  blog:
-    image: blog-client:latest
-    container_name: blog-client
+  nginx:
+    image: crpi-if0dbq06utqk8du0.cn-hongkong.personal.cr.aliyuncs.com/blog-client/nginx:latest
+    container_name: blog-nginx
     restart: always
     ports:
-      - "3005:3005"
+      - "80:80"
+    networks:
+      - blog_network
+
+  blog:
+    image: crpi-if0dbq06utqk8du0.cn-hongkong.personal.cr.aliyuncs.com/blog-client/blog:latest
+    container_name: blog-client
+    restart: always
+    expose:
+      - "3005"
     environment:
       NODE_ENV: production
       PORT: 3005
-      API_URL: ${API_URL:-http://blog-server:3004/api}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
+      API_URL: http://blog-server:3004/api
+      NEXT_PUBLIC_API_URL: /api
     networks:
       - blog_network
 

@@ -14,15 +14,6 @@ on:
       - 'package.json'
       - 'tsconfig.json'
   workflow_dispatch:
-  pull_request:
-    branches: [main, master]
-    paths:
-      - 'apps/blog/**'
-      - 'packages/**'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
-      - 'package.json'
-      - 'tsconfig.json'
 
 jobs:
   lint:
@@ -39,62 +30,44 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter blog lint
 
-  build:
+  deploy:
+    needs: lint
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v4
         with:
           version: 10.6.3
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:blog
-      - uses: actions/upload-artifact@v4
+
+      - name: Login to ACR
+        run: |
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login -u ${{ secrets.ACR_USERNAME }} --password-stdin crpi-if0dbq06utqk8du0.cn-hongkong.personal.cr.aliyuncs.com
+
+      - name: Build and push Docker image
+        run: |
+          docker build -f Dockerfile.blog -t crpi-if0dbq06utqk8du0.cn-hongkong.personal.cr.aliyuncs.com/blog-client/blog:latest .
+          docker push crpi-if0dbq06utqk8du0.cn-hongkong.personal.cr.aliyuncs.com/blog-client/blog:latest
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1
         with:
-          name: blog-build
-          path: apps/blog/.next
-          retention-days: 1
-
-  deploy:
-    needs: [lint, build]
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    runs-on: self-hosted
-    steps:
-      - name: Checkout
-        run: |
-          set -e
-          if [ -d /opt/blog-client-repo ]; then
-            cd /opt/blog-client-repo
-            git fetch origin main
-            git reset --hard origin/main
-          else
-            git clone git@github.com:ljt741212/blog-client.git /opt/blog-client-repo
-          fi
-
-      - name: Build and deploy blog
-        run: |
-          set -e
-          cd /opt/blog-client-repo
-
-          echo ">>> syncing deploy files..."
-          cp -f deploy/docker-compose.yml /opt/blog-client/docker-compose.yml
-          cp -f deploy/nginx-blog.conf /etc/nginx/conf.d/blog.conf
-          docker run --rm --pid host -v /etc/nginx/conf.d:/etc/nginx/conf.d -v /etc/nginx/ssl:/etc/nginx/ssl -v /var/run:/var/run nginx:alpine nginx -t
-          docker run --rm --pid host -v /etc/nginx/conf.d:/etc/nginx/conf.d -v /etc/nginx/ssl:/etc/nginx/ssl -v /var/run:/var/run nginx:alpine nginx -s reload
-
-          echo ">>> building blog image..."
-          docker build -f Dockerfile.blog -t blog-client:latest .
-
-          cd /opt/blog-client
-
-          echo ">>> restarting blog..."
-          docker compose up -d --remove-orphans
-
-          echo ">>> cleaning up old images..."
-          docker image prune -f
-
-          echo ">>> container status:"
-          docker compose ps
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /opt/blog-client
+            docker compose pull blog
+            docker compose up -d blog
+            docker image prune -f
+            echo ">>> blog deployed"

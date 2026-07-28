@@ -86,8 +86,11 @@ export default function Data() {
       title: '访问时间',
       dataIndex: 'visitedAt',
       render: (value: string) => (
-        <p className="text-sm max-w-[100px] truncate" title={dayjs(value).format('YYYY-MM-DD')}>
-          {dayjs(value).format('YYYY-MM-DD')}
+        <p
+          className="text-sm max-w-[100px] truncate"
+          title={dayjs(value).format('YYYY-MM-DD HH:mm')}
+        >
+          {dayjs(value).format('YYYY-MM-DD HH:mm')}
         </p>
       ),
     },

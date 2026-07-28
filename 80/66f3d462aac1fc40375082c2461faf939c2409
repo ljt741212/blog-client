@@ -1,0 +1,24 @@
+apps/admin/app/routes/data/index.tsx
+  b7c3a685ebfe7daa 89-93
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "8066f3d462aac1fc40375082c2461faf939c2409",
+  "prompts": {
+    "b7c3a685ebfe7daa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7771d996-3f5b-46e6-9ade-3bbc0162dbe9",
+        "model": "deepseek-v4-pro-260425"
+      },
+      "human_author": "lijintao",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 5,
+      "overriden_lines": 0,
+      "messages_url": "https://git-ai.hsjdata.com/cas/c9a677797dd884bc4c4bea0b648a80a07f7bfcba7c17ce4d95284021f981e13d"
+    }
+  }
+}

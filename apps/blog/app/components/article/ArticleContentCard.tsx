@@ -8,6 +8,8 @@ import { Viewer } from 'markdownEditor';
 
 import { incrementLikes } from '@/lib/api';
 
+import EditArticleButton from './EditArticleButton';
+
 function CodeCopyButton({ code }: { code: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -127,32 +129,33 @@ export default function ArticleContentCard({
   return (
     <Card>
       <Space orientation="vertical" size={12} className="w-full">
-        <div>
+        <div className="flex items-start justify-between">
           <Typography.Title level={3} style={{ marginBottom: 4 }}>
             {title}
           </Typography.Title>
-          <Space wrap size={[8, 8]}>
-            <Typography.Text type="secondary">ID：{articleId}</Typography.Text>
-            <Divider orientation="vertical" />
-            <Typography.Text type="secondary">阅读：{views}</Typography.Text>
-            <Divider orientation="vertical" />
-            {publishTime && (
-              <>
-                <Typography.Text type="secondary">
-                  发布于 {new Date(publishTime).toLocaleDateString('zh-CN')}
-                </Typography.Text>
-                <Divider orientation="vertical" />
-              </>
-            )}
-            <Typography.Text type="secondary">分类：</Typography.Text>
-            <Tag key={category.id}>{category.name}</Tag>
-            <Divider orientation="vertical" />
-            <Typography.Text type="secondary">标签：</Typography.Text>
-            {tags.map(t => (
-              <Tag key={t}>{t}</Tag>
-            ))}
-          </Space>
+          <EditArticleButton articleId={articleId} />
         </div>
+        <Space wrap size={[8, 8]}>
+          <Typography.Text type="secondary">ID：{articleId}</Typography.Text>
+          <Divider orientation="vertical" />
+          <Typography.Text type="secondary">阅读：{views}</Typography.Text>
+          <Divider orientation="vertical" />
+          {publishTime && (
+            <>
+              <Typography.Text type="secondary">
+                发布于 {new Date(publishTime).toLocaleDateString('zh-CN')}
+              </Typography.Text>
+              <Divider orientation="vertical" />
+            </>
+          )}
+          <Typography.Text type="secondary">分类：</Typography.Text>
+          <Tag key={category.id}>{category.name}</Tag>
+          <Divider orientation="vertical" />
+          <Typography.Text type="secondary">标签：</Typography.Text>
+          {tags.map(t => (
+            <Tag key={t}>{t}</Tag>
+          ))}
+        </Space>
 
         <Divider style={{ margin: '8px 0' }} />
 

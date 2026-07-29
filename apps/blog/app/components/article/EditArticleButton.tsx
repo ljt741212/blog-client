@@ -18,6 +18,7 @@ export default function EditArticleButton({ articleId }: { articleId: string }) 
 
   return (
     <Button
+      type="text"
       icon={<EditOutlined />}
       onClick={() => {
         window.location.href = `/admin/article/save?articleId=${articleId}`;

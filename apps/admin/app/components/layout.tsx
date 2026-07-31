@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   SettingOutlined,
@@ -12,8 +12,10 @@ import {
   LockOutlined,
   LinkOutlined,
 } from '@ant-design/icons';
+import { AiChatPanel, createAiChatApi } from 'ai-chat';
 import { Menu, Dropdown, Form, Modal, Input, message } from 'antd';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
+
 
 import { userService } from '@/services/user';
 import { getCookie, removeCookie } from '@/utils';
@@ -82,6 +84,16 @@ const Layout: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [showAiPanel, setShowAiPanel] = useState(false);
+
+  const aiChatApi = useMemo(
+    () =>
+      createAiChatApi('/api', () => {
+        const token = getCookie('token');
+        return token ? `Bearer ${token}` : '';
+      }),
+    []
+  );
 
   const changePassword = async () => {
     try {
@@ -145,6 +157,12 @@ const Layout: React.FC = () => {
             <Logo /> Admin
           </div>
           <div className="flex items-center gap-3">
+            <button
+              className="text-sm font-medium bg-gradient-to-r from-[#7c5cfc] to-[#e056a0] bg-clip-text text-transparent hover:drop-shadow-[0_0_12px_rgba(124,92,252,0.5)] transition-all"
+              onClick={() => setShowAiPanel(true)}
+            >
+              AI 助理
+            </button>
             <Dropdown menu={{ items: settingItems }}>
               <SettingOutlined className="text-2xl cursor-pointer" />
             </Dropdown>
@@ -194,6 +212,8 @@ const Layout: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+      <AiChatPanel visible={showAiPanel} onClose={() => setShowAiPanel(false)} api={aiChatApi} />
     </>
   );
 };

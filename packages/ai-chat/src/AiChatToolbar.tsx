@@ -19,7 +19,7 @@ interface AiChatToolbarProps {
 }
 
 const btnClass =
-  'w-8 h-8 flex items-center justify-center rounded-lg text-[#8a7ca0] hover:text-[#e8e0f0] hover:bg-[#1a1333] transition-colors cursor-pointer';
+  'w-8 h-8 flex items-center justify-center rounded-lg text-[#7c8da5] hover:text-[#e2e8f0] hover:bg-[#16223b] transition-colors cursor-pointer';
 
 export default function AiChatToolbar({
   isFullscreen,
@@ -43,7 +43,7 @@ export default function AiChatToolbar({
         title={isFloat ? '退出浮动' : '浮动模式'}
         onClick={onToggleFloat}
       >
-        <ColumnWidthOutlined style={isFloat ? { color: '#7c5cfc' } : undefined} />
+        <ColumnWidthOutlined style={isFloat ? { color: '#4d94ff' } : undefined} />
       </button>
       <button
         className={btnClass}

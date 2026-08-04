@@ -33,33 +33,33 @@ export default function AiChatConversationList({
       width={320}
       styles={{
         header: {
-          background: '#0f0a1a',
-          color: '#e8e0f0',
-          borderBottom: '1px solid #2d2050',
+          background: '#0b1424',
+          color: '#e2e8f0',
+          borderBottom: '1px solid #1e3050',
         },
-        body: { background: '#0f0a1a', padding: 0 },
+        body: { background: '#0b1424', padding: 0 },
       }}
       closable
     >
       {conversations.length === 0 && (
-        <p className="text-sm text-[#8a7ca0] text-center py-8">暂无会话记录</p>
+        <p className="text-sm text-[#7c8da5] text-center py-8">暂无会话记录</p>
       )}
       {conversations.map(c => (
         <div
           key={c.id}
-          className={`flex items-center justify-between px-4 py-3 cursor-pointer border-b border-[#2d2050] transition-colors hover:bg-[#1a1333] ${
-            activeId === String(c.id) ? 'bg-[#1a1333]' : ''
+          className={`flex items-center justify-between px-4 py-3 cursor-pointer border-b border-[#1e3050] transition-colors hover:bg-[#16223b] ${
+            activeId === String(c.id) ? 'bg-[#16223b]' : ''
           }`}
           onClick={() => onSelect(c.id)}
         >
           <div className="flex-1 min-w-0 mr-3">
-            <p className="text-sm text-[#e8e0f0] truncate">{c.title || '新对话'}</p>
-            <p className="text-xs text-[#8a7ca0] truncate mt-0.5">
+            <p className="text-sm text-[#e2e8f0] truncate">{c.title || '新对话'}</p>
+            <p className="text-xs text-[#7c8da5] truncate mt-0.5">
               {c.lastMessagePreview || fmtDate(c.updatedAt)}
             </p>
           </div>
           <DeleteOutlined
-            className="text-[#8a7ca0] hover:text-[#f85149] transition-colors shrink-0"
+            className="text-[#7c8da5] hover:text-[#f97066] transition-colors shrink-0"
             onClick={e => {
               e.stopPropagation();
               onDelete(c.id);

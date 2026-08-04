@@ -16,7 +16,6 @@ import { AiChatPanel, createAiChatApi } from 'ai-chat';
 import { Menu, Dropdown, Form, Modal, Input, message } from 'antd';
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router';
 
-
 import { userService } from '@/services/user';
 import { getCookie, removeCookie } from '@/utils';
 
@@ -158,7 +157,7 @@ const Layout: React.FC = () => {
           </div>
           <div className="flex items-center gap-3">
             <button
-              className="text-sm font-medium bg-gradient-to-r from-[#7c5cfc] to-[#e056a0] bg-clip-text text-transparent hover:drop-shadow-[0_0_12px_rgba(124,92,252,0.5)] transition-all"
+              className="text-sm font-medium bg-gradient-to-r from-[#4d94ff] to-[#5eead4] bg-clip-text text-transparent hover:drop-shadow-[0_0_12px_rgba(77,148,255,0.5)] transition-all"
               onClick={() => setShowAiPanel(true)}
             >
               AI 助理

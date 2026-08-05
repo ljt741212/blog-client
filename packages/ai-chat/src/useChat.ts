@@ -1,6 +1,6 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useRef } from 'react';
 
-import type { AiChatApi, ChatMessage, ChatStatus, ConfirmRequest } from './types';
+import type { AiChatApi, ChatMessage, ChatStatus, ConfirmRequest, SseCallbacks } from './types';
 
 function genId() {
   return `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -33,7 +33,7 @@ export function useChat({ api }: UseChatOptions): UseChatReturn {
   const abortRef = useRef<(() => void) | null>(null);
   const confirmReqRef = useRef<ConfirmRequest | null>(null);
 
-  const updateLastAssistant = useCallback((fn: (msg: ChatMessage) => ChatMessage) => {
+  const updateLastAssistant = (fn: (msg: ChatMessage) => ChatMessage) => {
     setMessages(prev => {
       const idx = prev.length - 1;
       if (idx < 0 || prev[idx].role !== 'assistant') return prev;
@@ -41,118 +41,106 @@ export function useChat({ api }: UseChatOptions): UseChatReturn {
       updated[idx] = fn(updated[idx]);
       return updated;
     });
-  }, []);
+  };
 
-  const sseCallbacks = useCallback(
-    () => ({
-      onToken: (content: string) => {
-        updateLastAssistant(msg => ({ ...msg, content: msg.content + content }));
-      },
-      onToolCall: (tool: string, args: Record<string, unknown>) => {
-        updateLastAssistant(msg => ({
-          ...msg,
-          toolCalls: [
-            ...(msg.toolCalls || []),
-            { id: genId(), name: tool, args, status: 'running' as const },
-          ],
-        }));
-      },
-      onToolResult: (tool: string, result: unknown) => {
-        updateLastAssistant(msg => {
-          if (!msg.toolCalls) return msg;
-          const tcs = [...msg.toolCalls];
-          for (let i = tcs.length - 1; i >= 0; i--) {
-            if (tcs[i].name === tool && tcs[i].status === 'running') {
-              tcs[i] = { ...tcs[i], result, status: 'completed' };
-              break;
-            }
+  const sseCallbacks = (): SseCallbacks => ({
+    onToken: (content: string) => {
+      updateLastAssistant(msg => ({ ...msg, content: msg.content + content }));
+    },
+    onToolCall: (tool: string, args: Record<string, unknown>) => {
+      updateLastAssistant(msg => ({
+        ...msg,
+        toolCalls: [
+          ...(msg.toolCalls || []),
+          { id: genId(), name: tool, args, status: 'running' as const },
+        ],
+      }));
+    },
+    onToolResult: (tool: string, result: unknown) => {
+      updateLastAssistant(msg => {
+        if (!msg.toolCalls) return msg;
+        const tcs = [...msg.toolCalls];
+        for (let i = tcs.length - 1; i >= 0; i--) {
+          if (tcs[i].name === tool && tcs[i].status === 'running') {
+            tcs[i] = { ...tcs[i], result, status: 'completed' };
+            break;
           }
-          return { ...msg, toolCalls: tcs };
-        });
-      },
-      onConfirm: (tool: string, args: Record<string, unknown>, message: string) => {
-        confirmReqRef.current = { tool, args, message };
-        setStatus('confirming');
-      },
-      onDone: (threadId?: string) => {
-        if (threadId) setConversationId(threadId);
-        setStatus('idle');
-      },
-      onError: (msg: string) => {
-        setError(msg);
-        setStatus('error');
-      },
-    }),
-    [updateLastAssistant]
-  );
-
-  const send = useCallback(
-    async (message: string) => {
-      abortRef.current?.();
-      setError(null);
-      setStatus('streaming');
-      setMessages(prev => [...prev, newMsg('user', message), newMsg('assistant')]);
-      const { abort } = api.chatStream(
-        { message, conversationId: conversationId || undefined },
-        sseCallbacks()
-      );
-      abortRef.current = abort;
+        }
+        return { ...msg, toolCalls: tcs };
+      });
     },
-    [api, conversationId, sseCallbacks]
-  );
-
-  const confirm = useCallback(
-    async (approved: boolean) => {
-      if (!conversationId || !confirmReqRef.current) return;
-      const cid = Number(conversationId);
-      confirmReqRef.current = null;
-      if (!approved) {
-        setStatus('idle');
-        return;
-      }
-      setStatus('streaming');
-      setMessages(prev => [...prev, newMsg('assistant')]);
-      const { abort } = api.confirmStream(cid, approved, sseCallbacks());
-      abortRef.current = abort;
+    onConfirm: (tool: string, args: Record<string, unknown>, message: string) => {
+      confirmReqRef.current = { tool, args, message };
+      setStatus('confirming');
     },
-    [api, conversationId, sseCallbacks]
-  );
+    onDone: (threadId?: string) => {
+      if (threadId) setConversationId(threadId);
+      setStatus('idle');
+    },
+    onError: (msg: string) => {
+      setError(msg);
+      setStatus('error');
+    },
+  });
 
-  const clear = useCallback(() => {
+  const send = async (message: string) => {
+    abortRef.current?.();
+    setError(null);
+    setStatus('streaming');
+    setMessages(prev => [...prev, newMsg('user', message), newMsg('assistant')]);
+    const { abort } = api.chatStream(
+      { message, conversationId: conversationId || undefined },
+      sseCallbacks()
+    );
+    abortRef.current = abort;
+  };
+
+  const confirm = async (approved: boolean) => {
+    if (!conversationId || !confirmReqRef.current) return;
+    const cid = Number(conversationId);
+    confirmReqRef.current = null;
+    if (!approved) {
+      setStatus('idle');
+      return;
+    }
+    setStatus('streaming');
+    setMessages(prev => [...prev, newMsg('assistant')]);
+    const { abort } = api.confirmStream(cid, approved, sseCallbacks());
+    abortRef.current = abort;
+  };
+
+  const clear = () => {
     abortRef.current?.();
     setMessages([]);
     setConversationId(null);
     setStatus('idle');
     setError(null);
     confirmReqRef.current = null;
-  }, []);
+  };
 
-  const loadHistory = useCallback(
-    async (id: number) => {
-      abortRef.current?.();
-      setError(null);
-      setStatus('idle');
+  const loadHistory = async (id: number) => {
+    abortRef.current?.();
+    setError(null);
+    setStatus('idle');
 
-      const conv = await api.getConversation(id);
-      const history: ChatMessage[] = (conv.messages || []).map(m => ({
-        id: genId(),
-        role: m.role,
-        content: m.content ?? '',
-        toolCalls: m.toolCalls?.map(tc => ({
-          id: tc.id || genId(),
-          name: tc.name,
-          args: tc.args,
-          status: 'completed' as const,
-        })),
-        createdAt: m.createdAt,
-      }));
+    const conv = await api.getConversation(id);
+    const history: ChatMessage[] = (conv.messages || []).map(m => ({
+      id: genId(),
+      role: m.role,
+      content: m.content ?? '',
+      toolCalls: m.toolCalls?.map(tc => ({
+        id: tc.id || genId(),
+        name: tc.name,
+        args: tc.args,
+        status: 'completed' as const,
+      })),
+      createdAt: m.createdAt,
+    }));
 
-      setMessages(history);
-      setConversationId(String(id));
-      confirmReqRef.current = null;
-    },
-    [api]
-  );
+    setMessages(history);
+    setConversationId(String(id));
+    confirmReqRef.current = null;
+  };
 
   return { messages, status, conversationId, error, send, confirm, clear, loadHistory };
 }

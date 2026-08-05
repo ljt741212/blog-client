@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface AiChatComposerProps {
   onSend: (message: string) => void;
@@ -9,16 +9,12 @@ export default function AiChatComposer({ onSend, disabled }: AiChatComposerProps
   const [value, setValue] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const adjustHeight = useCallback(() => {
+  useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
-  }, []);
-
-  useEffect(() => {
-    adjustHeight();
-  }, [value, adjustHeight]);
+  }, [value]);
 
   const handleSend = () => {
     const trimmed = value.trim();

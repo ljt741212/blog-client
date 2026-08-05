@@ -39,11 +39,11 @@ export default function AiChatToolbar({
         <ClockCircleOutlined />
       </button>
       <button
-        className={btnClass}
+        className={`${btnClass} ${isFloat ? '!text-[#4d94ff]' : ''}`}
         title={isFloat ? '退出浮动' : '浮动模式'}
         onClick={onToggleFloat}
       >
-        <ColumnWidthOutlined style={isFloat ? { color: '#4d94ff' } : undefined} />
+        <ColumnWidthOutlined />
       </button>
       <button
         className={btnClass}

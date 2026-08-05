@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Draggable from 'react-draggable';
 
@@ -71,32 +71,36 @@ export default function AiChatPanel({ visible, onClose, api }: AiChatPanelProps)
     });
   };
 
-  const handleClose = useCallback(() => {
+  const handleClose = () => {
     setClosing(true);
     setTimeout(() => {
       setClosing(false);
       onClose();
     }, 200);
-  }, [onClose]);
+  };
 
   if (!visible && !closing) return null;
 
   const isStreaming = status === 'streaming';
   const isConfirming = status === 'confirming';
-  const panelStyle = getPanelStyle(mode);
 
   return (
     <>
       {mode !== 'float' && mode !== 'fullscreen' && (
         <div
-          className={`fixed inset-0 z-[998] bg-[rgba(0,0,0,0.4)] ${closing ? 'ai-backdrop-exit' : 'ai-backdrop-enter'}`}
+          className={`fixed inset-0 z-[998] bg-black/40 ${closing ? 'ai-backdrop-exit' : 'ai-backdrop-enter'}`}
           onClick={handleClose}
         />
       )}
 
       <div
-        className={`fixed z-[999] rounded-lg ${closing ? 'ai-panel-exit' : 'ai-panel-enter'}`}
-        style={panelStyle}
+        className={`fixed z-[999] ${closing ? 'ai-panel-exit' : 'ai-panel-enter'} ${
+          mode === 'fullscreen'
+            ? 'inset-0 rounded-none overflow-hidden'
+            : mode === 'float'
+              ? 'left-[calc(100vw_-_440px)] top-[calc(100vh_-_520px)] w-[420px] h-[500px]'
+              : 'top-[120px] right-0 bottom-0 w-[480px] rounded-lg'
+        }`}
       >
         <Draggable
           key={mode}
@@ -108,8 +112,7 @@ export default function AiChatPanel({ visible, onClose, api }: AiChatPanelProps)
         >
           <div
             ref={dragRef}
-            className="relative flex flex-col w-full h-full rounded-lg overflow-hidden border border-[#1e3050]"
-            style={{ backgroundColor: '#0b1424', paddingBottom: 12 }}
+            className="relative flex flex-col w-full h-full rounded-lg overflow-hidden border border-[#1e3050] bg-[#0b1424] pb-3"
           >
             <div
               className={`drag-handle flex items-center justify-between px-4 py-3 shrink-0 ${mode === 'float' ? 'cursor-move' : ''}`}
@@ -179,15 +182,4 @@ export default function AiChatPanel({ visible, onClose, api }: AiChatPanelProps)
       </div>
     </>
   );
-}
-
-function getPanelStyle(mode: PanelMode): React.CSSProperties {
-  switch (mode) {
-    case 'fullscreen':
-      return { inset: 0, borderRadius: 0, overflow: 'hidden' };
-    case 'float':
-      return { left: 'calc(100vw - 440px)', top: 'calc(100vh - 520px)', width: 420, height: 500 };
-    default:
-      return { top: 120, right: 0, bottom: 0, width: 480 };
-  }
 }

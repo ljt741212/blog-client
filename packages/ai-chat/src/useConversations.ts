@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import type { AiChatApi, Conversation } from './types';
 
@@ -17,23 +17,16 @@ export function useConversations({ api }: UseConversationsOptions): UseConversat
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const loadList = useCallback(async () => {
+  const loadList = async () => {
     setLoading(true);
-    try {
-      const data = await api.getConversations(1, 50);
-      setConversations(data.items);
-    } finally {
-      setLoading(false);
-    }
-  }, [api]);
+    const data = await api.getConversations(1, 50).finally(() => setLoading(false));
+    setConversations(data.items);
+  };
 
-  const remove = useCallback(
-    async (id: number) => {
-      await api.deleteConversation(id);
-      setConversations(prev => prev.filter(c => c.id !== id));
-    },
-    [api]
-  );
+  const remove = async (id: number) => {
+    await api.deleteConversation(id);
+    setConversations(prev => prev.filter(c => c.id !== id));
+  };
 
   return { conversations, loading, loadList, remove };
 }

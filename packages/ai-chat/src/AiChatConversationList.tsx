@@ -1,5 +1,4 @@
 import { DeleteOutlined } from '@ant-design/icons';
-import { Drawer } from 'antd';
 
 import type { Conversation } from './types';
 
@@ -25,48 +24,88 @@ export default function AiChatConversationList({
   onSelect,
   onDelete,
 }: AiChatConversationListProps) {
+  if (!open) return null;
+
   return (
-    <Drawer
-      open={open}
-      onClose={onClose}
-      title="会话记录"
-      width={320}
-      styles={{
-        header: {
-          background: '#0b1424',
-          color: '#e2e8f0',
-          borderBottom: '1px solid #1e3050',
-        },
-        body: { background: '#0b1424', padding: 0 },
-      }}
-      closable
-    >
-      {conversations.length === 0 && (
-        <p className="text-sm text-[#7c8da5] text-center py-8">暂无会话记录</p>
-      )}
-      {conversations.map(c => (
+    <>
+      <div className="absolute inset-0 z-10" onClick={onClose} />
+
+      <div
+        className="absolute z-20 flex flex-col rounded-b-lg"
+        style={{
+          left: 0,
+          right: 0,
+          top: 49,
+          maxHeight: 'calc(100% - 49px)',
+          backgroundColor: '#152240',
+        }}
+      >
         <div
-          key={c.id}
-          className={`flex items-center justify-between px-4 py-3 cursor-pointer border-b border-[#1e3050] transition-colors hover:bg-[#16223b] ${
-            activeId === String(c.id) ? 'bg-[#16223b]' : ''
-          }`}
-          onClick={() => onSelect(c.id)}
+          style={{
+            height: 1,
+            flexShrink: 0,
+            background: 'linear-gradient(to right, #4d94ff, #5eead4)',
+          }}
+        />
+
+        <div
+          className="flex items-center px-4 py-3 shrink-0"
+          style={{ borderBottom: '1px solid #1e3050' }}
         >
-          <div className="flex-1 min-w-0 mr-3">
-            <p className="text-sm text-[#e2e8f0] truncate">{c.title || '新对话'}</p>
-            <p className="text-xs text-[#7c8da5] truncate mt-0.5">
-              {c.lastMessagePreview || fmtDate(c.updatedAt)}
-            </p>
-          </div>
-          <DeleteOutlined
-            className="text-[#7c8da5] hover:text-[#f97066] transition-colors shrink-0"
-            onClick={e => {
-              e.stopPropagation();
-              onDelete(c.id);
-            }}
-          />
+          <span className="text-sm font-medium" style={{ color: '#e2e8f0' }}>
+            会话记录
+          </span>
         </div>
-      ))}
-    </Drawer>
+
+        <div className="overflow-y-auto">
+          {conversations.length === 0 && (
+            <p className="text-sm text-center py-8" style={{ color: '#94a3b8' }}>
+              暂无会话记录
+            </p>
+          )}
+          {conversations.map(c => (
+            <div
+              key={c.id}
+              className="flex items-center justify-between px-4 py-3 cursor-pointer transition-colors"
+              style={{
+                borderBottom: '1px solid #1e3050',
+                backgroundColor: activeId === String(c.id) ? '#223860' : 'transparent',
+              }}
+              onMouseEnter={e => {
+                if (activeId !== String(c.id))
+                  (e.currentTarget as HTMLDivElement).style.backgroundColor = '#1c3055';
+              }}
+              onMouseLeave={e => {
+                if (activeId !== String(c.id))
+                  (e.currentTarget as HTMLDivElement).style.backgroundColor = 'transparent';
+              }}
+              onClick={() => onSelect(c.id)}
+            >
+              <div className="flex-1 min-w-0 mr-3">
+                <p className="text-sm truncate" style={{ color: '#e2e8f0' }}>
+                  {c.title || '新对话'}
+                </p>
+                <p className="text-xs truncate mt-0.5" style={{ color: '#94a3b8' }}>
+                  {c.lastMessagePreview || fmtDate(c.updatedAt)}
+                </p>
+              </div>
+              <DeleteOutlined
+                style={{ color: '#94a3b8' }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.color = '#f97066';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.color = '#94a3b8';
+                }}
+                onClick={e => {
+                  e.stopPropagation();
+                  onDelete(c.id);
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

@@ -32,15 +32,23 @@ export default function AiChatPanel({ visible, onClose, api }: AiChatPanelProps)
     right: 5000,
   });
   const dragRef = useRef<HTMLDivElement>(null!);
+  const autoLoaded = useRef(false);
 
   const { messages, status, conversationId, error, send, confirm, clear, loadHistory } = useChat({
     api,
   });
-  const { conversations, loadList, remove } = useConversations({ api });
+  const { conversations, loading, loadList, remove } = useConversations({ api });
 
   useEffect(() => {
     if (visible && conversations.length === 0) loadList();
   }, [visible]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!loading && conversations.length > 0 && !autoLoaded.current && !conversationId) {
+      autoLoaded.current = true;
+      loadHistory(conversations[0].id);
+    }
+  }, [loading, conversations, conversationId, loadHistory]);
 
   useEffect(() => {
     if (visible && mode !== 'float') {
@@ -91,6 +99,7 @@ export default function AiChatPanel({ visible, onClose, api }: AiChatPanelProps)
         style={panelStyle}
       >
         <Draggable
+          key={mode}
           disabled={mode !== 'float'}
           handle=".drag-handle"
           bounds={dragBounds}
@@ -99,7 +108,7 @@ export default function AiChatPanel({ visible, onClose, api }: AiChatPanelProps)
         >
           <div
             ref={dragRef}
-            className="flex flex-col w-full h-full rounded-lg overflow-hidden border border-[#1e3050]"
+            className="relative flex flex-col w-full h-full rounded-lg overflow-hidden border border-[#1e3050]"
             style={{ backgroundColor: '#0b1424', paddingBottom: 12 }}
           >
             <div
@@ -150,24 +159,24 @@ export default function AiChatPanel({ visible, onClose, api }: AiChatPanelProps)
             <div className="px-4 pt-3">
               <AiChatComposer onSend={send} disabled={isStreaming || isConfirming} />
             </div>
+
+            <AiChatConversationList
+              open={historyOpen}
+              conversations={conversations}
+              activeId={conversationId}
+              onClose={() => setHistoryOpen(false)}
+              onSelect={async id => {
+                await loadHistory(id);
+                setHistoryOpen(false);
+              }}
+              onDelete={async id => {
+                await remove(id);
+                if (String(id) === conversationId) clear();
+              }}
+            />
           </div>
         </Draggable>
       </div>
-
-      <AiChatConversationList
-        open={historyOpen}
-        conversations={conversations}
-        activeId={conversationId}
-        onClose={() => setHistoryOpen(false)}
-        onSelect={async id => {
-          await loadHistory(id);
-          setHistoryOpen(false);
-        }}
-        onDelete={async id => {
-          await remove(id);
-          if (String(id) === conversationId) clear();
-        }}
-      />
     </>
   );
 }

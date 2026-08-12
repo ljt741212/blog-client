@@ -1,10 +1,8 @@
 import request, { get, post, del } from '@/lib/request';
 
-import type { AiConfig, ChatRequest, ChatResponse, UsageQuery, UsageResponse } from '~/types/ai';
+import type { AiConfig, UsageQuery, UsageResponse } from '~/types/ai';
 
 export const aiService = {
-  chat: (data: ChatRequest) => post<ChatResponse>('/ai/chat', data),
-
   getConfigs: () => get<AiConfig[]>('/ai/configs'),
 
   saveConfig: (data: Partial<AiConfig>) => post<AiConfig>('/ai/configs/save', data),

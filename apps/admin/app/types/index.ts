@@ -1,4 +1,5 @@
 export * from './ai';
+export * from './editorAi';
 export * from './friendLink';
 
 export interface Meta {

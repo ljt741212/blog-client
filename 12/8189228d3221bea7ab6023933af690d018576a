@@ -1,0 +1,54 @@
+apps/admin/app/routes/article/saveArticlePage.tsx
+  8a2188255afeda8a 16,245,334
+  d4ad0ba71b3a663e 1,231
+apps/admin/app/types/editorAi.ts
+  d4ad0ba71b3a663e 1-39
+apps/admin/app/services/editorAi.ts
+  d4ad0ba71b3a663e 1-45,47-83,85-118,120-122
+apps/admin/app/types/index.ts
+  d4ad0ba71b3a663e 2
+apps/admin/app/components/EditorAiPanel.tsx
+  8a2188255afeda8a 1,3,123,175-176
+  d4ad0ba71b3a663e 2,4-85,87-93,95-108,110-115,117-122,124-125,127-135,138-155,158-174,177-251
+apps/admin/app/services/index.ts
+  d4ad0ba71b3a663e 13
+apps/admin/app/services/ai.ts
+  d4ad0ba71b3a663e 3
+apps/admin/app/components/FloatingAiPanel.tsx
+  8a2188255afeda8a 1-41,43-57,59-85,87-180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "128189228d3221bea7ab6023933af690d018576a",
+  "prompts": {
+    "8a2188255afeda8a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "17a2de0d-ccfb-4a64-a338-38c82effa9d5",
+        "model": "deepseek-v4-pro"
+      },
+      "human_author": "lijintao",
+      "messages": [],
+      "total_additions": 207,
+      "total_deletions": 46,
+      "accepted_lines": 182,
+      "overriden_lines": 3,
+      "messages_url": "https://git-ai.hsjdata.com/cas/10af92110efcc8ca8f2aa1da2de23581c4469aeb49c64655555f566d3235e69f"
+    },
+    "d4ad0ba71b3a663e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1153a017-0c44-44d8-9f3a-02e59c31def9",
+        "model": "deepseek-v4-pro"
+      },
+      "human_author": "lijintao",
+      "messages": [],
+      "total_additions": 434,
+      "total_deletions": 67,
+      "accepted_lines": 397,
+      "overriden_lines": 12,
+      "messages_url": "https://git-ai.hsjdata.com/cas/cc7fc2bb48523749ba2c24d9304295bed870bfe108fac6ace85fe8108fa468d5"
+    }
+  }
+}

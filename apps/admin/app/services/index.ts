@@ -10,6 +10,7 @@ export * from './tag';
 export * from './user';
 export * from './updateLog';
 export * from './ai';
+export * from './editorAi';
 export * from './upload';
 export * from './visitor';
 export * from './siteConfig';

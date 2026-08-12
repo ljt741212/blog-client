@@ -27,25 +27,6 @@ export interface AiConfig {
   updatedAt: string;
 }
 
-export interface ChatMessage {
-  role: string;
-  content: string;
-}
-
-export interface ChatRequest {
-  messages: ChatMessage[];
-  action?: AiAction;
-}
-
-export interface ChatResponse {
-  content: string;
-  model: string;
-  usage: {
-    promptTokens: number;
-    completionTokens: number;
-  };
-}
-
 export interface AiUsage {
   id: number;
   configId: number;

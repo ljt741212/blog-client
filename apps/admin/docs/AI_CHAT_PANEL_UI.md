@@ -13,8 +13,8 @@
 ```
 
 - 文字：`AI 助理`
-- 样式：渐变文字 `bg-gradient-to-r from-[#7c5cfc] to-[#e056a0] bg-clip-text text-transparent`，`font-medium`
-- Hover：增加文字光晕 `text-shadow: 0 0 12px rgba(124,92,252,0.5)`
+- 样式：渐变文字 `bg-gradient-to-r from-[#4d94ff] to-[#5eead4] bg-clip-text text-transparent`，`font-medium`
+- Hover：增加文字光晕 `drop-shadow-[0_0_12px_rgba(77,148,255,0.5)]`
 - 点击：打开 AI 助理面板
 
 ---
@@ -349,17 +349,27 @@ CX330 AI 助理
 ## 11. 文件结构
 
 ```
+packages/ai-chat/src/                   # 共享 AI 聊天面板（package）
+├── AiChatPanel.tsx                     # 面板主组件（欢迎屏、消息区、输入框、流光边框）
+├── AiChatToolbar.tsx                   # Toolbar 6 按钮子组件
+├── AiChatMessage.tsx                   # 消息气泡子组件（用户/AI/工具调用/确认）
+├── AiChatComposer.tsx                  # 输入框子组件
+├── AiChatConversationList.tsx          # 会话记录抽屉子组件
+├── useChat.ts                          # 聊天状态管理 hook（流式消息、工具调用）
+├── useConversations.ts                 # 会话列表管理 hook
+├── api-client.ts                       # createAiChatApi — SSE 流式 + 会话 CRUD
+├── types.ts                            # 类型定义（ChatMessage, ToolCall, ConfirmRequest 等）
+├── panel.css                           # 面板样式 + 流光边框动画
+└── index.ts                            # 统一导出
+
 apps/admin/app/
 ├── components/
-│   ├── AiChatPanel.tsx          # 面板主组件（含欢迎屏、消息区、输入框、流光边框）
-│   ├── AiChatToolbar.tsx        # Toolbar 6 按钮子组件
-│   ├── AiChatWelcome.tsx        # 欢迎屏子组件（渐变大字 + 两张卡片）
-│   ├── AiChatMessage.tsx        # 消息气泡子组件（用户/AI/工具调用/确认）
-│   ├── AiChatComposer.tsx       # 输入框子组件
-│   ├── AiChatConversationList.tsx # 会话记录抽屉子组件
-│   └── BorderBeam.tsx           # 流光边框组件
+│   ├── EditorAiPanel.tsx               # 文章编辑页内嵌 AI 助手（SSE 流式 + 表单回填）
+│   └── FloatingAiPanel.tsx             # 可拖拽浮动 AI 窗口（resize + 新对话）
 ├── services/
-│   └── ai.ts                    # [修改] 新增 SSE 方法 + 会话管理方法
+│   ├── ai.ts                           # AI 聊天 SSE + 会话管理 API
+│   └── editorAi.ts                     # 编辑器 AI 助手 SSE API
 └── types/
-    └── ai.ts                    # [修改] 新增 SSE 相关类型
+    ├── ai.ts                           # AI 聊天类型
+    └── editorAi.ts                     # 编辑器 AI 类型（FillAction, EditorState 等）
 ```

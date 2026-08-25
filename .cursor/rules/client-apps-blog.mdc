@@ -11,19 +11,19 @@ alwaysApply: false
 - **框架**: Next.js 16
 - **路由系统**: App Router
 - **样式**: Tailwind CSS 4
-- **路径别名**: `@/*` 指向 `./*`（根目录）
+- **路径别名**: `@/*` 指向 `./app/*`
 
 ## 路径别名规则
 
-- **使用 `@/` 引用应用内模块**，指向根目录（`apps/blog/`）
+- **使用 `@/` 引用应用内模块**，指向 `app/` 目录
 - **禁止使用相对路径跨级引用**（如 `../../`），应使用路径别名
 - **示例**：
   ```typescript
   // ✅ 正确
-  import { Card } from '@/app/components/article';
-  import { getArticles } from '@/app/lib/api';
-  import type { Article } from '@/app/types/article';
-  
+  import { Card } from '@/components/article';
+  import { getArticles } from '@/lib/api';
+  import type { Article } from '@/types/article';
+
   // ❌ 错误
   import { Card } from '../../components/article';
   import { getArticles } from '../../../lib/api';
@@ -39,18 +39,25 @@ app/
 │   │   └── [id]/          # 动态路由
 │   ├── changeLog/         # 更新日志
 │   ├── messageBoard/      # 留言板
-│   ├── aboutBlog/         # 关于博客
-│   └── aboutMe/           # 关于我
+│   ├── aboutMe/           # 关于我
+│   ├── friendLinks/       # 友情链接 + 申请
+│   └── rss.xml/           # RSS 订阅源（Route Handler）
 ├── components/    # 公共组件
-│   ├── article/   # 文章相关组件
+│   ├── article/   # 文章相关组件（Card · ContentCard · CommentsCard · Sidebar · viewer · toc）
 │   ├── navBar/    # 导航栏
-│   └── ...
+│   ├── footer/    # 页脚
+│   ├── messageBoard/ # 留言板表单/列表
+│   ├── Snowfall.tsx       # 雪花特效
+│   ├── GeometricRibbons.tsx # 几何渐变装饰
+│   ├── SuspensionPanel.tsx  # 悬浮快捷面板（回顶/全屏）
+│   └── analyticsLoader.tsx  # 分析脚本懒加载
 ├── lib/           # 工具库
 │   ├── api.ts     # API 调用
-│   └── request.ts # 请求封装
+│   ├── request.ts # 请求封装
+│   └── cookie.ts  # Cookie 工具
 ├── types/         # TypeScript 类型定义
 ├── globals.css    # 全局样式
-└── layout.tsx     # 根布局
+└── layout.tsx     # 根布局（SEO · 背景图 · 特效）
 ```
 
 ## Next.js App Router 规范
@@ -109,8 +116,8 @@ app/
 - **类型导入**: 使用 `type` 关键字导入类型
 - **示例**:
   ```typescript
-  import type { Article } from '@/app/types/article';
-  import type { Category } from '@/app/types/category';
+  import type { Article } from '@/types/article';
+  import type { Category } from '@/types/category';
   ```
 
 ## API 调用
@@ -197,12 +204,12 @@ app/
 ### 服务端页面组件
 
 ```typescript
-import { get } from '@/app/lib/request';
-import { getArticleComments } from '@/app/lib/api';
-import ArticleContentCard from '@/app/components/article/ArticleContentCard';
-import ArticleSidebar from '@/app/components/article/ArticleSidebar';
+import { get } from '@/lib/request';
+import { getArticleComments } from '@/lib/api';
+import ArticleContentCard from '@/components/article/ArticleContentCard';
+import ArticleSidebar from '@/components/article/ArticleSidebar';
 
-import type { Article } from '@/app/types/article';
+import type { Article } from '@/types/article';
 
 interface ArticleDetailProps {
   params: Promise<{ id: string }>;
@@ -238,9 +245,9 @@ import { useState, useEffect } from 'react';
 
 import { Pagination, Input } from 'antd';
 
-import { Card } from '@/app/components/article';
-import { getArticles } from '@/app/lib/api';
-import type { Article } from '@/app/types/article';
+import { Card } from '@/components/article';
+import { getArticles } from '@/lib/api';
+import type { Article } from '@/types/article';
 
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -273,7 +280,7 @@ export default function Home() {
 // app/lib/api.ts
 import { get, post } from './request';
 
-import type { Article, PaginationParams, PaginationResponse } from '@/app/types';
+import type { Article, PaginationParams, PaginationResponse } from '@/types';
 
 export async function getArticles(params: PaginationParams) {
   return get<PaginationResponse<Article>>('/posts/page', { params });

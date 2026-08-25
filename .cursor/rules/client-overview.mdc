@@ -16,6 +16,7 @@ client/
 │   ├── blog/               # 博客前端应用（Next.js）
 │   └── admin/              # 管理后台应用（React Router）
 ├── packages/                # 共享包目录
+│   ├── ai-chat/            # AI 聊天面板（SSE 流式 · 会话管理 · 工具调用）
 │   ├── behaviorMonitor/    # 行为监控 SDK
 │   └── markdownEditor/     # Markdown 编辑器组件
 └── package.json            # 根 package.json
@@ -52,6 +53,10 @@ client/
 - **编辑根目录或共享包**: 遵循通用规范
 
 ## 共享包
+
+### ai-chat
+- **用途**: AI 聊天面板，支持 SSE 流式输出、会话管理、工具调用、浮动/全屏模式
+- **使用**: Admin 的 FloatingAiPanel（全局 AI 助理）集成此包
 
 ### behaviorMonitor
 - **用途**: 用户行为监控 SDK

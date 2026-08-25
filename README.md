@@ -38,6 +38,7 @@
 | 📋 **留言板**    | 访客留言，管理员可回复                                  |
 | 📝 **更新日志**  | 系统更新记录展示                                        |
 | 👤 **关于页面**  | 关于博客 / 关于我                                       |
+| 🔗 **友情链接**  | 友链展示 + 在线申请                                     |
 | 🌙 **暗色主题**  | CSS 变量驱动的深色主题，蓝紫粉渐变配色                  |
 | 🔍 **SEO**       | SSR + 动态 generateMetadata                             |
 | 📡 **RSS**       | 自动生成 RSS 订阅源                                     |
@@ -56,14 +57,15 @@
 
 ### 🛠️ 管理后台
 
-| 模块             | 功能                                                |
-| ---------------- | --------------------------------------------------- |
-| 📊 **数据看板**  | 核心指标可视化                                      |
-| 📝 **文章管理**  | 新建/编辑/删除/草稿/发布，Markdown 编辑器 + AI 助理 |
-| 👥 **用户管理**  | 注册用户管理，权限控制                              |
-| 💬 **评论管理**  | 评论审核、删除                                      |
-| 🏷️ **分类/标签** | 文章分类和标签的 CRUD                               |
-| ⚙️ **网站设置**  | 基础配置、个人信息、留言管理、更新日志、工具箱      |
+| 模块             | 功能                                                    |
+| ---------------- | ------------------------------------------------------- |
+| 📊 **数据看板**  | 核心指标可视化                                          |
+| 📝 **文章管理**  | 新建/编辑/删除/草稿/发布，Markdown 编辑器 + AI 助手     |
+| 👥 **用户管理**  | 注册用户管理，权限控制                                  |
+| 💬 **评论管理**  | 评论审核、删除                                          |
+| 🏷️ **分类/标签** | 文章分类和标签的 CRUD                                   |
+| 🔗 **友链管理**  | 友情链接审核、管理                                      |
+| ⚙️ **网站设置**  | 基础配置、个人资料、留言管理、更新日志、工具箱、AI 配置 |
 
 ---
 
@@ -79,6 +81,7 @@
 | **包管理** | pnpm 10 · Monorepo workspace                            |
 | **质量**   | ESLint · Prettier · Husky · Commitlint · lint-staged    |
 | **认证**   | JWT Bearer Token                                        |
+| **监控**   | behaviorMonitor 自研 SDK（页面生命周期 + 行为上报）     |
 | **部署**   | Docker + GitHub Actions CI/CD · Nginx                   |
 
 ---
@@ -95,29 +98,44 @@ blog-client/
 │   │       ├── messageBoard/         # 留言板
 │   │       ├── changeLog/            # 更新日志
 │   │       ├── aboutMe/              # 关于我
-│   │       ├── components/           # NavBar、Footer、文章卡片、评论区、侧栏等
-│   │       ├── lib/                  # API 封装 · 请求工具
+│   │       ├── friendLinks/          # 友情链接 + 申请表单
+│   │       ├── rss.xml/              # RSS 订阅源（Route Handler）
+│   │       ├── components/           # NavBar · Footer · 文章卡片 · 评论区 · 侧栏
+│   │       │                         # Snowfall · GeometricRibbons · SuspensionPanel
+│   │       ├── lib/                  # API 封装 · 请求工具 · Cookie
 │   │       └── types/                # TypeScript 类型
 │   │
 │   └── admin/                   # 管理后台（React Router 7 SPA）
 │       └── app/
 │           ├── routes/
-│           │   ├── data/             # 数据看板
-│           │   ├── article/          # 文章管理 + 编辑页（含 AI 面板）
-│           │   ├── user/             # 用户管理
-│           │   ├── comment/          # 评论管理
-│           │   ├── category/         # 分类管理
-│           │   ├── tag/              # 标签管理
-│           │   ├── setting/          # 网站设置 · AI 配置 · 工具箱
-│           │   └── login/            # 登录
-│           ├── components/           # AiPanel · Layout · Loading
-│           ├── services/             # AI · 文章 · 用户 · 上传等 API
-│           └── hooks/                # useQuery 自定义 hook
+│           │   ├── home/               # 仪表盘（数据概览）
+│           │   ├── data/               # 数据统计
+│           │   ├── article/            # 文章管理 + 编辑页（含 AI 写作助手）
+│           │   ├── user/               # 用户管理
+│           │   ├── comment/            # 评论管理
+│           │   ├── category/           # 分类管理
+│           │   ├── tag/                # 标签管理
+│           │   ├── friendLink/         # 友链管理
+│           │   ├── setting/            # 基础设置 · 个人资料 · 留言 · 更新日志 · 工具 · AI 配置
+│           │   └── login/              # 登录
+│           ├── components/             # Layout · Loading · Logo
+│           │                           # EditorAiPanel（编辑器内 AI 助手）
+│           │                           # FloatingAiPanel（可拖拽浮动窗口）
+│           ├── services/               # 文章 · 用户 · 评论 · 分类 · 标签 · 友链
+│           │                           # AI · 编辑器AI · 访客 · 仪表盘 · 上传 · 站点配置 等
+│           ├── hooks/                  # useQuery 自定义 hook
+│           └── utils/                  # Cookie 工具
 │
 ├── packages/
+│   ├── ai-chat/                 # AI 聊天面板（SSE 流式 · 会话管理 · 工具调用 · 浮动/全屏模式）
 │   ├── markdownEditor/          # ByteMD 编辑器和预览组件封装
-│   └── behaviorMonitor/         # 访客行为监控 SDK
+│   └── behaviorMonitor/         # 访客行为监控 SDK（Rollup 构建）
 │
+├── deploy/
+│   ├── docker-compose.yml       # 服务器容器编排
+│   └── nginx-blog.conf          # Nginx 路由配置
+├── Dockerfile.admin             # Admin nginx 镜像
+├── Dockerfile.blog              # Blog Next.js 镜像
 ├── package.json                 # Monorepo 根配置
 ├── pnpm-workspace.yaml
 └── tsconfig.json

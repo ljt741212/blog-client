@@ -1,0 +1,32 @@
+apps/admin/docs/AI_CHAT_PANEL_UI.md
+  8dc3245885ce5de8 16-17,352-364,367-368,370-371,373-374
+.cursor/rules/client-apps-admin.mdc
+  8dc3245885ce5de8 38-39,44-50,52-54
+.cursor/rules/client-apps-blog.mdc
+  8dc3245885ce5de8 14,18,23-26,42-44,46,48-53,56-57,60,119-120,207-210,212,248-250,283
+.cursor/rules/client-overview.mdc
+  8dc3245885ce5de8 19,57-60
+README.md
+  8dc3245885ce5de8 41,60-68,84,101-105,111-127,130,132,134-138
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "ed9ee26f40502bf8065a7b4b77ad4580f5b93055",
+  "prompts": {
+    "8dc3245885ce5de8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d5fa16b-7b36-4a2b-860b-714abc47a3b6",
+        "model": "qwen3.7-plus"
+      },
+      "human_author": "lijintao",
+      "messages": [],
+      "total_additions": 102,
+      "total_deletions": 59,
+      "accepted_lines": 656,
+      "overriden_lines": 0,
+      "messages_url": "https://git-ai.hsjdata.com/cas/8ca755c468412880f31f00bf163eb9343c65f06d4b9d5bece4c14d6c7bfe6cfb"
+    }
+  }
+}

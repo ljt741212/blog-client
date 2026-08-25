@@ -35,20 +35,23 @@ alwaysApply: false
 ```
 app/
 ├── routes/          # 路由页面
-│   ├── article/    # 文章管理
+│   ├── home/       # 仪表盘（数据概览）
+│   ├── article/    # 文章管理 + 编辑页（含 AI 写作助手）
 │   ├── user/       # 用户管理
 │   ├── comment/    # 评论管理
 │   ├── category/   # 分类管理
 │   ├── tag/        # 标签管理
-│   ├── setting/    # 设置页面
-│   └── data/       # 数据统计
-├── components/     # 公共组件
-├── services/       # API 服务
-├── hooks/          # 自定义 Hooks
+│   ├── friendLink/ # 友链管理
+│   ├── setting/    # 基础设置 · 个人资料 · 留言 · 更新日志 · 工具 · AI 配置
+│   ├── data/       # 数据统计
+│   └── login/      # 登录
+├── components/     # 公共组件（Layout · Loading · Logo · EditorAiPanel · FloatingAiPanel）
+├── services/       # API 服务（文章 · 用户 · 评论 · 分类 · 标签 · 友链 · AI · 仪表盘 · 上传 · 站点配置 等）
+├── hooks/          # 自定义 Hooks（useQuery）
 ├── types/          # TypeScript 类型定义
-├── utils/          # 工具函数
-├── lib/            # 库文件（如 request）
-└── root.tsx        # 根组件
+├── utils/          # 工具函数（Cookie）
+├── lib/            # 库文件（request 请求封装）
+└── root.tsx        # 根组件（ConfigProvider 主题配置）
 ```
 
 ## 路由规范

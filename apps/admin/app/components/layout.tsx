@@ -170,7 +170,7 @@ const Layout: React.FC = () => {
         <div className="flex flex-1 min-h-0">
           <Menu
             onClick={onClick}
-            style={{ width: 256 }}
+            style={{ width: 256, height: '100%', overflow: 'auto' }}
             selectedKeys={[selectedKey]}
             openKeys={menuOpenKeys}
             onOpenChange={setMenuOpenKeys}

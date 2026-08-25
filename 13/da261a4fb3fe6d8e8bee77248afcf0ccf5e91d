@@ -1,0 +1,24 @@
+apps/admin/app/components/layout.tsx
+  8dc3245885ce5de8 173
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "13da261a4fb3fe6d8e8bee77248afcf0ccf5e91d",
+  "prompts": {
+    "8dc3245885ce5de8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "4d5fa16b-7b36-4a2b-860b-714abc47a3b6",
+        "model": "qwen3.7-plus"
+      },
+      "human_author": "lijintao",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0,
+      "messages_url": "https://git-ai.hsjdata.com/cas/ac4d4b2a7541d01885caf31a61f550f3aa59b459203705fe997957e1fdbdc1f7"
+    }
+  }
+}
